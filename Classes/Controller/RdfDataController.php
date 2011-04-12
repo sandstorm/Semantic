@@ -49,6 +49,12 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 	protected $reflectionService;
 
 	/**
+	 * @var \F3\Semantic\Domain\Service\ResourceUriService
+	 * @inject
+	 */
+	protected $resourceUriService;
+
+	/**
 	 * Default action of the backend controller.
 	 *
 	 * @param string $dataType
@@ -85,7 +91,7 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 		}
 
 		$tripleContainer = new \F3\Semantic\Domain\Model\TripleContainer();
-		$rdfSubject = $this->buildResourceUri($domainModelObjectName, $identifier);
+		$rdfSubject = $this->resourceUriService->buildResourceUri($object, $this->uriBuilder);
 
 		foreach ($rdfSchema['properties'] as $propertyName => $rdfPredicate) {
 			$propertySchema = $schema->getProperty($propertyName);
@@ -100,7 +106,7 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 					$collection = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
 					if (class_exists($propertySchema['elementType'])) {
 						foreach ($collection as $element) {
-							$rdfObject = $this->buildResourceUri($propertySchema['elementType'], $this->persistenceManager->getIdentifierByObject($element));
+							$rdfObject = $this->resourceUriService->buildResourceUri($element, $this->uriBuilder);
 							$tripleContainer->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
 						}
 					} else {
@@ -118,15 +124,6 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 			$tripleContainer->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
 		}
 		return $tripleContainer;
-	}
-	protected function buildResourceUri($domainModelObjectName, $identifier) {
-		return $this->uriBuilder
-				->reset()
-				->setCreateAbsoluteUri(TRUE)
-				->uriFor('show', array(
-					'dataType' => str_replace('\\', '_', $domainModelObjectName),
-					'identifier' => $identifier),
-				'RdfIdentity'); // TODO: we need some kind of Identity service later.
 	}
 }
 ?>

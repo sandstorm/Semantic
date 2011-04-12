@@ -11,3 +11,5 @@ Semantic:
       #  http://rdfs.org/sioc/ns#avatar
       #  http://rdfs.org/sioc/ns#creator_of
       #  http://rdfs.org/sioc/ns#related to
+  rdfa:
+    enable: true
