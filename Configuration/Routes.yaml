@@ -1,0 +1,31 @@
+#                                                                        #
+# Default subroutes configuration for the TYPO3 package                  #
+#                                                                        #
+
+# add the following to your global Routes.yaml:
+#-
+#  name: 'Subroutes of the Semantic Package'
+#  uriPattern: 'rdf/<SemanticSubroutes>'
+#  subRoutes:
+#    SemanticSubroutes:
+#      package: Semantic
+
+##
+# RDF data endpoint
+
+-
+  name: 'RDF Data'
+  uriPattern: 'data/{dataType}/{identifier}'
+  defaults:
+    '@package':    'Semantic'
+    '@controller': 'RdfData'
+    '@action':     'show'
+    '@format':     'nt'
+
+-
+  name: 'RDF Identity'
+  uriPattern: 'id/{dataType}/{identifier}'
+  defaults:
+    '@package':    'Semantic'
+    '@controller': 'RdfIdentity'
+    '@action':     'show'

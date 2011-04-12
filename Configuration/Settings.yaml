@@ -1,0 +1,13 @@
+Semantic:
+  PropertyMapping:
+    F3\Blog\Domain\Model\Post:
+      'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': 'http://rdfs.org/sioc/types#BlogPost'
+      properties:
+        content: 'http://rdfs.org/sioc/ns#content'
+        title: 'http://purl.org/dc/terms/title'
+        date: 'http://purl.org/dc/terms/created'
+        relatedPosts: 'http://rdfs.org/sioc/ns#related_to'
+      #  
+      #  http://rdfs.org/sioc/ns#avatar
+      #  http://rdfs.org/sioc/ns#creator_of
+      #  http://rdfs.org/sioc/ns#related to
