@@ -1,4 +1,8 @@
 Semantic:
+  namespaces:
+    sioc: 'http://rdfs.org/sioc/ns#'
+    dcterms: 'http://purl.org/dc/terms/'
+    sioctypes: 'http://rdfs.org/sioc/types#'
   PropertyMapping:
     F3\Blog\Domain\Model\Post:
       'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': 'http://rdfs.org/sioc/types#BlogPost'

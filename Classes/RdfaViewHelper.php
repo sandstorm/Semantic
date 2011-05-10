@@ -28,7 +28,7 @@ namespace F3\Semantic;
  */
 class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
-	protected $tagName = 'flow3:rdfa';
+	protected $tagName = 'span'; // TODO: use a different one later?
 
 	protected $settings;
 
@@ -50,7 +50,6 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 	 * @return string
 	 */
 	public function render($propertyPath) {
-		var_dump($propertyPath);
 		$propertyPathParts = explode('.', $propertyPath);
 
 		$propertyName = array_pop($propertyPathParts);
@@ -65,18 +64,33 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 			$rdfPredicate = $rdfSchema['properties'][$propertyName];
 		}
 
+		$rdfPredicate = $this->convertToCurie($rdfPredicate);
+
+
 		$innerContent = $this->renderChildren();
 
 		if ($rdfPredicate !== NULL && !is_object($innerContent)) { // TODO: hack to prevent conversion of f.e. DateTime
 			$this->tag->setContent($innerContent);
-			$this->tag->addAttribute('subject', $rdfSubject);
-			$this->tag->addAttribute('predicate', $rdfPredicate);
+			$this->tag->addAttribute('about', $rdfSubject);
+			$this->tag->addAttribute('xmlns:' . $rdfPredicate[0], $this->settings['namespaces'][$rdfPredicate[0]]);
+			$this->tag->addAttribute('property', implode(':', $rdfPredicate));
 			// TODO: handle the case that f.e. DateTime is shown, with "content"
 
 			return $this->tag->render();
 		} else {
 			return $innerContent;
 		}
+	}
+
+	protected function convertToCurie($rdfPredicate) {
+		foreach ($this->settings['namespaces'] as $prefix => $namespace) {
+			if (strpos($rdfPredicate, $namespace) === 0) {
+				// found correct predicate!
+				return array($prefix, substr($rdfPredicate, strlen($namespace)));
+			}
+		}
+		// Conversion not possible, returning NULL
+		return NULL;
 	}
 }
 ?>

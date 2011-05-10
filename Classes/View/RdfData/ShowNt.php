@@ -35,14 +35,13 @@ class ShowNt extends \F3\FLOW3\MVC\View\AbstractView {
 	protected $settings;
 
 	/**
-	 * @param array $settings 
+	 * @param array $settings
 	 */
 	public function injectSettings($settings) {
 		$this->settings = $settings;
 	}
 	public function render() {
-		//$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/n3;charset=utf-8');
-		$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/plain;charset=utf-8');
+		$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/rdf+n3;charset=utf-8');
 
 		$triples = $this->variables['triples'];
 		$output = '';
@@ -57,7 +56,7 @@ class ShowNt extends \F3\FLOW3\MVC\View\AbstractView {
 			} else {
 				$output .= $this->encodeDataPropertyAsString($triple->getObject());
 			}
-			
+
 			$output .= '.' . chr(10);
 
 		}
