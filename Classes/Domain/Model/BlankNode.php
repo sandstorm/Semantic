@@ -25,7 +25,7 @@ namespace F3\Semantic\Domain\Model;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-abstract class Resource {
-	abstract public function asN3();
+class BlankNode extends RdfNode {
+	// TODO
 }
 ?>

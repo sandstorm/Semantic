@@ -28,45 +28,60 @@ namespace F3\Semantic\Domain\Model;
 class Triple {
 
 	/**
-	 * @var UriReference
+	 * @var RdfNode
 	 */
 	protected $subject;
 
 	/**
-	 * @var UriReference
+	 * @var RdfNode
 	 */
 	protected $predicate;
 
 	/**
-	 * @var Resource
+	 * @var RdfNode
 	 */
 	protected $object;
 
-	public function __construct(UriReference $subject, UriReference $predicate, Resource $object) {
+	public function __construct(RdfNode $subject, RdfNode $predicate, RdfNode $object) {
 		$this->subject = $subject;
 		$this->predicate = $predicate;
 		$this->object = $object;
 	}
 	/**
 	 *
-	 * @return UriReference
+	 * @return RdfNode
 	 */
 	public function getSubject() {
 		return $this->subject;
 	}
 
 	/**
-	 * @return UriReference
+	 * @return RdfNode
 	 */
 	public function getPredicate() {
 		return $this->predicate;
 	}
 
 	/**
-	 * @return UriReference
+	 * @return RdfNode
 	 */
 	public function getObject() {
 		return $this->object;
+	}
+
+	public function equals(Triple $otherTriple) {
+		return ($otherTriple->getSubject()->equals($this->subject)
+			&& $otherTriple->getPredicate()->equals($this->predicate)
+			&& $otherTriple->getObject()->equals($this->object));
+	}
+	public function toString() {
+		$output = '';
+		$output .= $this->subject->toNT();
+		$output .= ' ';
+		$output .= $this->predicate->toNT();
+		$output .= ' ';
+		$output .= $this->object->toNT();
+		$output .= chr(10);
 	}
 
 }

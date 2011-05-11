@@ -25,51 +25,69 @@ namespace F3\Semantic\Domain\Model;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class Literal extends Resource {
+class Literal extends RdfNode {
+
+	/**
+	 * The value of the literal, is always a simple type.
+	 * @var mixed
+	 */
+	protected $nominalValue;
+
+	/**
+	 * @var NamedNode
+	 */
+	protected $dataType = NULL;
 
 	/**
 	 *
 	 * @var string
 	 */
-	protected $value;
+	protected $language;
 
 	/**
-	 * @var UriReference
+	 *
+	 * @param mixed $nominalValue
+	 * @param string $language
+	 * @param NamedNode $dataType
 	 */
-	protected $type = NULL;
-
-	/**
-	 * @param string $value
-	 */
-	public function __construct($value) {
-		if ($value instanceof \DateTime) {
-			$this->value = $value->format(\DateTime::W3C);
-			$this->type = new UriReference('http://www.w3.org/2001/XMLSchema#dateTime');
+	public function __construct($nominalValue, $language = NULL, NamedNode $dataType = NULL) {
+		if ($nominalValue instanceof \DateTime) {
+			$this->nominalValue = $nominalValue->format(\DateTime::W3C);
+			$this->dataType = new NamedNode('http://www.w3.org/2001/XMLSchema#dateTime');
 		} else {
-			$this->value = (string)$value;
+			$this->nominalValue = (string)$nominalValue;
+			$this->dataType = $dataType;
 		}
+		$this->language = $language;
 	}
 
 	/**
 	 * @return string
 	 * @api
 	 */
-	public function getValue() {
-		return $this->value;
+	public function getNominalValue() {
+		return $this->nominalValue;
 	}
 
-	public function getType() {
-		return $this->type;
+	public function getDataType() {
+		return $this->dataType;
 	}
 
-	public function asN3() {
-		$value = str_replace(array("\r\n", "\n"), '\n', $this->value);
-		$output = '"' . $value . '"';
+	public function toNT() {
+		$nominalValue = str_replace(array("\r\n", "\n"), '\n', $this->nominalValue);
+		$output = '"' . $nominalValue . '"';
 
-		if ($this->type !== NULL) {
-			$output .= '^^' . $this->type;
+		if ($this->dataType !== NULL) {
+			$output .= '^^' . $this->dataType;
 		}
 		return $output;
+	}
+
+	public function __toString() {
+		return (string)$this->nominalValue;
+	}
+
+	public function equals(RdfNode $other) {
 	}
 }
 ?>

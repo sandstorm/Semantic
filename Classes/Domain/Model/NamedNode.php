@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\View\RdfData;
+namespace F3\Semantic\Domain\Model;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -22,32 +22,64 @@ namespace F3\Semantic\View\RdfData;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Triple;
 /**
- *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class ShowNt extends \F3\FLOW3\MVC\View\AbstractView {
+class NamedNode extends RdfNode {
 
-	public function render() {
-		if ($this->controllerContext->getRequest()->hasArgument('asText')) {
-			$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/plain;charset=utf-8');
-		} else {
-			$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/rdf+n3;charset=utf-8');
+	/**
+	 * an IRI
+	 * @var string
+	 */
+	protected $nominalValue;
+
+	/**
+	 * @var string
+	 * @transient
+	 */
+	protected $settings;
+	/**
+	 * @param string $iri
+	 */
+	public function __construct($iri) {
+		$this->nominalValue = (string)$iri;
+		// TODO: check that $iri is really an IRI
+	}
+
+
+	/*public function initializeObject() {
+		if ($this->iri{0} === '[' && $this->iri{strlen($this->iri)-1} === ']') {
+			$curie = substr($this->iri, 1, -1);
+			list($prefix, $suffix) = explode(':', $curie, 2);
+
+			if (!isset($this->settings['namespaces'][$prefix])) {
+				throw new \Exception("TODO: Namespace not found");
+			}
+			$this->iri = $this->settings['namespaces'][$prefix] . $suffix;
 		}
+	}*/
 
-		$triples = $this->variables['triples'];
-		$output = '';
+	/**
+	 * @return string
+	 * @api
+	 */
+	public function getIri() {
+		return $this->nominalValue;
+	}
 
-		foreach ($triples as $triple) {
-			$output .= $triple->getSubject()->toNT();
-			$output .= ' ';
-			$output .= $triple->getPredicate()->toNT();
-			$output .= ' ';
-			$output .= $triple->getObject()->toNT();
-			$output .= '.' . chr(10);
-		}
-		return $output;
+	/**
+	 * @return string
+	 * @api
+	 */
+	public function __toString() {
+		return $this->getIri();
+	}
+
+	public function toNT() {
+		return '<' . $this->getUri() . '>';
+	}
+
+	public function equals(RdfNode $other) {
 	}
 }
 ?>

@@ -95,8 +95,8 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 		foreach ($rdfSchema['properties'] as $propertyName => $propertyConfiguration) {
 			$propertySchema = $schema->getProperty($propertyName);
-			
-			$rdfPredicate = new \F3\Semantic\Domain\Model\UriReference($propertyConfiguration['type']);
+
+			$rdfPredicate = new \F3\Semantic\Domain\Model\NamedNode($propertyConfiguration['type']);
 			switch ($propertySchema['type']) {
 				case 'string':
 				case 'DateTime':
@@ -122,8 +122,8 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 		$tripleContainer->add(new Triple(
 			$rdfSubject,
-			new \F3\Semantic\Domain\Model\UriReference('[rdf:type]'),
-			new \F3\Semantic\Domain\Model\UriReference($rdfSchema['type'])));
+			new \F3\Semantic\Domain\Model\NamedNode('[rdf:type]'),
+			new \F3\Semantic\Domain\Model\NamedNode($rdfSchema['type'])));
 
 
 		return $tripleContainer;

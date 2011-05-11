@@ -23,71 +23,33 @@ namespace F3\Semantic\Tests\Unit\Domain\Model;
  *                                                                        */
 
 use \F3\Semantic\Domain\Model\Literal;
-
+use \F3\Semantic\Domain\Model\Graph;
+use \F3\Semantic\Domain\Model\Triple;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class LiteralTest extends \F3\FLOW3\Tests\UnitTestCase {
+class GraphTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
 	 */
-	public function nominalValueCanBeSetInConstructor() {
-		$literal = new Literal('someString');
-		$this->assertEquals('someString', $literal->getNominalValue());
+	public function addExecutesTripleActions() {
+		$passedTriple = NULL;
+		$graph = new Graph(array(function($triple) use (&$passedTriple) {
+			$passedTriple = $triple;
+		}));
+
+		$mockTriple = $this->getMockTriple();
+		$returnValue = $graph->add($mockTriple);
+
+		$this->assertEquals($mockTriple, $passedTriple, 'Triple actions on add not executed.');
+		$this->assertSame($graph, $returnValue);
 	}
 
-	/**
-	 * @test
-	 */
-	public function valueOfTypeDateTimeSetsTheDataTypeAppropriately() {
-		$literal = new Literal(new \DateTime('2010-10-02T10:11:35+01:00'));
-		$this->assertEquals('2010-10-02T10:11:35+01:00', $literal->getNominalValue());
-		$this->assertEquals('http://www.w3.org/2001/XMLSchema#dateTime', (string)$literal->getDataType());
-	}
+	public function addActionAddsTheActionToTheListOfActions
 
-	/**
-	 * @test
-	 */
-	public function languageCanBeSetInConstructor() {
-		$this->markTestIncomplete('TODO');
-	}
-
-	/**
-	 * @test
-	 */
-	public function dataTypeCanBeSetInConstructor() {
-		$this->markTestIncomplete('TODO');
-	}
-
-	public function dataProviderForNT() {
-		return array(
-			array(
-				'title' => 'Simple Literal',
-				'literal' => 'my simple Literal',
-				'expected' => '"my simple Literal"'
-			),
-			array(
-				'title' => 'Literal with newlines',
-				'literal' => 'Literal' . "\r\n" . "\n" . 'with some text after two newlines.',
-				'expected' => '"Literal\n\nwith some text after two newlines."'
-			),
-
-			array(
-				'title' => 'Literal with Data Type',
-				'literal' => new \DateTime('2010-10-02T10:11:35+01:00'),
-				'expected' => '"2010-10-02T10:11:35+01:00"^^http://www.w3.org/2001/XMLSchema#dateTime'
-			),
-		);
-	}
-
-	/**
-	 * @test
-	 * @dataProvider dataProviderForNT
-	 */
-	public function toNTReturnsNT($title, $literal, $expected) {
-		$literal = new Literal($literal);
-		$this->assertEquals($expected, $literal->toNT(), $title);
+	protected function getMockTriple() {
+		return $this->getMock('F3\Semantic\Domain\Model\Triple', array(), array(), '', FALSE);
 	}
 }
 ?>

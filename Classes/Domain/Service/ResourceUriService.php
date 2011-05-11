@@ -42,7 +42,7 @@ class ResourceUriService {
 					'identifier' => $this->persistenceManager->getIdentifierByObject($domainObject)),
 				'RdfIdentity', 'Semantic'); // TODO: we need some kind of Identity service later.
 
-		return new \F3\Semantic\Domain\Model\UriReference($uri);
+		return new \F3\Semantic\Domain\Model\NamedNode($uri);
 	}
 }
 ?>

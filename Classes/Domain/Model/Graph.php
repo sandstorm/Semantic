@@ -25,11 +25,98 @@ namespace F3\Semantic\Domain\Model;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class TripleContainer implements \IteratorAggregate {
+class Graph implements \IteratorAggregate {
+
+	/**
+	 * A list of triple actions executed when a new triple is added
+	 * to the graph.
+	 *
+	 * @var array<\Closure>
+	 */
+	protected $actions = array();
+
+	/**
+	 *
+	 * @var array<Triple>
+	 */
 	protected $triples = array();
 
+
 	public function add(Triple $triple) {
-		$this->triples[] = $triple;
+		foreach ($this->actions as $tripleAction) {
+			$tripleAction($triple);
+		}
+
+		$this->triples[spl_object_hash($triple)] = $triple;
+
+		return $this;
+	}
+
+	public function addAction(\Closure $tripleAction, $run = FALSE) {
+		if ($run === TRUE) {
+			foreach ($this->triples as $triple) {
+				// TODO: This should be a *triple action*
+				$tripleAction($triple, $this);
+			}
+		}
+		$this->actions[] = $tripleAction;
+
+		return $this;
+	}
+
+	public function addAll(Graph $graph) {
+		foreach ($graph as $triple) {
+			$this->add($triple);
+		}
+	}
+
+	public function every(\Closure $tripleFilter) {
+		foreach ($this->triples as $triple) {
+			if ($tripleFilter[$triple] === FALSE) {
+				return FALSE;
+			}
+		}
+
+		return TRUE;
+	}
+
+	public function some(\Closure $tripleFilter) {
+		foreach ($this->triples as $triple) {
+			if ($tripleFilter[$triple]) {
+				return TRUE;
+			}
+		}
+
+		return FALSE;
+	}
+
+	public function filter(\Closure $tripleFilter) {
+		$newGraph = new Graph();
+
+		foreach ($this->triples as $triple) {
+			if ($tripleFilter[$triple]) {
+				$newGraph->add($triple);
+			}
+		}
+
+		return $newGraph;
+	}
+
+	public function toArray() {
+		return $this->triples;
+	}
+	// TODO: match
+
+	// TODO: merge
+
+	public function remove(Triple $tripleToRemove) {
+		unset($this->triples[spl_object_hash($tripleToRemove)]);
+
+		return $this;
+	}
+
+	public function getLength() {
+		return count($this->triples);
 	}
 
 	public function getIterator() {

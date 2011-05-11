@@ -25,59 +25,16 @@ namespace F3\Semantic\Domain\Model;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class UriReference extends Resource {
+abstract class RdfNode {
 
-	/**
-	 * @var string
-	 */
-	protected $uri;
 
-	/**
-	 * @var string
-	 * @transient
-	 */
-	protected $settings;
-	/**
-	 * @param string $uri
-	 */
-	public function __construct($uri) {
-		$this->uri = (string)$uri;
-	}
+	abstract public function toNT();
+	abstract public function __toString();
 
-	public function injectSettings($settings) {
-		$this->settings = $settings;
-	}
+	abstract public function equals(RdfNode $node);
+	//
 
-	public function initializeObject() {
-		if ($this->uri{0} === '[' && $this->uri{strlen($this->uri)-1} === ']') {
-			$curie = substr($this->uri, 1, -1);
-			list($prefix, $suffix) = explode(':', $curie, 2);
+	/**/
 
-			if (!isset($this->settings['namespaces'][$prefix])) {
-				throw new \Exception("TODO: Namespace not found");
-			}
-			$this->uri = $this->settings['namespaces'][$prefix] . $suffix;
-		}
-	}
-
-	/**
-	 * @return string
-	 * @api
-	 */
-	public function getUri() {
-		return $this->uri;
-	}
-
-	/**
-	 * @return string
-	 * @api
-	 */
-	public function __toString() {
-		return $this->getUri();
-	}
-
-	public function asN3() {
-		return '<' . $this->getUri() . '>';
-	}
 }
 ?>
