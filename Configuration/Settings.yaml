@@ -1,17 +1,23 @@
 Semantic:
   namespaces:
+    xs: 'http://www.w3.org/2001/XMLSchema#'
+    rdf: 'http://www.w3.org/1999/02/22-rdf-syntax-ns#'
     sioc: 'http://rdfs.org/sioc/ns#'
     dcterms: 'http://purl.org/dc/terms/'
     sioctypes: 'http://rdfs.org/sioc/types#'
   PropertyMapping:
     F3\Blog\Domain\Model\Post:
-      'http://www.w3.org/1999/02/22-rdf-syntax-ns#type': 'http://rdfs.org/sioc/types#BlogPost'
+      type: '[sioctypes:BlogPost]'
       properties:
-        content: 'http://rdfs.org/sioc/ns#content'
-        title: 'http://purl.org/dc/terms/title'
-        date: 'http://purl.org/dc/terms/created'
-        relatedPosts: 'http://rdfs.org/sioc/ns#related_to'
-      #  
+        content:
+          type: '[sioc:content]'
+        title:
+          type: '[dcterms:title]'
+        date:
+          type: '[dcterms:created]'
+        relatedPosts:
+          type: '[sioc:related_to]'
+      #
       #  http://rdfs.org/sioc/ns#avatar
       #  http://rdfs.org/sioc/ns#creator_of
       #  http://rdfs.org/sioc/ns#related to

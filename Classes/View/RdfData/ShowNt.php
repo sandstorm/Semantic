@@ -29,63 +29,25 @@ use \F3\Semantic\Domain\Model\Triple;
  */
 class ShowNt extends \F3\FLOW3\MVC\View\AbstractView {
 
-	/**
-	 * @var array
-	 */
-	protected $settings;
-
-	/**
-	 * @param array $settings
-	 */
-	public function injectSettings($settings) {
-		$this->settings = $settings;
-	}
 	public function render() {
-		//$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/rdf+n3;charset=utf-8');
-		$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/plain;charset=utf-8');
+		if ($this->controllerContext->getRequest()->hasArgument('asText')) {
+			$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/plain;charset=utf-8');
+		} else {
+			$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/rdf+n3;charset=utf-8');
+		}
 
 		$triples = $this->variables['triples'];
 		$output = '';
 
 		foreach ($triples as $triple) {
-			$output .= '<' . $triple->getSubject() . '>';
+			$output .= $triple->getSubject()->asN3();
 			$output .= ' ';
-			$output .= '<' . $triple->getPredicate() . '>';
+			$output .= $triple->getPredicate()->asN3();
 			$output .= ' ';
-			if ($this->isObjectProperty($triple->getObject())) {
-				$output .= '<' . $triple->getObject() . '>';
-			} else {
-				$output .= $this->encodeDataPropertyAsString($triple->getObject());
-			}
-
+			$output .= $triple->getObject()->asN3();
 			$output .= '.' . chr(10);
-
 		}
 		return $output;
-	}
-
-	// TODO: methode auslagern, verbessern!
-	protected function isObjectProperty($objectOrDataProperty) {
-		if (!is_string($objectOrDataProperty)) {
-			return FALSE;
-		}
-		$result = parse_url($objectOrDataProperty);
-		if ($result === FALSE) {
-			return FALSE;
-		} elseif (isset($result['scheme']) && $result['scheme'] === 'http') {
-			return TRUE;
-		} else {
-			return FALSE;
-		}
-	}
-
-	// TODO: Implement according to: http://www.w3.org/TR/rdf-testcases/#ntrip_strings
-	protected function encodeDataPropertyAsString($input) {
-		if ($input instanceof \DateTime) {
-			return '"' . $input->format(\DateTime::W3C) . '"^^<http://www.w3.org/2001/XMLSchema#dateTime>';
-		}
-		$input = str_replace(array("\r\n", "\n"), '\n', $input);
-		return '"' . $input . '"';
 	}
 }
 ?>

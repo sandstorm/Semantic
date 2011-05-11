@@ -25,49 +25,51 @@ namespace F3\Semantic\Domain\Model;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class Triple {
+class Literal extends Resource {
 
-	/**
-	 * @var UriReference
-	 */
-	protected $subject;
-
-	/**
-	 * @var UriReference
-	 */
-	protected $predicate;
-
-	/**
-	 * @var Resource
-	 */
-	protected $object;
-
-	public function __construct(UriReference $subject, UriReference $predicate, Resource $object) {
-		$this->subject = $subject;
-		$this->predicate = $predicate;
-		$this->object = $object;
-	}
 	/**
 	 *
-	 * @return UriReference
+	 * @var string
 	 */
-	public function getSubject() {
-		return $this->subject;
+	protected $value;
+
+	/**
+	 * @var UriReference
+	 */
+	protected $type = NULL;
+
+	/**
+	 * @param string $value
+	 */
+	public function __construct($value) {
+		if ($value instanceof \DateTime) {
+			$this->value = $value->format(\DateTime::W3C);
+			$this->type = new UriReference('http://www.w3.org/2001/XMLSchema#dateTime');
+		} else {
+			$this->value = (string)$value;
+		}
 	}
 
 	/**
-	 * @return UriReference
+	 * @return string
+	 * @api
 	 */
-	public function getPredicate() {
-		return $this->predicate;
+	public function getValue() {
+		return $this->value;
 	}
 
-	/**
-	 * @return UriReference
-	 */
-	public function getObject() {
-		return $this->object;
+	public function getType() {
+		return $this->type;
 	}
 
+	public function asN3() {
+		$value = str_replace(array("\r\n", "\n"), '\n', $this->value);
+		$output = '"' . $value . '"';
+
+		if ($this->type !== NULL) {
+			$output .= '^^' . $this->type;
+		}
+		return $output;
+	}
 }
 ?>

@@ -93,14 +93,16 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$tripleContainer = new \F3\Semantic\Domain\Model\TripleContainer();
 		$rdfSubject = $this->resourceUriService->buildResourceUri($object, $this->uriBuilder);
 
-		foreach ($rdfSchema['properties'] as $propertyName => $rdfPredicate) {
+		foreach ($rdfSchema['properties'] as $propertyName => $propertyConfiguration) {
 			$propertySchema = $schema->getProperty($propertyName);
+			
+			$rdfPredicate = new \F3\Semantic\Domain\Model\UriReference($propertyConfiguration['type']);
 			switch ($propertySchema['type']) {
 				case 'string':
 				case 'DateTime':
 					$rdfObject = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
 
-					$tripleContainer->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
+					$tripleContainer->add(new Triple($rdfSubject, $rdfPredicate, new \F3\Semantic\Domain\Model\Literal($rdfObject)));
 					break;
 				case 'Doctrine\Common\Collections\ArrayCollection':
 					$collection = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
@@ -118,11 +120,12 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 			}
 		}
 
-		unset($rdfSchema['properties']);
+		$tripleContainer->add(new Triple(
+			$rdfSubject,
+			new \F3\Semantic\Domain\Model\UriReference('[rdf:type]'),
+			new \F3\Semantic\Domain\Model\UriReference($rdfSchema['type'])));
 
-		foreach ($rdfSchema as $rdfPredicate => $rdfObject) {
-			$tripleContainer->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
-		}
+
 		return $tripleContainer;
 	}
 }

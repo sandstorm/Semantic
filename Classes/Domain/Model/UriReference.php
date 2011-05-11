@@ -25,49 +25,59 @@ namespace F3\Semantic\Domain\Model;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class Triple {
+class UriReference extends Resource {
 
 	/**
-	 * @var UriReference
+	 * @var string
 	 */
-	protected $subject;
+	protected $uri;
 
 	/**
-	 * @var UriReference
+	 * @var string
+	 * @transient
 	 */
-	protected $predicate;
-
+	protected $settings;
 	/**
-	 * @var Resource
+	 * @param string $uri
 	 */
-	protected $object;
-
-	public function __construct(UriReference $subject, UriReference $predicate, Resource $object) {
-		$this->subject = $subject;
-		$this->predicate = $predicate;
-		$this->object = $object;
-	}
-	/**
-	 *
-	 * @return UriReference
-	 */
-	public function getSubject() {
-		return $this->subject;
+	public function __construct($uri) {
+		$this->uri = (string)$uri;
 	}
 
-	/**
-	 * @return UriReference
-	 */
-	public function getPredicate() {
-		return $this->predicate;
+	public function injectSettings($settings) {
+		$this->settings = $settings;
+	}
+
+	public function initializeObject() {
+		if ($this->uri{0} === '[' && $this->uri{strlen($this->uri)-1} === ']') {
+			$curie = substr($this->uri, 1, -1);
+			list($prefix, $suffix) = explode(':', $curie, 2);
+
+			if (!isset($this->settings['namespaces'][$prefix])) {
+				throw new \Exception("TODO: Namespace not found");
+			}
+			$this->uri = $this->settings['namespaces'][$prefix] . $suffix;
+		}
 	}
 
 	/**
-	 * @return UriReference
+	 * @return string
+	 * @api
 	 */
-	public function getObject() {
-		return $this->object;
+	public function getUri() {
+		return $this->uri;
 	}
 
+	/**
+	 * @return string
+	 * @api
+	 */
+	public function __toString() {
+		return $this->getUri();
+	}
+
+	public function asN3() {
+		return '<' . $this->getUri() . '>';
+	}
 }
 ?>

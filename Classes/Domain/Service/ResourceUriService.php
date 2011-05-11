@@ -34,13 +34,15 @@ class ResourceUriService {
 	protected $persistenceManager;
 
 	public function buildResourceUri($domainObject, \F3\FLOW3\MVC\Web\Routing\UriBuilder $uriBuilder) {
-		return $uriBuilder
+		$uri = $uriBuilder
 				->reset()
 				->setCreateAbsoluteUri(TRUE)
 				->uriFor('show', array(
 					'dataType' => str_replace('\\', '_', get_class($domainObject)),
 					'identifier' => $this->persistenceManager->getIdentifierByObject($domainObject)),
 				'RdfIdentity', 'Semantic'); // TODO: we need some kind of Identity service later.
+
+		return new \F3\Semantic\Domain\Model\UriReference($uri);
 	}
 }
 ?>

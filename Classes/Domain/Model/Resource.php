@@ -25,49 +25,7 @@ namespace F3\Semantic\Domain\Model;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class Triple {
-
-	/**
-	 * @var UriReference
-	 */
-	protected $subject;
-
-	/**
-	 * @var UriReference
-	 */
-	protected $predicate;
-
-	/**
-	 * @var Resource
-	 */
-	protected $object;
-
-	public function __construct(UriReference $subject, UriReference $predicate, Resource $object) {
-		$this->subject = $subject;
-		$this->predicate = $predicate;
-		$this->object = $object;
-	}
-	/**
-	 *
-	 * @return UriReference
-	 */
-	public function getSubject() {
-		return $this->subject;
-	}
-
-	/**
-	 * @return UriReference
-	 */
-	public function getPredicate() {
-		return $this->predicate;
-	}
-
-	/**
-	 * @return UriReference
-	 */
-	public function getObject() {
-		return $this->object;
-	}
-
+abstract class Resource {
+	abstract public function asN3();
 }
 ?>
