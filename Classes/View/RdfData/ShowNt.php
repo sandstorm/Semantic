@@ -41,7 +41,8 @@ class ShowNt extends \F3\FLOW3\MVC\View\AbstractView {
 		$this->settings = $settings;
 	}
 	public function render() {
-		$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/rdf+n3;charset=utf-8');
+		//$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/rdf+n3;charset=utf-8');
+		$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/plain;charset=utf-8');
 
 		$triples = $this->variables['triples'];
 		$output = '';
