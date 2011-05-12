@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model;
+namespace F3\Semantic\Domain\Model\Rdf;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -55,22 +55,21 @@ class Literal extends RdfNode {
 			$this->nominalValue = $nominalValue->format(\DateTime::W3C);
 			$this->dataType = new NamedNode('http://www.w3.org/2001/XMLSchema#dateTime');
 		} else {
-			$this->nominalValue = (string)$nominalValue;
+			$this->nominalValue = $nominalValue;
 			$this->dataType = $dataType;
 		}
-		$this->language = $language;
-	}
 
-	/**
-	 * @return string
-	 * @api
-	 */
-	public function getNominalValue() {
-		return $this->nominalValue;
+		if ($language !== NULL) {
+			$this->language = strtolower($language);
+		}
 	}
 
 	public function getDataType() {
 		return $this->dataType;
+	}
+
+	public function getLanguage() {
+		return $this->language;
 	}
 
 	public function toNT() {
@@ -88,6 +87,27 @@ class Literal extends RdfNode {
 	}
 
 	public function equals(RdfNode $other) {
+		if (!$other instanceof Literal) {
+			return FALSE;
+		}
+
+		if ($other->getDataType() !== NULL && $this->dataType !== NULL) {
+			if (!$this->dataType->equals($other->getDataType())) {
+				return FALSE;
+			}
+		} elseif ($other->getDataType() === NULL && $this->dataType === NULL ) {
+			// OK; data types are equal
+		} else {
+			// One data type is NULL, the other one is non-null; so the Literals are not equal
+			return FALSE;
+		}
+
+		return ($other->valueOf() === $this->nominalValue
+			&& $other->getLanguage() === $this->language);
+	}
+
+	public function valueOf() {
+		return $this->nominalValue;
 	}
 }
 ?>

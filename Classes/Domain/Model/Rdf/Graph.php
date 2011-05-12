@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model;
+namespace F3\Semantic\Domain\Model\Rdf;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -44,7 +44,7 @@ class Graph implements \IteratorAggregate {
 
 	public function add(Triple $triple) {
 		foreach ($this->actions as $tripleAction) {
-			$tripleAction($triple);
+			$tripleAction($triple, $this);
 		}
 
 		$this->triples[spl_object_hash($triple)] = $triple;
@@ -55,7 +55,6 @@ class Graph implements \IteratorAggregate {
 	public function addAction(\Closure $tripleAction, $run = FALSE) {
 		if ($run === TRUE) {
 			foreach ($this->triples as $triple) {
-				// TODO: This should be a *triple action*
 				$tripleAction($triple, $this);
 			}
 		}
@@ -68,11 +67,12 @@ class Graph implements \IteratorAggregate {
 		foreach ($graph as $triple) {
 			$this->add($triple);
 		}
+		return $this;
 	}
 
 	public function every(\Closure $tripleFilter) {
 		foreach ($this->triples as $triple) {
-			if ($tripleFilter[$triple] === FALSE) {
+			if ($tripleFilter($triple) === FALSE) {
 				return FALSE;
 			}
 		}
@@ -82,7 +82,7 @@ class Graph implements \IteratorAggregate {
 
 	public function some(\Closure $tripleFilter) {
 		foreach ($this->triples as $triple) {
-			if ($tripleFilter[$triple]) {
+			if ($tripleFilter($triple)) {
 				return TRUE;
 			}
 		}
@@ -94,7 +94,7 @@ class Graph implements \IteratorAggregate {
 		$newGraph = new Graph();
 
 		foreach ($this->triples as $triple) {
-			if ($tripleFilter[$triple]) {
+			if ($tripleFilter($triple)) {
 				$newGraph->add($triple);
 			}
 		}
@@ -103,11 +103,8 @@ class Graph implements \IteratorAggregate {
 	}
 
 	public function toArray() {
-		return $this->triples;
+		return array_values($this->triples);
 	}
-	// TODO: match
-
-	// TODO: merge
 
 	public function remove(Triple $tripleToRemove) {
 		unset($this->triples[spl_object_hash($tripleToRemove)]);
@@ -120,7 +117,7 @@ class Graph implements \IteratorAggregate {
 	}
 
 	public function getIterator() {
-        return new \ArrayIterator($this->triples);
+        return new \ArrayIterator(array_values($this->triples));
     }
 }
 ?>

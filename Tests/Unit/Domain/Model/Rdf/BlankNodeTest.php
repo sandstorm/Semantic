@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Tests\Unit\Domain\Model;
+namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -22,64 +22,62 @@ namespace F3\Semantic\Tests\Unit\Domain\Model;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\UriReference;
+use \F3\Semantic\Domain\Model\Rdf\BlankNode;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @covers F3\Semantic\Domain\Model\Rdf\BlankNode
  */
-class UriReferenceTest extends \F3\FLOW3\Tests\UnitTestCase {
-
-	protected $mockSettings = array('namespaces' => array(
-		'sioc' => 'http://rdfs.org/sioc/ns#',
-		'dcterms' => 'http://purl.org/dc/terms/',
-		'sioctypes' => 'http://rdfs.org/sioc/types#'
-	));
+class BlankNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
 	 */
-	public function resourceUriCanBeSetInConstructor() {
-		$uriReference = new UriReference('http://foo.bar');
-		$this->assertEquals('http://foo.bar', $uriReference->getUri());
+	public function toNTReturnsNTriplesNotation() {
+		$blankNode = new BlankNode();
+		$this->assertStringStartsWith('_:b', $blankNode->toNT());
 	}
 
 	/**
 	 * @test
 	 */
-	public function curieEnclosedInBracketsCanBeSetInConstructor() {
-		$uriReference = new UriReference('[dcterms:title:a]');
-		$uriReference->injectSettings($this->mockSettings);
-		$uriReference->initializeObject();
-
-		$this->assertEquals('http://purl.org/dc/terms/title:a', $uriReference->getUri());
-	}
-
-	/**
-	 * @test
-	 * @expectedException \Exception
-	 */
-	public function curieEnclosedInBracketsThrowsExceptionIfPrefixNotFound() {
-		$uriReference = new UriReference('[someNonExistingPrefix:title:a]');
-		$uriReference->injectSettings($this->mockSettings);
-		$uriReference->initializeObject();
-
-		$this->assertEquals('http://purl.org/dc/terms/title:a', $uriReference->getUri());
+	public function toStringTest() {
+		$blankNode = new BlankNode();
+		$this->assertStringStartsWith('_:b', (string)$blankNode);
 	}
 
 	/**
 	 * @test
 	 */
-	public function toStringReturnsUri() {
-		$uriReference = new UriReference('http://foo.bar');
-		$this->assertEquals('http://foo.bar', (string)$uriReference);
+	public function valueOfReturnsValueStartingWithB() {
+		$blankNode = new BlankNode();
+		$this->assertStringStartsWith('b', $blankNode->valueOf());
 	}
 
 	/**
 	 * @test
 	 */
-	public function asN3ReturnsWrappedUri() {
-		$uriReference = new UriReference('http://foo.bar');
-		$this->assertEquals('<http://foo.bar>', $uriReference->asN3());
+	public function isEqualWithItself() {
+		$blankNode = new BlankNode();
+		$this->assertTrue($blankNode->equals($blankNode));
+	}
+
+	/**
+	 * @test
+	 */
+	public function isNotEqualWithAnotherBlankNode() {
+		$blankNode = new BlankNode();
+		$otherBlankNode = new BlankNode();
+		$this->assertFalse($blankNode->equals($otherBlankNode));
+	}
+
+	/**
+	 * @test
+	 */
+	public function isNotEqualWithANamedNode() {
+		$blankNode = new BlankNode();
+		$namedNode = new \F3\Semantic\Domain\Model\Rdf\NamedNode('http://foo.bar');
+		$this->assertFalse($blankNode->equals($namedNode));
 	}
 }
 ?>

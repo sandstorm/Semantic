@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model;
+namespace F3\Semantic\Domain\Model\Rdf;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -25,61 +25,81 @@ namespace F3\Semantic\Domain\Model;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class NamedNode extends RdfNode {
+class Triple {
 
 	/**
-	 * an IRI
-	 * @var string
+	 * @var RdfNode
 	 */
-	protected $nominalValue;
+	protected $subject;
 
 	/**
-	 * @var string
-	 * @transient
+	 * @var RdfNode
 	 */
-	protected $settings;
+	protected $predicate;
+
 	/**
-	 * @param string $iri
+	 * @var RdfNode
 	 */
-	public function __construct($iri) {
-		$this->nominalValue = (string)$iri;
-		// TODO: check that $iri is really an IRI
+	protected $object;
+
+	/**
+	 * @param RdfNode $subject
+	 * @param RdfNode $predicate
+	 * @param RdfNode $object
+	 */
+	public function __construct(RdfNode $subject, RdfNode $predicate, RdfNode $object) {
+		$this->subject = $subject;
+		$this->predicate = $predicate;
+		$this->object = $object;
 	}
-
-
-	/*public function initializeObject() {
-		if ($this->iri{0} === '[' && $this->iri{strlen($this->iri)-1} === ']') {
-			$curie = substr($this->iri, 1, -1);
-			list($prefix, $suffix) = explode(':', $curie, 2);
-
-			if (!isset($this->settings['namespaces'][$prefix])) {
-				throw new \Exception("TODO: Namespace not found");
-			}
-			$this->iri = $this->settings['namespaces'][$prefix] . $suffix;
-		}
-	}*/
-
 	/**
-	 * @return string
-	 * @api
+	 * @return RdfNode
 	 */
-	public function getIri() {
-		return $this->nominalValue;
+	public function getSubject() {
+		return $this->subject;
 	}
 
 	/**
+	 * @return RdfNode
+	 */
+	public function getPredicate() {
+		return $this->predicate;
+	}
+
+	/**
+	 * @return RdfNode
+	 */
+	public function getObject() {
+		return $this->object;
+	}
+
+	/**
+	 * @param Triple $otherTriple
+	 * @return boolean TRUE if $this equals $otherTriple, FALSE otherwise.
+	 */
+	public function equals(Triple $otherTriple) {
+		return ($otherTriple->getSubject()->equals($this->subject)
+			&& $otherTriple->getPredicate()->equals($this->predicate)
+			&& $otherTriple->getObject()->equals($this->object));
+	}
+
+	/**
+	 *Return the NTriples notation for this triple.
+	 *
 	 * @return string
-	 * @api
 	 */
 	public function __toString() {
-		return $this->getIri();
+		$output = '';
+		$output .= $this->subject->toNT();
+		$output .= ' ';
+		$output .= $this->predicate->toNT();
+		$output .= ' ';
+		$output .= $this->object->toNT();
+		$output .= '.';
+		$output .= chr(10);
+
+		return $output;
 	}
 
-	public function toNT() {
-		return '<' . $this->getUri() . '>';
-	}
-
-	public function equals(RdfNode $other) {
-	}
 }
 ?>

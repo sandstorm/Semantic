@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model;
+namespace F3\Semantic\Domain\Model\Rdf;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -25,7 +25,33 @@ namespace F3\Semantic\Domain\Model;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class BlankNode extends RdfNode {
-	// TODO
+abstract class RdfNode {
+
+	/**
+	 * Return the NTriples notation for this Node
+	 *
+	 * @return string
+	 */
+	abstract public function toNT();
+
+	/**
+	 * Return a string repesentation of this RDF Node.
+	 */
+	abstract public function __toString();
+
+	/**
+	 * Comparator.
+	 *
+	 * @param RdfNode $otherNode the oher node to test Equality with.
+	 * @return boolean TRUE if $otherNode equals $this, FALSE otherwise.
+	 */
+	abstract public function equals(RdfNode $otherNode);
+
+	/**
+	 * Return the internal value of this Node.
+	 *
+	 * @return mixed
+	 */
+	abstract public function valueOf();
 }
 ?>

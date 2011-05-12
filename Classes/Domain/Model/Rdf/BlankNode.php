@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model;
+namespace F3\Semantic\Domain\Model\Rdf;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -25,16 +25,56 @@ namespace F3\Semantic\Domain\Model;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-abstract class RdfNode {
+class BlankNode extends RdfNode {
 
+	/**
+	 * @var string
+	 */
+	protected $nominalValue;
 
-	abstract public function toNT();
-	abstract public function __toString();
+	/**
+	 * @test
+	 */
+	public function __construct() {
+		$this->nominalValue = uniqid('b', TRUE);
+	}
 
-	abstract public function equals(RdfNode $node);
-	//
+	/**
+	 * Return the NTriples notation for this Node
+	 *
+	 * @return string
+	 */
+	public function toNT() {
+		return '_:' . $this->nominalValue;
+	}
 
-	/**/
+	/**
+	 * Return a string repesentation of this RDF Node.
+	 */
+	public function __toString() {
+		return $this->toNT();
+	}
 
+	/**
+	 * Comparator.
+	 *
+	 * @param RdfNode $otherNode the oher node to test Equality with.
+	 * @return boolean TRUE if $otherNode equals $this, FALSE otherwise.
+	 */
+	public function equals(RdfNode $otherNode) {
+		if (!$otherNode instanceof BlankNode) {
+			return FALSE;
+		}
+		return $otherNode->valueOf() === $this->nominalValue;
+	}
+
+	/**
+	 * Return the internal value of this Node.
+	 *
+	 * @return mixed
+	 */
+	public function valueOf() {
+		return $this->nominalValue;
+	}
 }
 ?>

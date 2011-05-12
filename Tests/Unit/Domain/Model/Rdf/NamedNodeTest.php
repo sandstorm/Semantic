@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Tests\Unit\Domain\Model;
+namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -22,72 +22,57 @@ namespace F3\Semantic\Tests\Unit\Domain\Model;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Literal;
+use \F3\Semantic\Domain\Model\Rdf\NamedNode;
+use \F3\Semantic\Domain\Model\Rdf\Literal;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @covers F3\Semantic\Domain\Model\Rdf\NamedNode
  */
-class LiteralTest extends \F3\FLOW3\Tests\UnitTestCase {
+class NamedNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
 	 */
-	public function nominalValueCanBeSetInConstructor() {
-		$literal = new Literal('someString');
-		$this->assertEquals('someString', $literal->getNominalValue());
+	public function toStringReturnsUri() {
+		$namedNode = new NamedNode('http://foo.bar');
+		$this->assertEquals('http://foo.bar', (string)$namedNode);
+		$this->assertEquals('http://foo.bar', $namedNode->valueOf());
 	}
 
 	/**
 	 * @test
 	 */
-	public function valueOfTypeDateTimeSetsTheDataTypeAppropriately() {
-		$literal = new Literal(new \DateTime('2010-10-02T10:11:35+01:00'));
-		$this->assertEquals('2010-10-02T10:11:35+01:00', $literal->getNominalValue());
-		$this->assertEquals('http://www.w3.org/2001/XMLSchema#dateTime', (string)$literal->getDataType());
+	public function asNTReturnsUriEnclosedInBrackets() {
+		$namedNode = new NamedNode('http://foo.bar');
+		$this->assertEquals('<http://foo.bar>', $namedNode->toNT());
 	}
 
 	/**
 	 * @test
 	 */
-	public function languageCanBeSetInConstructor() {
-		$this->markTestIncomplete('TODO');
+	public function equalsReturnsTrueIfIriIsSame() {
+		$namedNode1 = new NamedNode('http://foo.bar');
+		$namedNode2 = new NamedNode('http://foo.bar');
+		$this->assertTrue($namedNode1->equals($namedNode2));
 	}
 
 	/**
 	 * @test
 	 */
-	public function dataTypeCanBeSetInConstructor() {
-		$this->markTestIncomplete('TODO');
-	}
-
-	public function dataProviderForNT() {
-		return array(
-			array(
-				'title' => 'Simple Literal',
-				'literal' => 'my simple Literal',
-				'expected' => '"my simple Literal"'
-			),
-			array(
-				'title' => 'Literal with newlines',
-				'literal' => 'Literal' . "\r\n" . "\n" . 'with some text after two newlines.',
-				'expected' => '"Literal\n\nwith some text after two newlines."'
-			),
-
-			array(
-				'title' => 'Literal with Data Type',
-				'literal' => new \DateTime('2010-10-02T10:11:35+01:00'),
-				'expected' => '"2010-10-02T10:11:35+01:00"^^http://www.w3.org/2001/XMLSchema#dateTime'
-			),
-		);
+	public function equalsReturnsFalseIfIriIsNotSame() {
+		$namedNode1 = new NamedNode('http://foo.bar');
+		$namedNode2 = new NamedNode('http://foo.bar#baz');
+		$this->assertFalse($namedNode1->equals($namedNode2));
 	}
 
 	/**
 	 * @test
-	 * @dataProvider dataProviderForNT
 	 */
-	public function toNTReturnsNT($title, $literal, $expected) {
-		$literal = new Literal($literal);
-		$this->assertEquals($expected, $literal->toNT(), $title);
+	public function equalsReturnsFalseComparedWithLiteral() {
+		$namedNode1 = new NamedNode('http://foo.bar');
+		$literal = new Literal('http://foo.bar');
+		$this->assertFalse($namedNode1->equals($literal));
 	}
 }
 ?>
