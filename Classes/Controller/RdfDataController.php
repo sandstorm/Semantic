@@ -22,7 +22,11 @@ namespace F3\Semantic\Controller;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Triple;
+use \F3\Semantic\Domain\Model\Rdf\Concept\Graph;
+use \F3\Semantic\Domain\Model\Rdf\Concept\NamedNode;
+use \F3\Semantic\Domain\Model\Rdf\Concept\Literal;
+use \F3\Semantic\Domain\Model\Rdf\Concept\Triple;
+
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
@@ -69,12 +73,12 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 			throw new \Exception("TODO: Data Type not found.");
 		}
 
-		$triples = $this->buildTriples($domainModelObjectName, $identifier);
+		$graph = $this->buildGraph($domainModelObjectName, $identifier);
 
-		$this->view->assign('triples', $triples);
+		$this->view->assign('graph', $graph);
 	}
 
-	protected function buildTriples($domainModelObjectName, $identifier) {
+	protected function buildGraph($domainModelObjectName, $identifier) {
 		$object = $this->persistenceManager->getObjectByIdentifier($identifier, $domainModelObjectName);
 		if ($object === NULL) {
 			throw new \Exception("TODO: Object not found.");
@@ -90,26 +94,26 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 			throw new \Exception("TODO: RDF Schema not found.");
 		}
 
-		$tripleContainer = new \F3\Semantic\Domain\Model\TripleContainer();
+		$rdfGraph = new Graph();
 		$rdfSubject = $this->resourceUriService->buildResourceUri($object, $this->uriBuilder);
 
 		foreach ($rdfSchema['properties'] as $propertyName => $propertyConfiguration) {
 			$propertySchema = $schema->getProperty($propertyName);
 
-			$rdfPredicate = new \F3\Semantic\Domain\Model\NamedNode($propertyConfiguration['type']);
+			$rdfPredicate = new NamedNode($propertyConfiguration['type']);
 			switch ($propertySchema['type']) {
 				case 'string':
 				case 'DateTime':
-					$rdfObject = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
+					$rdfObject = new Literal(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName));
 
-					$tripleContainer->add(new Triple($rdfSubject, $rdfPredicate, new \F3\Semantic\Domain\Model\Literal($rdfObject)));
+					$rdfGraph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
 					break;
 				case 'Doctrine\Common\Collections\ArrayCollection':
 					$collection = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
 					if (class_exists($propertySchema['elementType'])) {
 						foreach ($collection as $element) {
 							$rdfObject = $this->resourceUriService->buildResourceUri($element, $this->uriBuilder);
-							$tripleContainer->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
+							$rdfGraph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
 						}
 					} else {
 						throw new \Exception('Simple element collection types not yet supported!');
@@ -120,13 +124,13 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 			}
 		}
 
-		$tripleContainer->add(new Triple(
+		$rdfGraph->add(new Triple(
 			$rdfSubject,
-			new \F3\Semantic\Domain\Model\NamedNode('[rdf:type]'),
-			new \F3\Semantic\Domain\Model\NamedNode($rdfSchema['type'])));
+			new NamedNode('rdf:type'),
+			new NamedNode($rdfSchema['type'])));
 
 
-		return $tripleContainer;
+		return $rdfGraph;
 	}
 }
 ?>

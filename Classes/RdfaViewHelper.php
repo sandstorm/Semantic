@@ -39,7 +39,13 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 	protected $resourceUriService;
 
 	/**
-	 * @param array $settings 
+	 * @var F3\Semantic\Domain\Model\Rdf\Environment\ProfileInterface
+	 * @inject
+	 */
+	protected $profile;
+
+	/**
+	 * @param array $settings
 	 */
 	public function injectSettings($settings) {
 		$this->settings = $settings;
@@ -57,40 +63,30 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 
 		$object = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->templateVariableContainer, $objectPath);
 		$rdfSubject = $this->resourceUriService->buildResourceUri($object, $this->controllerContext->getUriBuilder());
-		
+
 		$rdfPredicate = NULL;
 		$rdfSchema = isset($this->settings['PropertyMapping'][get_class($object)]) ? $this->settings['PropertyMapping'][get_class($object)] : array();
 		if (isset($rdfSchema['properties'][$propertyName])) {
-			$rdfPredicate = $rdfSchema['properties'][$propertyName];
+			$rdfPredicate = new Domain\Model\Rdf\Concept\NamedNode($rdfSchema['properties'][$propertyName]['type']);
 		}
-
-		$rdfPredicate = $this->convertToCurie($rdfPredicate);
-
 
 		$innerContent = $this->renderChildren();
 
 		if ($rdfPredicate !== NULL && !is_object($innerContent)) { // TODO: hack to prevent conversion of f.e. DateTime
 			$this->tag->setContent($innerContent);
 			$this->tag->addAttribute('about', $rdfSubject);
-			$this->tag->addAttribute('xmlns:' . $rdfPredicate[0], $this->settings['namespaces'][$rdfPredicate[0]]);
-			$this->tag->addAttribute('property', implode(':', $rdfPredicate));
+
+			$curie = $this->profile->getPrefixes()->shrink((string)$rdfPredicate);
+			list($prefix, ) = explode(':', $curie, 2);
+
+			$this->tag->addAttribute('xmlns:' . $prefix, $this->profile->getPrefixes()->get($prefix));
+			$this->tag->addAttribute('property', $curie);
 			// TODO: handle the case that f.e. DateTime is shown, with "content"
 
 			return $this->tag->render();
 		} else {
 			return $innerContent;
 		}
-	}
-
-	protected function convertToCurie($rdfPredicate) {
-		foreach ($this->settings['namespaces'] as $prefix => $namespace) {
-			if (strpos($rdfPredicate, $namespace) === 0) {
-				// found correct predicate!
-				return array($prefix, substr($rdfPredicate, strlen($namespace)));
-			}
-		}
-		// Conversion not possible, returning NULL
-		return NULL;
 	}
 }
 ?>

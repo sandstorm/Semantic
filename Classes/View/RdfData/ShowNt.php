@@ -36,16 +36,11 @@ class ShowNt extends \F3\FLOW3\MVC\View\AbstractView {
 			$this->controllerContext->getResponse()->setHeader('Content-Type', 'text/rdf+n3;charset=utf-8');
 		}
 
-		$triples = $this->variables['triples'];
+		$graph = $this->variables['graph'];
 		$output = '';
 
-		foreach ($triples as $triple) {
-			$output .= $triple->getSubject()->toNT();
-			$output .= ' ';
-			$output .= $triple->getPredicate()->toNT();
-			$output .= ' ';
-			$output .= $triple->getObject()->toNT();
-			$output .= '.' . chr(10);
+		foreach ($graph as $triple) {
+			$output .= (string)$triple;
 		}
 		return $output;
 	}

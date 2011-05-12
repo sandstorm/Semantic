@@ -43,6 +43,9 @@ class PrefixMap {
 	}
 
 	public function resolve($curie) {
+		if (strpos($curie, ':') === FALSE) {
+			return NULL;
+		}
 		list($prefix, $suffix) = explode(':', $curie, 2);
 		if (!isset($this->prefixes[$prefix])) {
 			return NULL;

@@ -27,6 +27,9 @@ namespace F3\Semantic\Domain\Model\Rdf\Environment;
  */
 interface ProfileInterface {
 
+	/**
+	 * @return PrefixMap
+	 */
 	public function getPrefixes();
 
 	public function resolve($curieOrTerm);
