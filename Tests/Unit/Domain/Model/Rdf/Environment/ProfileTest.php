@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf;
+namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Environment;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -22,62 +22,52 @@ namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Rdf\BlankNode;
+use F3\Semantic\Domain\Model\Rdf\Environment\Profile;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers F3\Semantic\Domain\Model\Rdf\BlankNode
+ * @covers F3\Semantic\Domain\Model\Rdf\Environment\Profile
  */
-class BlankNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
+class ProfileTest extends \F3\FLOW3\Tests\UnitTestCase {
 
 	/**
-	 * @test
+	 *
+	 * @var Profile
 	 */
-	public function toNTReturnsNTriplesNotation() {
-		$blankNode = new BlankNode();
-		$this->assertStringStartsWith('_:b', $blankNode->toNT());
+	protected $profile;
+
+	protected $mockPrefixMap;
+
+	public function setUp() {
+		$this->profile = $this->getAccessibleMock('F3\Semantic\Domain\Model\Rdf\Environment\Profile', array('dummy'));
+
+		$this->mockPrefixMap = $this->getMock('F3\Semantic\Domain\Model\Rdf\Environment\PrefixMap');
+		$this->profile->_set('prefixes', $this->mockPrefixMap);
 	}
 
 	/**
 	 * @test
 	 */
-	public function toStringTest() {
-		$blankNode = new BlankNode();
-		$this->assertStringStartsWith('_:b', (string)$blankNode);
+	public function getPrefixesReturnsPrefixMap() {
+		$this->assertSame($this->mockPrefixMap, $this->profile->getPrefixes());
 	}
 
 	/**
 	 * @test
 	 */
-	public function valueOfReturnsValueStartingWithB() {
-		$blankNode = new BlankNode();
-		$this->assertStringStartsWith('b', $blankNode->valueOf());
+	public function resolveDispatchesToPrefixMap() {
+		$this->mockPrefixMap->expects($this->once())->method('resolve')->with('foo:bar')->will($this->returnValue('http://my.iri/bar'));
+
+		$this->assertSame('http://my.iri/bar', $this->profile->resolve('foo:bar'));
 	}
 
 	/**
 	 * @test
 	 */
-	public function isEqualWithItself() {
-		$blankNode = new BlankNode();
-		$this->assertTrue($blankNode->equals($blankNode));
-	}
+	public function setPrefixDispatchesToPrefixMap() {
+		$this->mockPrefixMap->expects($this->once())->method('set')->with('myPrefix', 'http://the.iri');
 
-	/**
-	 * @test
-	 */
-	public function isNotEqualWithAnotherBlankNode() {
-		$blankNode = new BlankNode();
-		$otherBlankNode = new BlankNode();
-		$this->assertFalse($blankNode->equals($otherBlankNode));
-	}
-
-	/**
-	 * @test
-	 */
-	public function isNotEqualWithANamedNode() {
-		$blankNode = new BlankNode();
-		$namedNode = new \F3\Semantic\Domain\Model\Rdf\NamedNode('http://foo.bar');
-		$this->assertFalse($blankNode->equals($namedNode));
+		$this->profile->setPrefix('myPrefix', 'http://the.iri');
 	}
 }
 ?>

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model\Rdf;
+namespace F3\Semantic\Domain\Model\Rdf\Concept;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -25,29 +25,19 @@ namespace F3\Semantic\Domain\Model\Rdf;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class NamedNode extends RdfNode {
+abstract class RdfNode {
 
 	/**
-	 * The IRI inside this NamedNode.
+	 * Return the NTriples notation for this Node
 	 *
-	 * @var string
+	 * @return string
 	 */
-	protected $nominalValue;
+	abstract public function toNT();
 
 	/**
-	 * @param string $iri
+	 * Return a string repesentation of this RDF Node.
 	 */
-	public function __construct($iri) {
-		$this->nominalValue = (string)$iri;
-		// TODO: check that $iri is really an IRI
-	}
-
-	/**
-	 * @return string the IRI of this node in NTriples notation
-	 */
-	public function toNT() {
-		return '<' . $this->nominalValue . '>';
-	}
+	abstract public function __toString();
 
 	/**
 	 * Comparator.
@@ -55,25 +45,13 @@ class NamedNode extends RdfNode {
 	 * @param RdfNode $otherNode the oher node to test Equality with.
 	 * @return boolean TRUE if $otherNode equals $this, FALSE otherwise.
 	 */
-	public function equals(RdfNode $other) {
-		if (!$other instanceof NamedNode) {
-			return FALSE;
-		}
-		return $other->valueOf() === $this->nominalValue;
-	}
+	abstract public function equals(RdfNode $otherNode);
 
 	/**
-	 * @return string the IRI for this NamedNode
+	 * Return the internal value of this Node.
+	 *
+	 * @return mixed
 	 */
-	public function valueOf() {
-		return $this->nominalValue;
-	}
-
-	/**
-	 * @return string the IRI of this node
-	 */
-	public function __toString() {
-		return $this->nominalValue;
-	}
+	abstract public function valueOf();
 }
 ?>

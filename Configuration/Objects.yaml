@@ -1,0 +1,2 @@
+F3\Semantic\Domain\Model\Rdf\Environment\ProfileInterface:
+  className: F3\Semantic\Domain\Model\Rdf\Environment\DefaultProfile

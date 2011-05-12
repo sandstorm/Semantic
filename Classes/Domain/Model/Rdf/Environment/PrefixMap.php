@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model\Rdf;
+namespace F3\Semantic\Domain\Model\Rdf\Environment;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -25,81 +25,39 @@ namespace F3\Semantic\Domain\Model\Rdf;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class Triple {
+class PrefixMap {
+	protected $prefixes = array();
 
-	/**
-	 * @var RdfNode
-	 */
-	protected $subject;
-
-	/**
-	 * @var RdfNode
-	 */
-	protected $predicate;
-
-	/**
-	 * @var RdfNode
-	 */
-	protected $object;
-
-	/**
-	 * @param RdfNode $subject
-	 * @param RdfNode $predicate
-	 * @param RdfNode $object
-	 */
-	public function __construct(RdfNode $subject, RdfNode $predicate, RdfNode $object) {
-		$this->subject = $subject;
-		$this->predicate = $predicate;
-		$this->object = $object;
+	public function get($prefix) {
+		if (!isset($this->prefixes[$prefix])) {
+			return NULL;
+		}
+		return $this->prefixes[$prefix];
 	}
-	/**
-	 * @return RdfNode
-	 */
-	public function getSubject() {
-		return $this->subject;
+	public function set($prefix, $iri) {
+		$this->prefixes[(string)$prefix] = (string)$iri;
 	}
 
-	/**
-	 * @return RdfNode
-	 */
-	public function getPredicate() {
-		return $this->predicate;
+	public function remove($prefix) {
+		unset($this->prefixes[$prefix]);
 	}
 
-	/**
-	 * @return RdfNode
-	 */
-	public function getObject() {
-		return $this->object;
+	public function resolve($curie) {
+		list($prefix, $suffix) = explode(':', $curie, 2);
+		if (!isset($this->prefixes[$prefix])) {
+			return NULL;
+		}
+		return $this->prefixes[$prefix] . $suffix;
 	}
 
-	/**
-	 * @param Triple $otherTriple
-	 * @return boolean TRUE if $this equals $otherTriple, FALSE otherwise.
-	 */
-	public function equals(Triple $otherTriple) {
-		return ($otherTriple->getSubject()->equals($this->subject)
-			&& $otherTriple->getPredicate()->equals($this->predicate)
-			&& $otherTriple->getObject()->equals($this->object));
+	public function shrink($iri) {
+		foreach ($this->prefixes as $prefix => $prefixIri) {
+			if (substr_compare($iri, $prefixIri, 0, strlen($prefixIri)) === 0) {
+				return $prefix . ':' . substr($iri, strlen($prefixIri));
+			}
+		}
+
+		return $iri;
 	}
-
-	/**
-	 *Return the NTriples notation for this triple.
-	 *
-	 * @return string
-	 */
-	public function __toString() {
-		$output = '';
-		$output .= $this->subject->toNT();
-		$output .= ' ';
-		$output .= $this->predicate->toNT();
-		$output .= ' ';
-		$output .= $this->object->toNT();
-		$output .= '.';
-		$output .= chr(10);
-
-		return $output;
-	}
-
 }
 ?>

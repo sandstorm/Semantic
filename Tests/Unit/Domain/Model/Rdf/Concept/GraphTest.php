@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf;
+namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -22,12 +22,12 @@ namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Rdf\Literal;
-use \F3\Semantic\Domain\Model\Rdf\Graph;
-use \F3\Semantic\Domain\Model\Rdf\Triple;
+use \F3\Semantic\Domain\Model\Rdf\Concept\Literal;
+use \F3\Semantic\Domain\Model\Rdf\Concept\Graph;
+use \F3\Semantic\Domain\Model\Rdf\Concept\Triple;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers F3\Semantic\Domain\Model\Rdf\Graph
+ * @covers F3\Semantic\Domain\Model\Rdf\Concept\Graph
  */
 class GraphTest extends \F3\FLOW3\Tests\UnitTestCase {
 
@@ -265,7 +265,7 @@ class GraphTest extends \F3\FLOW3\Tests\UnitTestCase {
 	}
 
 	protected function getMockTriple() {
-		return $this->getMock('F3\Semantic\Domain\Model\Rdf\Triple', array(), array(), '', FALSE);
+		return $this->getMock('F3\Semantic\Domain\Model\Rdf\Concept\Triple', array(), array(), '', FALSE);
 	}
 
 	protected function getMockTriples() {

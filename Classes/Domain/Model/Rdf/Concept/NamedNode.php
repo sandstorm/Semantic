@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model\Rdf;
+namespace F3\Semantic\Domain\Model\Rdf\Concept;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -25,19 +25,41 @@ namespace F3\Semantic\Domain\Model\Rdf;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-abstract class RdfNode {
+class NamedNode extends RdfNode {
 
 	/**
-	 * Return the NTriples notation for this Node
+	 * @var F3\Semantic\Domain\Model\Rdf\Environment\ProfileInterface
+	 * @inject
+	 */
+	protected $profile;
+
+	/**
+	 * The IRI inside this NamedNode.
 	 *
-	 * @return string
+	 * @var string
 	 */
-	abstract public function toNT();
+	protected $nominalValue;
 
 	/**
-	 * Return a string repesentation of this RDF Node.
+	 * @param string $iri
 	 */
-	abstract public function __toString();
+	public function __construct($iri) {
+		$this->nominalValue = (string)$iri;
+	}
+
+	public function initializeObject() {
+		$result = $this->profile->resolve($this->nominalValue);
+		if ($result !== NULL) {
+			$this->nominalValue = $result;
+		}
+	}
+
+	/**
+	 * @return string the IRI of this node in NTriples notation
+	 */
+	public function toNT() {
+		return '<' . $this->nominalValue . '>';
+	}
 
 	/**
 	 * Comparator.
@@ -45,13 +67,25 @@ abstract class RdfNode {
 	 * @param RdfNode $otherNode the oher node to test Equality with.
 	 * @return boolean TRUE if $otherNode equals $this, FALSE otherwise.
 	 */
-	abstract public function equals(RdfNode $otherNode);
+	public function equals(RdfNode $other) {
+		if (!$other instanceof NamedNode) {
+			return FALSE;
+		}
+		return $other->valueOf() === $this->nominalValue;
+	}
 
 	/**
-	 * Return the internal value of this Node.
-	 *
-	 * @return mixed
+	 * @return string the IRI for this NamedNode
 	 */
-	abstract public function valueOf();
+	public function valueOf() {
+		return $this->nominalValue;
+	}
+
+	/**
+	 * @return string the IRI of this node
+	 */
+	public function __toString() {
+		return $this->nominalValue;
+	}
 }
 ?>

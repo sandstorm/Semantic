@@ -1,3 +1,6 @@
+Implementation of: RDF Interfaces 1.0 Working Draft
+===================================================
+
 We implement the RDF Interfaces 1.0 Working Draft (10. May 2011) with the following modifications:
 
 * All readonly properties can only be set through the constructor.
@@ -25,6 +28,21 @@ We implement the RDF Interfaces 1.0 Working Draft (10. May 2011) with the follow
 * ... are not explicitely implemented; as this is just a special form of "Triple Callback". At all places where "Triple Actions" can
   be added in the specification, you can instead add "Triple Callbacks".
 
+3.2.1. Prefix Maps
+* TODO: implement "setDefault", "addAll"
+* the methods "get", "set" and "remove" exist explicitely; we could also use magic methods or ArrayAccess there... Not sure about what to use -- TODO
+
+3.2.2. Term Maps
+* TODO: NOT IMPLEMENTED FOR NOW
+
+3.2.3. Profiles
+* TODO: Term support not yet implemented
+* TODO: implement "importProfile, setDefaultPrefix, setDefaultVocabulary, setTerm"
+
+3.3.1. RDF Environment
+* We do NOT need support for all these *create*-Functions, as one should use Dependency Injection / new in our case.
+* That's why we do not have an implementation of "RDF Environment".
+
 1. Introduction
 1.1 Conformance
 2. RDF Concept Interfaces
@@ -44,9 +62,9 @@ We implement the RDF Interfaces 1.0 Working Draft (10. May 2011) with the follow
 3. RDF Environment Interfaces
 3.1 Overview
 3.2 Terms, Prefixes and Profiles
-3.2.1 Prefix Maps
-3.2.2 Term Maps
-3.2.3 Profiles
+3.2.1 Prefix Maps					OK
+3.2.2 Term Maps						NOT IMPLEMENTED YET
+3.2.3 Profiles						OK
 3.3 High level API
 3.3.1 RDF Environment
 4. RDF Data Interfaces
@@ -62,42 +80,12 @@ B.2 Informative references
 
 
 
+Further implementation notes
+============================
 
-
-
-	protected $mockSettings = array('namespaces' => array(
-		'sioc' => 'http://rdfs.org/sioc/ns#',
-		'dcterms' => 'http://purl.org/dc/terms/',
-		'sioctypes' => 'http://rdfs.org/sioc/types#'
-	));
-
-	/**
-	 * @test
-	 */
-	public function resourceUriCanBeSetInConstructor() {
-		$uriReference = new UriReference('http://foo.bar');
-		$this->assertEquals('http://foo.bar', $uriReference->getUri());
-	}
-
-	/**
-	 * @test
-	 */
-	public function curieEnclosedInBracketsCanBeSetInConstructor() {
-		$uriReference = new UriReference('[dcterms:title:a]');
-		$uriReference->injectSettings($this->mockSettings);
-		$uriReference->initializeObject();
-
-		$this->assertEquals('http://purl.org/dc/terms/title:a', $uriReference->getUri());
-	}
-
-	/**
-	 * @test
-	 * @expectedException \Exception
-	 */
-	public function curieEnclosedInBracketsThrowsExceptionIfPrefixNotFound() {
-		$uriReference = new UriReference('[someNonExistingPrefix:title:a]');
-		$uriReference->injectSettings($this->mockSettings);
-		$uriReference->initializeObject();
-
-		$this->assertEquals('http://purl.org/dc/terms/title:a', $uriReference->getUri());
-	}
+We have furthermore added Domain\Model\Rdf\Environment\DefaultProfile, which sets some
+default prefix mappings as specified by the standard, AND imports all namespaces from the
+Settings.
+This one is a SINGLETON, which is USED INSIDE NamedNode construction to expand CURIEs to IRIs.
+Thus, you can set CURIEs as well on NamedNode instances, which are then transparently converted
+to IRIs. This is an *addition* to the standard!

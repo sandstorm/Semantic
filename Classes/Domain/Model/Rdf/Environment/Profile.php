@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model\Rdf;
+namespace F3\Semantic\Domain\Model\Rdf\Environment;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -25,56 +25,24 @@ namespace F3\Semantic\Domain\Model\Rdf;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class BlankNode extends RdfNode {
+class Profile implements ProfileInterface {
 
 	/**
-	 * @var string
+	 * @var F3\Semantic\Domain\Model\Rdf\Environment\PrefixMap
+	 * @inject
 	 */
-	protected $nominalValue;
+	protected $prefixes;
 
-	/**
-	 * @test
-	 */
-	public function __construct() {
-		$this->nominalValue = uniqid('b', TRUE);
+	public function getPrefixes() {
+		return $this->prefixes;
 	}
 
-	/**
-	 * Return the NTriples notation for this Node
-	 *
-	 * @return string
-	 */
-	public function toNT() {
-		return '_:' . $this->nominalValue;
+	public function resolve($curieOrTerm) {
+		return $this->prefixes->resolve($curieOrTerm);
 	}
 
-	/**
-	 * Return a string repesentation of this RDF Node.
-	 */
-	public function __toString() {
-		return $this->toNT();
-	}
-
-	/**
-	 * Comparator.
-	 *
-	 * @param RdfNode $otherNode the oher node to test Equality with.
-	 * @return boolean TRUE if $otherNode equals $this, FALSE otherwise.
-	 */
-	public function equals(RdfNode $otherNode) {
-		if (!$otherNode instanceof BlankNode) {
-			return FALSE;
-		}
-		return $otherNode->valueOf() === $this->nominalValue;
-	}
-
-	/**
-	 * Return the internal value of this Node.
-	 *
-	 * @return mixed
-	 */
-	public function valueOf() {
-		return $this->nominalValue;
+	public function setPrefix($prefix, $iri) {
+		$this->prefixes->set($prefix, $iri);
 	}
 }
 ?>

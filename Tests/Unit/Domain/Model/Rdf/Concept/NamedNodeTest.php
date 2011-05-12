@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf;
+namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -22,12 +22,12 @@ namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Rdf\NamedNode;
-use \F3\Semantic\Domain\Model\Rdf\Literal;
+use \F3\Semantic\Domain\Model\Rdf\Concept\NamedNode;
+use \F3\Semantic\Domain\Model\Rdf\Concept\Literal;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers F3\Semantic\Domain\Model\Rdf\NamedNode
+ * @covers F3\Semantic\Domain\Model\Rdf\Concept\NamedNode
  */
 class NamedNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 
@@ -35,7 +35,7 @@ class NamedNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function toStringReturnsUri() {
-		$namedNode = new NamedNode('http://foo.bar');
+		$namedNode = $this->createNamedNode('http://foo.bar');
 		$this->assertEquals('http://foo.bar', (string)$namedNode);
 		$this->assertEquals('http://foo.bar', $namedNode->valueOf());
 	}
@@ -44,7 +44,7 @@ class NamedNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function asNTReturnsUriEnclosedInBrackets() {
-		$namedNode = new NamedNode('http://foo.bar');
+		$namedNode = $this->createNamedNode('http://foo.bar');
 		$this->assertEquals('<http://foo.bar>', $namedNode->toNT());
 	}
 
@@ -52,8 +52,8 @@ class NamedNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function equalsReturnsTrueIfIriIsSame() {
-		$namedNode1 = new NamedNode('http://foo.bar');
-		$namedNode2 = new NamedNode('http://foo.bar');
+		$namedNode1 = $this->createNamedNode('http://foo.bar');
+		$namedNode2 = $this->createNamedNode('http://foo.bar');
 		$this->assertTrue($namedNode1->equals($namedNode2));
 	}
 
@@ -61,8 +61,8 @@ class NamedNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function equalsReturnsFalseIfIriIsNotSame() {
-		$namedNode1 = new NamedNode('http://foo.bar');
-		$namedNode2 = new NamedNode('http://foo.bar#baz');
+		$namedNode1 = $this->createNamedNode('http://foo.bar');
+		$namedNode2 = $this->createNamedNode('http://foo.bar#baz');
 		$this->assertFalse($namedNode1->equals($namedNode2));
 	}
 
@@ -70,9 +70,41 @@ class NamedNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function equalsReturnsFalseComparedWithLiteral() {
-		$namedNode1 = new NamedNode('http://foo.bar');
+		$namedNode1 = $this->createNamedNode('http://foo.bar');
 		$literal = new Literal('http://foo.bar');
 		$this->assertFalse($namedNode1->equals($literal));
+	}
+
+	/**
+	 * @test
+	 */
+	public function conversionToIriIsAttemptedUsingInjectedProfile() {
+		$namedNode = $this->getAccessibleMock('F3\Semantic\Domain\Model\Rdf\Concept\NamedNode', array('dummy'), array('my:curie'));
+		$profile = $this->getMock('F3\Semantic\Domain\Model\Rdf\Environment\ProfileInterface');
+		$namedNode->_set('profile', $profile);
+
+		$profile->expects($this->once())->method('resolve')->with('my:curie')->will($this->returnValue('http://very.long/curie'));
+
+		$namedNode->initializeObject();
+		$this->assertEquals('http://very.long/curie', (string)$namedNode);
+	}
+
+	/**
+	 * @test
+	 */
+	public function ifCurieCouldNotBeResolvedIriIsUsedWithoutModification() {
+		$namedNode = $this->getAccessibleMock('F3\Semantic\Domain\Model\Rdf\Concept\NamedNode', array('dummy'), array('http://my.iri'));
+		$profile = $this->getMock('F3\Semantic\Domain\Model\Rdf\Environment\ProfileInterface');
+		$namedNode->_set('profile', $profile);
+
+		$profile->expects($this->once())->method('resolve')->with('http://my.iri')->will($this->returnValue(NULL));
+
+		$namedNode->initializeObject();
+		$this->assertEquals('http://my.iri', (string)$namedNode);
+	}
+
+	protected function createNamedNode($iri) {
+		return new NamedNode($iri);
 	}
 }
 ?>
