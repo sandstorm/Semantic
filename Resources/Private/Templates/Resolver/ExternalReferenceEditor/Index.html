@@ -1,4 +1,4 @@
-<div class="externalReference-placeholder">SomeText</div>
+<div class="externalReference-placeholder">{metadata.value}</div><input class="metadata" type="hidden" name="" value="{metadata.value}" />
 <f:if condition="{includeJs}">
 	<style>
 			/* simple css-based tooltip */
@@ -49,39 +49,59 @@
 						tooltip: "mouseenter,mouseleave"
 					}*/
 				});
-
-				var executeServerSideRequest = function(inputElement, popup) {
-					jQuery.post(widget_serverside_endpoint, {
-						search: inputElement.val()
-					}, function(results) {
-						results = eval(results);
-						var html = "";
-						results.forEach(function(result) {
-							var description = result.description;
-							if (description.length > 120) {
-								description = description.substr(0, 120) + '...';
-							}
-							html += '<div data-uri="' + result.uri + '">';
-							html += '<b>' + result.label + '</b>';
-							html += '<div class="description">' + description + '</div>';
-							html += '</div>';
-						});
-
-						popup.html(html);
-					});
-				};
 				jQuery(".externalReference-placeholder").each(function(index, element) {
 					var inputElement = jQuery(element).prev();
 					var timeoutId = null;
-					inputElement.keydown(function() {
+
+					var request = null;
+					var lastValue = null;
+					var executeServerSideRequest = function(inputElement, popup) {
+						if (inputElement.val() === lastValue) return;
+						lastValue = inputElement.val();
+						request = jQuery.post(widget_serverside_endpoint, {
+							search: inputElement.val()
+						}, function(results) {
+							request = null;
+							results = eval(results);
+							var html = "";
+							results.forEach(function(result) {
+								var description = result.description;
+								if (description.length > 120) {
+									description = description.substr(0, 120) + '...';
+								}
+								html += '<div class="result" data-uri="' + result.uri + '">';
+								html += '<b>' + result.label + '</b>';
+								html += '<div class="description">' + description + '</div>';
+								html += '</div>';
+							});
+
+							popup.html(html);
+						})
+					};
+
+					inputElement.keyup(function() {
 						window.clearTimeout(timeoutId);
+						if (request) request.abort();
 
 						timeoutId = window.setTimeout(function() {
 							executeServerSideRequest(inputElement, jQuery(element));
 						}, 500)
 
-					})
-				})
+					});
+
+					jQuery(".result", element).live('click', function() {
+						var clickedUri = jQuery(this).attr('data-uri');
+						var clickedLabel = jQuery('b', this).text();
+						var clickedDescription = jQuery('.description', this).text();
+
+						inputElement.val(clickedLabel);
+						var metadataField = jQuery(element).next();
+						metadataField.val(clickedUri);
+						var nameOfInputElement = inputElement.attr('name');
+						metadataField.attr('name',nameOfInputElement.substring(0, nameOfInputElement.length - 1) + '_metadata]');
+						console.log(clickedUri, clickedLabel, clickedDescription);
+					});
+				});
 			});
 		]]></script>
 </f:if>

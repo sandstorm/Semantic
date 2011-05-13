@@ -24,6 +24,7 @@ namespace F3\Semantic\Domain\Model;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
+ * @entity
  */
 class Metadata {
 
@@ -38,7 +39,7 @@ class Metadata {
 	protected $propertyName;
 
 	/**
-	 * @var mixed
+	 * @var string
 	 */
 	protected $value;
 

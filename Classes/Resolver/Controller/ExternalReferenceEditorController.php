@@ -34,14 +34,15 @@ class ExternalReferenceEditorController extends \F3\Fluid\Core\Widget\AbstractWi
 	public function indexAction() {
 		if (!self::$javaScriptAndCssAlreadyIncluded) $this->view->assign('includeJs', TRUE);
 		self::$javaScriptAndCssAlreadyIncluded = TRUE;
-		//return "foo";
+		$this->view->assign('metadata', $this->widgetConfiguration['metadata']);
+
 	}
 
 	/**
 	 * @param string $search
 	 */
 	public function autocompleteAction($search) {
-		$resolver = $this->objectManager->get($this->widgetConfiguration);
+		$resolver = $this->objectManager->get($this->widgetConfiguration['resolver']);
 		$results = $resolver->resolve($search);
 		return json_encode($results);
 	}

@@ -61,6 +61,10 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 		$propertyName = array_pop($propertyPathParts);
 		$objectPath = implode('.', $propertyPathParts);
 
+		$innerContent = $this->renderChildren();
+
+		if (strlen($objectPath) == 0) return $innerContent;
+
 		$object = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->templateVariableContainer, $objectPath);
 		$rdfSubject = $this->resourceUriService->buildResourceUri($object, $this->controllerContext->getUriBuilder());
 
@@ -69,8 +73,6 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 		if (isset($rdfSchema['properties'][$propertyName]['type'])) {  // TODO handle external references
 			$rdfPredicate = new Domain\Model\Rdf\Concept\NamedNode($rdfSchema['properties'][$propertyName]['type']);
 		}
-
-		$innerContent = $this->renderChildren();
 
 		if ($rdfPredicate !== NULL && !is_object($innerContent)) { // TODO: hack to prevent conversion of f.e. DateTime
 			$this->tag->setContent($innerContent);

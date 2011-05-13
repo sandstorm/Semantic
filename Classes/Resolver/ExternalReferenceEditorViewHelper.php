@@ -36,6 +36,18 @@ class ExternalReferenceEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWi
 	 */
 	protected $controller;
 
+	/**
+	 * @var F3\Semantic\Domain\Repository\MetadataRepository
+	 * @inject
+	 */
+	protected $metadataRepository;
+
+	/**
+	 * @var F3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @inject
+	 */
+	protected $persistenceManager;
+
 	protected $enabled = FALSE;
 
 	protected $resolverConfiguration = array();
@@ -60,11 +72,18 @@ class ExternalReferenceEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWi
 	}
 
 	public function getWidgetConfiguration() {
-		return $this->resolverConfiguration;
+		$metadata = NULL;
+		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+			$identifierOfObject = $this->persistenceManager->getIdentifierByObject($formObject);
+
+			$metadata = $this->metadataRepository->findByUuidAndPropertyName($identifierOfObject, $this->arguments['property'])->getFirst();
+		}
+		return array('resolver' => $this->resolverConfiguration, 'metadata' => $metadata);
 	}
 
 	/**
-	 * @param string $propertyPath
+	 * @param string $property
 	 * @return string
 	 */
 	public function render($property) {

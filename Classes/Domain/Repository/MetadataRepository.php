@@ -28,12 +28,11 @@ namespace F3\Semantic\Domain\Repository;
 class MetadataRepository extends \F3\FLOW3\Persistence\Repository {
 	public function findByUuidAndPropertyName($uuid, $propertyName) {
 		$query = $this->createQuery();
-		$query->and(
+		$query->matching($query->logicalAnd(
 			$query->equals('objectUuid', $uuid),
 			$query->equals('propertyName', $propertyName)
-		);
+		));
 		return $query->execute();
 	}
 }
-
 ?>
