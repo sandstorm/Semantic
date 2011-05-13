@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Aspect;
+namespace F3\Semantic\Resolver;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -25,31 +25,53 @@ namespace F3\Semantic\Aspect;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
- * @aspect
  */
-class TemplateViewNodeInterceptorAspect {
+class ExternalReferenceEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWidgetViewHelper {
+
+	protected $settings;
 
 	/**
-	 * @var \F3\Semantic\FluidInterceptor
+	 * @var F3\Semantic\Resolver\Controller\ExternalReferenceEditorController
 	 * @inject
 	 */
-	protected $rdfaInterceptor;
+	protected $controller;
+
+	protected $enabled = FALSE;
+
+	protected $resolverConfiguration = array();
+	/**
+	 * @param array $settings
+	 */
+	public function injectSettings($settings) {
+		$this->settings = $settings;
+	}
+
+	public function initialize() {
+		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+			$formObjectName = get_class($formObject);
+			if (isset($this->settings['PropertyMapping'][$formObjectName]['properties'][$this->arguments['property']]['externalResolver'])) {
+				$externalResolverConfiguration = $this->settings['PropertyMapping'][$formObjectName]['properties'][$this->arguments['property']]['externalResolver'];
+				$this->ajaxWidget = TRUE;
+				$this->enabled = TRUE;
+				$this->resolverConfiguration = $externalResolverConfiguration;
+			}
+		}
+	}
+
+	public function getWidgetConfiguration() {
+		return $this->resolverConfiguration;
+	}
 
 	/**
-	 * @var \F3\Semantic\Resolver\ExternalReferencesInterceptor
-	 * @inject
+	 * @param string $propertyPath
+	 * @return string
 	 */
-	protected $externalReferencesInterceptor;
+	public function render($property) {
+		if (!$this->enabled) return '';
 
-	/**
-	 * @afterreturning method(F3\Fluid\View\TemplateView->buildParserConfiguration()) && setting(Semantic.rdfa.enable)
-	 * @param \F3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
-	 * @return void
-	 */
-	public function addTemplateViewInterceptor(\F3\FLOW3\AOP\JoinPointInterface $joinPoint) {
-		$parserConfiguration = $joinPoint->getResult();
-		$parserConfiguration->addInterceptor($this->rdfaInterceptor);
-		$parserConfiguration->addInterceptor($this->externalReferencesInterceptor);
+		$response = $this->initiateSubRequest();
+		return $response->getContent();
 	}
 }
 ?>

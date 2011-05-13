@@ -15,6 +15,8 @@ Semantic:
           type: dcterms:created
         relatedPosts:
           type: sioc:related_to
+        author:
+          externalResolver: F3\Semantic\Resolver\DbpediaResolver
       #
       #  http://rdfs.org/sioc/ns#avatar
       #  http://rdfs.org/sioc/ns#creator_of

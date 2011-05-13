@@ -66,7 +66,7 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 
 		$rdfPredicate = NULL;
 		$rdfSchema = isset($this->settings['PropertyMapping'][get_class($object)]) ? $this->settings['PropertyMapping'][get_class($object)] : array();
-		if (isset($rdfSchema['properties'][$propertyName])) {
+		if (isset($rdfSchema['properties'][$propertyName]['type'])) {  // TODO handle external references
 			$rdfPredicate = new Domain\Model\Rdf\Concept\NamedNode($rdfSchema['properties'][$propertyName]['type']);
 		}
 

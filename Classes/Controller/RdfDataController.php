@@ -100,6 +100,9 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 		foreach ($rdfSchema['properties'] as $propertyName => $propertyConfiguration) {
 			$propertySchema = $schema->getProperty($propertyName);
 
+			if (!isset($propertyConfiguration['type'])) {
+				continue;
+			}
 			$rdfPredicate = new NamedNode($propertyConfiguration['type']);
 			switch ($propertySchema['type']) {
 				case 'string':

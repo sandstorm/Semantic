@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic;
+namespace F3\Semantic\Resolver;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -27,7 +27,7 @@ namespace F3\Semantic;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  * @scope singleton
  */
-class FluidInterceptor implements \F3\Fluid\Core\Parser\InterceptorInterface {
+class ExternalReferencesInterceptor implements \F3\Fluid\Core\Parser\InterceptorInterface {
 
 	/**
 	 * Is the interceptor enabled right now?
@@ -46,29 +46,20 @@ class FluidInterceptor implements \F3\Fluid\Core\Parser\InterceptorInterface {
 			return $node;
 		}
 
-		$subNode = $node;
-		// Hack for dealing with escape ViewHelper
-		if ($subNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode && $subNode->getUninitializedViewHelper() instanceof \F3\Fluid\ViewHelpers\EscapeViewHelper) {
-			$argumentsReflection = new \ReflectionProperty($subNode, 'arguments');
+
+		if ($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode && $node->getUninitializedViewHelper() instanceof \F3\Fluid\ViewHelpers\Form\TextfieldViewHelper) {
+			$argumentsReflection = new \ReflectionProperty($node, 'arguments');
 			$argumentsReflection->setAccessible(TRUE);
-			$arguments = $argumentsReflection->getValue($subNode);
-			$subNode = $arguments['value'];
-		}
+			$arguments = $argumentsReflection->getValue($node);
+			if (isset($arguments['property'])) {
+				$propertyNode = $arguments['property'];
 
-		if ($subNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode) {
-			$objectPathReflection = new \ReflectionProperty($subNode, 'objectPath');
-			$objectPathReflection->setAccessible(TRUE);
-			$objectPath = $objectPathReflection->getValue($subNode);
-
-			$newNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
-					new \F3\Semantic\RdfaViewHelper(),
-					array('propertyPath' => new \F3\Fluid\Core\Parser\SyntaxTree\TextNode($objectPath))
+				$newNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
+					new \F3\Semantic\Resolver\ExternalReferenceEditorViewHelper(),
+					array('property' => $propertyNode)
 				);
-
-			$newNode->addChildNode($node);
-			$node = $newNode;
-		} else {
-			// TODO: log!
+				$parsingState->getNodeFromStack()->addChildNode($newNode);
+			}
 		}
 		return $node;
 	}
@@ -80,7 +71,7 @@ class FluidInterceptor implements \F3\Fluid\Core\Parser\InterceptorInterface {
 	 */
 	public function getInterceptionPoints() {
 		return array(
-			\F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OBJECTACCESSOR
+			\F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER
 		);
 	}
 }

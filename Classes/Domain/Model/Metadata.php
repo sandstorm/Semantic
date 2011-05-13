@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Aspect;
+namespace F3\Semantic\Domain\Model;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -23,33 +23,45 @@ namespace F3\Semantic\Aspect;
  *                                                                        */
 
 /**
- *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
- * @aspect
  */
-class TemplateViewNodeInterceptorAspect {
+class Metadata {
 
 	/**
-	 * @var \F3\Semantic\FluidInterceptor
-	 * @inject
+	 * @var string
 	 */
-	protected $rdfaInterceptor;
+	protected $objectUuid;
 
 	/**
-	 * @var \F3\Semantic\Resolver\ExternalReferencesInterceptor
-	 * @inject
+	 * @var string
 	 */
-	protected $externalReferencesInterceptor;
+	protected $propertyName;
 
 	/**
-	 * @afterreturning method(F3\Fluid\View\TemplateView->buildParserConfiguration()) && setting(Semantic.rdfa.enable)
-	 * @param \F3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
-	 * @return void
+	 * @var mixed
 	 */
-	public function addTemplateViewInterceptor(\F3\FLOW3\AOP\JoinPointInterface $joinPoint) {
-		$parserConfiguration = $joinPoint->getResult();
-		$parserConfiguration->addInterceptor($this->rdfaInterceptor);
-		$parserConfiguration->addInterceptor($this->externalReferencesInterceptor);
+	protected $value;
+
+	public function getObjectUuid() {
+		return $this->objectUuid;
+	}
+	public function setObjectUuid($objectUuid) {
+		$this->objectUuid = $objectUuid;
+	}
+
+	public function getPropertyName() {
+		return $this->propertyName;
+	}
+	public function setPropertyName($propertyName) {
+		$this->propertyName = $propertyName;
+	}
+
+	public function getValue() {
+		return $this->value;
+	}
+
+	public function setValue($value) {
+		$this->value = $value;
 	}
 }
 ?>

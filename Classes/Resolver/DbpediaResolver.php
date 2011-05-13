@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Aspect;
+namespace F3\Semantic\Resolver;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -22,34 +22,26 @@ namespace F3\Semantic\Aspect;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
- * @aspect
+ * @scope singleton
  */
-class TemplateViewNodeInterceptorAspect {
+class DbpediaResolver {
+	public function resolve($query) {
+		$data = file_get_contents('http://lookup.dbpedia.org/api/search.asmx/PrefixSearch?QueryClass=Person&MaxHits=5&QueryString=' . urlencode($query));
+		$results = new \SimpleXMLElement($data);
 
-	/**
-	 * @var \F3\Semantic\FluidInterceptor
-	 * @inject
-	 */
-	protected $rdfaInterceptor;
-
-	/**
-	 * @var \F3\Semantic\Resolver\ExternalReferencesInterceptor
-	 * @inject
-	 */
-	protected $externalReferencesInterceptor;
-
-	/**
-	 * @afterreturning method(F3\Fluid\View\TemplateView->buildParserConfiguration()) && setting(Semantic.rdfa.enable)
-	 * @param \F3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
-	 * @return void
-	 */
-	public function addTemplateViewInterceptor(\F3\FLOW3\AOP\JoinPointInterface $joinPoint) {
-		$parserConfiguration = $joinPoint->getResult();
-		$parserConfiguration->addInterceptor($this->rdfaInterceptor);
-		$parserConfiguration->addInterceptor($this->externalReferencesInterceptor);
+		$processedResults = array();
+		foreach ($results as $result) {
+			$processedResults[] = array(
+				'label' => (string)$result->Label,
+				'uri' => (string)$result->URI,
+				'description' => (string)$result->Description
+			);
+		}
+		return $processedResults;
 	}
 }
 ?>
