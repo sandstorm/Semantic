@@ -66,6 +66,11 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 		if (strlen($objectPath) == 0) return $innerContent;
 
 		$object = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->templateVariableContainer, $objectPath);
+		if (!is_object($object)) {
+			// Could be that this is a simple value, and no object.
+			return $innerContent;
+		}
+
 		$rdfSubject = $this->resourceUriService->buildResourceUri($object, $this->controllerContext->getUriBuilder());
 
 		$rdfPredicate = NULL;

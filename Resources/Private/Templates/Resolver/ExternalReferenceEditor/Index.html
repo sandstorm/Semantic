@@ -1,107 +1,179 @@
-<div class="externalReference-placeholder">{metadata.value}</div><input class="metadata" type="hidden" name="" value="{metadata.value}" />
+<div class="semantic-rdf-reference">
+	<img src="{f:uri.resource(path:'link.png')}" />
+	<div class="semantic-rdf-tooltip"></div>
+
+	<div class="semantic-rdf-reference-searchResults"></div>
+	<input class="semantic-rdf-reference-metadata" type="hidden" name="" value="{metadata.value}" />
+</div>
 <f:if condition="{includeJs}">
-	<style>
-			/* simple css-based tooltip */
-.externalReference-placeholder {
-	background-color:#000;
-	border:1px solid #fff;
-	padding:10px 15px;
-	width:250px;
-	min-height:100px;
+<style>
+
+/* Top Container */
+.semantic-rdf-reference {
+	display:inline;
+}
+/* Tooltip showing the RDF link */
+.semantic-rdf-tooltip {
+	position:relative;
+	padding:15px;
+	margin:1em 0 3em;
+	border:5px solid #70706C;
+	color:white;
+	background:#70706C;
+	min-width:300px;
+
+	-webkit-border-radius:10px;
+	-moz-border-radius:10px;
+	border-radius:10px;
+
 	display:none;
-	color:#fff;
+}
+
+.semantic-rdf-tooltip:before {
+	content:"";
+	position:absolute;
+    border-style:solid;
+    /* reduce the damage in FF3.0 */
+    display:block;
+    width:0;
+
+	top:10px; /* controls vertical position */
+	bottom:auto;
+	left:-30px; /* value = - border-left-width - border-right-width */
+	border-width:15px 30px 15px 0;
+	border-color:transparent #70706C;
+}
+.semantic-rdf-reference-searchResults {
+	display:none;
+	background-color: #000;
+	padding: 0;
+	width:250px;
+	min-height: 100px;
 	text-align:left;
-	overflow:hidden;
+	overflow: hidden;
 	font-size:12px;
-
-	/* outline radius for mozilla/firefox only */
-	-moz-box-shadow:0 0 10px #000;
-	-webkit-box-shadow:0 0 10px #000;
+	color: white;
 }
-
-.externalReference-placeholder div:hover {
-	background-color:#444;
+.semantic-rdf-reference-searchResults .result {
+	padding:5px;
 }
-.externalReference-placeholder .description {
-	color: #ccc;
-	font-size:8px;
+.semantic-rdf-reference-searchResults .result:hover {
+	background-color: #444;
 }
-		</style>
-	<script>
-			widget_serverside_endpoint = '{f:uri.widget(action:"autocomplete", ajax: 1)}';
-				<![CDATA[
-			jQuery(document).ready(function() {
-				jQuery(".externalReference-placeholder").prev().tooltip({
-					// place tooltip on the right edge
-					position: "center right",
-					// a little tweaking of the position
-					//offset: [-2, 10],
-					// use the built-in fadeIn/fadeOut effect
-					effect: "fade",
-					// custom opacity setting
-					opacity: 0.7,
-					relative: true,
-					delay: 1000000
-					/*events: {
-						def:     "mouseenter,mouseleave",
-						input:   "focus,blur",
-						widget:  "focus mouseenter,blur mouseleave",
-						tooltip: "mouseenter,mouseleave"
-					}*/
-				});
-				jQuery(".externalReference-placeholder").each(function(index, element) {
-					var inputElement = jQuery(element).prev();
-					var timeoutId = null;
+.semantic-rdf-reference-searchResults .description {
+	font-size:9px;
+}
+</style>
+<script>
+widget_serverside_endpoint = '{f:uri.widget(action:"autocomplete", ajax: 1)}';
+//<![CDATA[
+jQuery(document).ready(function() {
+	jQuery(".semantic-rdf-reference").each(function(index, element) {
+		var tooltipImg = jQuery('img', element),
+			tooltip = jQuery('.semantic-rdf-tooltip', element),
+			searchResults = jQuery('.semantic-rdf-reference-searchResults', element),
+			metadataField = jQuery('.semantic-rdf-reference-metadata', element),
+			inputElement = jQuery(element).prev();
 
-					var request = null;
-					var lastValue = null;
-					var executeServerSideRequest = function(inputElement, popup) {
-						if (inputElement.val() === lastValue) return;
-						lastValue = inputElement.val();
-						request = jQuery.post(widget_serverside_endpoint, {
-							search: inputElement.val()
-						}, function(results) {
-							request = null;
-							results = eval(results);
-							var html = "";
-							results.forEach(function(result) {
-								var description = result.description;
-								if (description.length > 120) {
-									description = description.substr(0, 120) + '...';
-								}
-								html += '<div class="result" data-uri="' + result.uri + '">';
-								html += '<b>' + result.label + '</b>';
-								html += '<div class="description">' + description + '</div>';
-								html += '</div>';
-							});
+		/* Tooltip Image */
+		tooltipImg.tooltip({
+			relative: true,
+			position: "center right",
+			offset: [-15, 25],
+			effect: 'fade',
+			onBeforeShow: function() {
+				if (metadataField.val()) {
+					this.getTip().html(metadataField.val() + '<a href="#">Delete</a>');
+				} else {
+					this.getTip().html('No metadata attached');
+				}
+				return true;
+			}
+		});
 
-							popup.html(html);
-						})
-					};
+		inputElement.tooltip({
+			tip: searchResults,
+			position: "center right",
+			relative: true,
+			delay: 500,
+			effect: 'fade',
+			onBeforeShow: function() {
+				if (this.getTip().data('results')) {
+					return true;
+				}
+				return false;
+			}
+		});
 
-					inputElement.keyup(function() {
-						window.clearTimeout(timeoutId);
-						if (request) request.abort();
-
-						timeoutId = window.setTimeout(function() {
-							executeServerSideRequest(inputElement, jQuery(element));
-						}, 500)
-
+		var timeoutId = null;
+		var request = null;
+		var lastValue = null;
+		var executeServerSideRequest = function(inputElement, popup) {
+			if (inputElement.val() === lastValue) return;
+			lastValue = inputElement.val();
+			request = jQuery.post(widget_serverside_endpoint, {
+					search: inputElement.val()
+				}, function(results) {
+					request = null;
+					results = eval(results);
+					var html = "";
+					results.forEach(function(result) {
+						var description = result.description;
+						if (description.length > 120) {
+							description = description.substr(0, 120) + '...';
+						}
+						html += '<div class="result" data-uri="' + result.uri + '">';
+						html += '<b>' + result.label + '</b>';
+						html += '<div class="description">' + description + '</div>';
+						html += '</div>';
 					});
-
-					jQuery(".result", element).live('click', function() {
-						var clickedUri = jQuery(this).attr('data-uri');
-						var clickedLabel = jQuery('b', this).text();
-						var clickedDescription = jQuery('.description', this).text();
-
-						inputElement.val(clickedLabel);
-						var metadataField = jQuery(element).next();
-						metadataField.val(clickedUri);
-						var nameOfInputElement = inputElement.attr('name');
-						metadataField.attr('name',nameOfInputElement.substring(0, nameOfInputElement.length - 1) + '_metadata]');
-						console.log(clickedUri, clickedLabel, clickedDescription);
-					});
+					searchResults.html(html);
+					searchResults.data('results', true);
+					inputElement.data('tooltip').show();
 				});
-			});
-		]]></script>
+			};
+
+		inputElement.keyup(function() {
+			window.clearTimeout(timeoutId);
+			if (request) request.abort();
+
+			timeoutId = window.setTimeout(function() {
+				executeServerSideRequest(inputElement, jQuery(element));
+			}, 500);
+		});
+
+		jQuery(".result", searchResults).live('click', function() {
+			var clickedUri = jQuery(this).attr('data-uri');
+			var clickedLabel = jQuery('b', this).text();
+
+			inputElement.val(clickedLabel);
+			metadataField.val(clickedUri);
+			metadataField.trigger('change');
+			var nameOfInputElement = inputElement.attr('name');
+			metadataField.attr('name',nameOfInputElement.substring(0, nameOfInputElement.length - 1) + '_metadata]');
+		});
+
+		// Click of "Delete" link
+		jQuery('a', tooltip).live('click', function(e) {
+			e.preventDefault();
+			metadataField.val('');
+			metadataField.trigger('change');
+			var nameOfInputElement = inputElement.attr('name');
+			metadataField.attr('name',nameOfInputElement.substring(0, nameOfInputElement.length - 1) + '_metadata]');
+			tooltip.html('No metadata attached');
+		});
+
+		var refreshTooltipImg = function() {
+			if (metadataField.val() == '') {
+				tooltipImg.css('opacity', 0.6);
+			} else {
+				tooltipImg.css('opacity', 1);
+			}
+		};
+		metadataField.change(refreshTooltipImg);
+
+		refreshTooltipImg();
+	});
+});
+//]]></script>
 </f:if>

@@ -80,7 +80,10 @@ class PersistentObjectConverter extends \F3\FLOW3\Property\TypeConverter\Persist
 				$uuid = $this->persistenceManager->getIdentifierByObject($object);
 				$propertyName = $matches[1];
 				$metadata = $this->metadataRepository->findByUuidAndPropertyName($uuid, $propertyName)->getFirst();
-				if ($metadata === NULL) {
+
+				if ($value == '' && $metadata !== NULL) {
+					$this->metadataRepository->remove($metadata);
+				} elseif ($metadata === NULL) {
 					$metadata = new Metadata();
 					$metadata->setObjectUuid($uuid);
 					$metadata->setPropertyName($propertyName);
