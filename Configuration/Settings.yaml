@@ -3,6 +3,7 @@ Semantic:
     sioc: 'http://rdfs.org/sioc/ns#'
     dcterms: 'http://purl.org/dc/terms/'
     sioctypes: 'http://rdfs.org/sioc/types#'
+    foaf: 'http://xmlns.com/foaf/0.1/'
   PropertyMapping:
     F3\Blog\Domain\Model\Post:
       type: sioctypes:BlogPost
@@ -16,6 +17,7 @@ Semantic:
         relatedPosts:
           type: sioc:related_to
         author:
+          type: foaf:maker
           externalResolver: F3\Semantic\Resolver\DbpediaResolver
       #
       #  http://rdfs.org/sioc/ns#avatar

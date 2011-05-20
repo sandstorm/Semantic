@@ -45,6 +45,12 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 	protected $profile;
 
 	/**
+	 * @var F3\Semantic\Domain\Repository\MetadataRepository
+	 * @inject
+	 */
+	protected $metadataRepository;
+
+	/**
 	 * @param array $settings
 	 */
 	public function injectSettings($settings) {
@@ -78,6 +84,13 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 		if (isset($rdfSchema['properties'][$propertyName]['type'])) {  // TODO handle external references
 			$rdfPredicate = new Domain\Model\Rdf\Concept\NamedNode($rdfSchema['properties'][$propertyName]['type']);
 		}
+
+		$possibleRdfMetadata = $this->metadataRepository->findOneByObjectAndPropertyName($object, $propertyName);
+		if ($possibleRdfMetadata) {
+			$value = $possibleRdfMetadata->getValue();
+			$this->tag->addAttribute('content', $value);
+		}
+
 
 		if ($rdfPredicate !== NULL && !is_object($innerContent)) { // TODO: hack to prevent conversion of f.e. DateTime
 			$this->tag->setContent($innerContent);

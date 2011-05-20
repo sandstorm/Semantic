@@ -26,13 +26,25 @@ namespace F3\Semantic\Domain\Repository;
  * @scope singleton
  */
 class MetadataRepository extends \F3\FLOW3\Persistence\Repository {
-	public function findByUuidAndPropertyName($uuid, $propertyName) {
+
+	/**
+	 * @var F3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @inject
+	 */
+	protected $persistenceManager;
+
+	public function findOneByObjectAndPropertyName($object, $propertyName) {
+		$uuid = $this->persistenceManager->getIdentifierByObject($object);
+		return $this->findOneByUuidAndPropertyName($uuid, $propertyName);
+	}
+
+	public function findOneByUuidAndPropertyName($uuid, $propertyName) {
 		$query = $this->createQuery();
 		$query->matching($query->logicalAnd(
 			$query->equals('objectUuid', $uuid),
 			$query->equals('propertyName', $propertyName)
 		));
-		return $query->execute();
+		return $query->execute()->getFirst();
 	}
 }
 ?>

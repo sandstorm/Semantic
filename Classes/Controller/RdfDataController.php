@@ -59,6 +59,12 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 	protected $resourceUriService;
 
 	/**
+	 * @var F3\Semantic\Domain\Repository\MetadataRepository
+	 * @inject
+	 */
+	protected $metadataRepository;
+
+	/**
 	 * Default action of the backend controller.
 	 *
 	 * @param string $dataType
@@ -104,6 +110,14 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 				continue;
 			}
 			$rdfPredicate = new NamedNode($propertyConfiguration['type']);
+
+			$possibleRdfMetadata = $this->metadataRepository->findOneByUuidAndPropertyName($identifier, $propertyName);
+			if ($possibleRdfMetadata) {
+				$rdfObject = new NamedNode($possibleRdfMetadata->getValue());
+				$rdfGraph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
+				continue;
+			}
+
 			switch ($propertySchema['type']) {
 				case 'string':
 				case 'DateTime':
