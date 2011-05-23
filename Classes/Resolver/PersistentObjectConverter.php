@@ -22,7 +22,7 @@ namespace F3\Semantic\Resolver;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use F3\Semantic\Domain\Model\Metadata;
+use F3\Semantic\Domain\Model\ExternalReference;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
@@ -32,10 +32,10 @@ class PersistentObjectConverter extends \F3\FLOW3\Property\TypeConverter\Persist
 	protected $priority = 10;
 
 	/**
-	 * @var F3\Semantic\Domain\Repository\MetadataRepository
+	 * @var F3\Semantic\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
-	protected $metadataRepository;
+	protected $externalReferenceRepository;
 
 	/**
 	 * @var F3\FLOW3\Persistence\PersistenceManagerInterface
@@ -79,18 +79,18 @@ class PersistentObjectConverter extends \F3\FLOW3\Property\TypeConverter\Persist
 			if (preg_match('/^(.*)_metadata$/', $key, $matches)) {
 				$uuid = $this->persistenceManager->getIdentifierByObject($object);
 				$propertyName = $matches[1];
-				$metadata = $this->metadataRepository->findOneByUuidAndPropertyName($uuid, $propertyName)->getFirst();
+				$externalReference = $this->externalReferenceRepository->findOneByUuidAndPropertyName($uuid, $propertyName);
 
-				if ($value == '' && $metadata !== NULL) {
-					$this->metadataRepository->remove($metadata);
-				} elseif ($metadata === NULL) {
-					$metadata = new Metadata();
-					$metadata->setObjectUuid($uuid);
-					$metadata->setPropertyName($propertyName);
+				if ($value == '' && $externalReference !== NULL) {
+					$this->externalReferenceRepository->remove($externalReference);
+				} elseif ($externalReference === NULL) {
+					$externalReference = new ExternalReference();
+					$externalReference->setObjectUuid($uuid);
+					$externalReference->setPropertyName($propertyName);
 
-					$this->metadataRepository->add($metadata);
+					$this->externalReferenceRepository->add($externalReference);
 				}
-				$metadata->setValue($value);
+				$externalReference->setValue($value);
 			}
 		}
 

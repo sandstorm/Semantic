@@ -25,7 +25,7 @@ namespace F3\Semantic\Domain\Repository;
 /**
  * @scope singleton
  */
-class MetadataRepository extends \F3\FLOW3\Persistence\Repository {
+class ExternalReferenceRepository extends \F3\FLOW3\Persistence\Repository {
 
 	/**
 	 * @var F3\FLOW3\Persistence\PersistenceManagerInterface

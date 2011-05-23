@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model;
+namespace F3\Semantic\Schema;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -23,46 +23,9 @@ namespace F3\Semantic\Domain\Model;
  *                                                                        */
 
 /**
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
- * @entity
  */
-class Metadata {
-
-	/**
-	 * @var string
-	 */
-	protected $objectUuid;
-
-	/**
-	 * @var string
-	 */
-	protected $propertyName;
-
-	/**
-	 * @var string
-	 */
-	protected $value;
-
-	public function getObjectUuid() {
-		return $this->objectUuid;
-	}
-	public function setObjectUuid($objectUuid) {
-		$this->objectUuid = $objectUuid;
-	}
-
-	public function getPropertyName() {
-		return $this->propertyName;
-	}
-	public function setPropertyName($propertyName) {
-		$this->propertyName = $propertyName;
-	}
-
-	public function getValue() {
-		return $this->value;
-	}
-
-	public function setValue($value) {
-		$this->value = $value;
-	}
+interface ClassSchemaProviderInterface {
 }
 ?>

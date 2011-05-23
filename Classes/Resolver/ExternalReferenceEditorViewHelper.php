@@ -37,7 +37,7 @@ class ExternalReferenceEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWi
 	protected $controller;
 
 	/**
-	 * @var F3\Semantic\Domain\Repository\MetadataRepository
+	 * @var F3\Semantic\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
 	protected $metadataRepository;

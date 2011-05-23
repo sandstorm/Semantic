@@ -1,4 +1,5 @@
 Semantic:
+  classSchemaResolvers: ['F3\Semantic\Schema\ClassSchemaProvider\ReflectionService', 'F3\Semantic\Schema\ClassSchemaProvider\SemanticYamlConfiguration']
   namespaces:
     sioc: 'http://rdfs.org/sioc/ns#'
     dcterms: 'http://purl.org/dc/terms/'

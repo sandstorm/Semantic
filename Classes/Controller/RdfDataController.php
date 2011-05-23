@@ -49,22 +49,22 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 	protected $persistenceManager;
 
 	/**
-	 * @var \F3\FLOW3\Reflection\ReflectionService
-	 * @inject
-	 */
-	protected $reflectionService;
-
-	/**
 	 * @var \F3\Semantic\Domain\Service\ResourceUriService
 	 * @inject
 	 */
 	protected $resourceUriService;
 
 	/**
-	 * @var F3\Semantic\Domain\Repository\MetadataRepository
+	 * @var F3\Semantic\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
-	protected $metadataRepository;
+	protected $externalReferenceRepository;
+
+	/**
+	 * @var \F3\Semantic\Schema\ClassSchemaResolver
+	 * @inject
+	 */
+	protected $classSchemaResolver;
 
 	/**
 	 * Default action of the backend controller.
@@ -91,65 +91,64 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 		if ($object === NULL) {
 			throw new \Exception("TODO: Object not found.");
 		}
-
-		$schema = $this->reflectionService->getClassSchema($domainModelObjectName);
-		if ($schema === NULL) {
-			throw new \Exception("TODO: Schema not found.");
-		}
-
-		$rdfSchema = $this->settings['PropertyMapping'][$domainModelObjectName];
-		if (!$rdfSchema) {
-			throw new \Exception("TODO: RDF Schema not found.");
-		}
-
 		$rdfGraph = new Graph();
 		$rdfSubject = $this->resourceUriService->buildResourceUri($object, $this->uriBuilder);
 
-		foreach ($rdfSchema['properties'] as $propertyName => $propertyConfiguration) {
-			$propertySchema = $schema->getProperty($propertyName);
+		$propertyNames = $this->classSchemaResolver->getPropertyNames($domainModelObjectName);
 
-			if (!isset($propertyConfiguration['type'])) {
-				continue;
-			}
-			$rdfPredicate = new NamedNode($propertyConfiguration['type']);
+		foreach ($propertyNames as $propertyName) {
+			$propertySchema = $this->classSchemaResolver->getPropertySchema($domainModelObjectName, $propertyName);
+			$propertyValue = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
 
-			$possibleRdfMetadata = $this->metadataRepository->findOneByUuidAndPropertyName($identifier, $propertyName);
-			if ($possibleRdfMetadata) {
-				$rdfObject = new NamedNode($possibleRdfMetadata->getValue());
-				$rdfGraph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
-				continue;
-			}
-
-			switch ($propertySchema['type']) {
-				case 'string':
-				case 'DateTime':
-					$rdfObject = new Literal(\F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName));
-
-					$rdfGraph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
-					break;
-				case 'Doctrine\Common\Collections\ArrayCollection':
-					$collection = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
-					if (class_exists($propertySchema['elementType'])) {
-						foreach ($collection as $element) {
-							$rdfObject = $this->resourceUriService->buildResourceUri($element, $this->uriBuilder);
-							$rdfGraph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
-						}
-					} else {
-						throw new \Exception('Simple element collection types not yet supported!');
-					}
-					break;
-				default:
-					throw new \Exception('TODO: Type ' . $propertySchema['type'] . ' not supported');
-			}
+			$this->buildTriplesForProperty($propertyValue, $propertySchema, $rdfGraph, $rdfSubject);
 		}
 
-		$rdfGraph->add(new Triple(
-			$rdfSubject,
-			new NamedNode('rdf:type'),
-			new NamedNode($rdfSchema['type'])));
+		$classSchema = $this->classSchemaResolver->getClassSchema($domainModelObjectName);
+
+		if (isset($classSchema['rdfType'])) {
+			$rdfGraph->add(new Triple(
+				$rdfSubject,
+				new NamedNode('rdf:type'),
+				new NamedNode($classSchema['rdfType'])));
+		}
 
 
 		return $rdfGraph;
+	}
+
+	protected function buildTriplesForProperty($propertyValue, $propertySchema, Graph $graph, $rdfSubject) {
+		if (!isset($propertySchema['rdfType'])) return;
+
+		$rdfPredicate = new NamedNode($propertySchema['rdfType']);
+
+		$possibleExternalRdfReference = $this->externalReferenceRepository->findOneByUuidAndPropertyName($identifier, $propertyName);
+		if ($possibleExternalRdfReference) {
+			$rdfObject = new NamedNode($possibleExternalRdfReference->getValue());
+			$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
+			return;
+		}
+
+		switch ($propertySchema['type']) {
+			case 'string':
+			case 'DateTime':
+				$rdfObject = new Literal($propertyValue);
+
+				$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
+				break;
+			case 'Doctrine\Common\Collections\ArrayCollection':
+				$collection = $propertyValue;
+				if (class_exists($propertySchema['elementType'])) {
+					foreach ($collection as $element) {
+						$rdfObject = $this->resourceUriService->buildResourceUri($element, $this->uriBuilder);
+						$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
+					}
+				} else {
+					throw new \Exception('Simple element collection types not yet supported!');
+				}
+				break;
+			default:
+				throw new \Exception('TODO: Type ' . $propertySchema['type'] . ' not supported');
+		}
 	}
 }
 ?>

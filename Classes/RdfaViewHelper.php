@@ -45,7 +45,7 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 	protected $profile;
 
 	/**
-	 * @var F3\Semantic\Domain\Repository\MetadataRepository
+	 * @var F3\Semantic\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
 	protected $metadataRepository;
@@ -85,9 +85,9 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 			$rdfPredicate = new Domain\Model\Rdf\Concept\NamedNode($rdfSchema['properties'][$propertyName]['type']);
 		}
 
-		$possibleRdfMetadata = $this->metadataRepository->findOneByObjectAndPropertyName($object, $propertyName);
-		if ($possibleRdfMetadata) {
-			$value = $possibleRdfMetadata->getValue();
+		$possibleRdfExternalReference = $this->metadataRepository->findOneByObjectAndPropertyName($object, $propertyName);
+		if ($possibleRdfExternalReference) {
+			$value = $possibleRdfExternalReference->getValue();
 			$this->tag->addAttribute('content', $value);
 		}
 
