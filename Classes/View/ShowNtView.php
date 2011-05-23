@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\View\RdfData;
+namespace F3\Semantic\View;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -27,7 +27,7 @@ use \F3\Semantic\Domain\Model\Triple;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
  */
-class ShowNt extends \F3\FLOW3\MVC\View\AbstractView {
+class ShowNtView extends \F3\FLOW3\MVC\View\AbstractView {
 
 	public function render() {
 		if ($this->controllerContext->getRequest()->hasArgument('asText')) {

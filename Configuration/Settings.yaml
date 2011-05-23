@@ -25,3 +25,12 @@ Semantic:
       #  http://rdfs.org/sioc/ns#related to
   rdfa:
     enable: true
+  datasetDescription:
+    title: 'voID description of this blog'
+    datasets:
+      blogData:
+        license: odbl # TODO
+        norms: http://www.opendatacommons.org/norms/odc-by-sa/ # TODO
+        subject: xy # TODO
+        feature: N-Triples # file format # TODO
+#      exampleResource

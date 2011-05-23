@@ -45,6 +45,8 @@ class DefaultProfile extends Profile {
 		$this->prefixes->set('xhv', 'http://www.w3.org/1999/xhtml/vocab#');
 		$this->prefixes->set('xml', 'http://www.w3.org/XML/1998/namespace');
 		$this->prefixes->set('xsd', 'http://www.w3.org/2001/XMLSchema#');
+
+		$this->prefixes->set('void', 'http://rdfs.org/ns/void#');
 	}
 }
 ?>

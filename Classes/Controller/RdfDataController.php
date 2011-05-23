@@ -34,6 +34,8 @@ use \F3\Semantic\Domain\Model\Rdf\Concept\Triple;
  */
 class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 
+	protected $defaultViewObjectName = 'F3\Semantic\View\ShowNtView';
+
 	/**
 	 * @var \F3\FLOW3\Object\ObjectManagerInterface
 	 * @inject

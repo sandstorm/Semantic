@@ -29,3 +29,18 @@
     '@package':    'Semantic'
     '@controller': 'RdfIdentity'
     '@action':     'show'
+-
+  name: 'Description of all datasets using Void'
+  uriPattern: 'void'
+  defaults:
+    '@package':    'Semantic'
+    '@controller': 'Void'
+    '@action':     'show'
+    '@format':     'nt'
+-
+  name: 'Description of all datasets using Void'
+  uriPattern: '.well-known/void'
+  defaults:
+    '@package':    'Semantic'
+    '@controller': 'Void'
+    '@action':     'wellKnown'
