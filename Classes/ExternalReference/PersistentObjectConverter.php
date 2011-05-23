@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Resolver;
+namespace F3\Semantic\ExternalReference;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -48,7 +48,7 @@ class PersistentObjectConverter extends \F3\FLOW3\Property\TypeConverter\Persist
 	 *
 	 * @param mixed $source
 	 * @return array
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Sebastian Kurf√ºrst <sebastian@typo3.org>
 	 */
 	public function getProperties($source) {
 		$result = parent::getProperties($source);
@@ -69,7 +69,7 @@ class PersistentObjectConverter extends \F3\FLOW3\Property\TypeConverter\Persist
 	 * @param array $subProperties
 	 * @param \F3\FLOW3\Property\PropertyMappingConfigurationInterface $configuration
 	 * @return object the target type
-	 * @author Sebastian Kurfürst <sebastian@typo3.org>
+	 * @author Sebastian Kurf√ºrst <sebastian@typo3.org>
 	 */
 	public function convertFrom($source, $targetType, array $subProperties = array(), \F3\FLOW3\Property\PropertyMappingConfigurationInterface $configuration = NULL) {
 		$object = parent::convertFrom($source, $targetType, $subProperties, $configuration);

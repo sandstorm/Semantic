@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Resolver\Controller;
+namespace F3\Semantic\ExternalReference\Controller;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *

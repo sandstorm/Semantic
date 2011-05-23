@@ -19,7 +19,7 @@ Semantic:
           type: sioc:related_to
         author:
           type: foaf:maker
-          externalResolver: F3\Semantic\Resolver\DbpediaResolver
+          externalResolver: F3\Semantic\ExternalReference\DbpediaResolver
       #
       #  http://rdfs.org/sioc/ns#avatar
       #  http://rdfs.org/sioc/ns#creator_of
@@ -30,8 +30,5 @@ Semantic:
     title: 'voID description of this blog'
     datasets:
       blogData:
-        license: odbl # TODO
-        norms: http://www.opendatacommons.org/norms/odc-by-sa/ # TODO
-        subject: xy # TODO
-        feature: N-Triples # file format # TODO
-#      exampleResource
+        license: odc-odbl
+        norms: odc-by-sa

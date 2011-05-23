@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Resolver;
+namespace F3\Semantic\ExternalReference;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -31,7 +31,7 @@ class ExternalReferenceEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWi
 	protected $settings;
 
 	/**
-	 * @var F3\Semantic\Resolver\Controller\ExternalReferenceEditorController
+	 * @var F3\Semantic\ExternalReference\Controller\ExternalReferenceEditorController
 	 * @inject
 	 */
 	protected $controller;
@@ -40,13 +40,7 @@ class ExternalReferenceEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWi
 	 * @var F3\Semantic\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
-	protected $metadataRepository;
-
-	/**
-	 * @var F3\FLOW3\Persistence\PersistenceManagerInterface
-	 * @inject
-	 */
-	protected $persistenceManager;
+	protected $externalReferenceRepository;
 
 	protected $enabled = FALSE;
 
@@ -75,9 +69,7 @@ class ExternalReferenceEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWi
 		$metadata = NULL;
 		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
 			$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
-			$identifierOfObject = $this->persistenceManager->getIdentifierByObject($formObject);
-
-			$metadata = $this->metadataRepository->findByUuidAndPropertyName($identifierOfObject, $this->arguments['property'])->getFirst();
+			$metadata = $this->externalReferenceRepository->findOneByObjectAndPropertyName($formObject, $this->arguments['property']);
 		}
 		return array('resolver' => $this->resolverConfiguration, 'metadata' => $metadata);
 	}

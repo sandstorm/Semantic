@@ -65,7 +65,21 @@ class VoidController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$object = new Literal($settings['title']);
 		$rdfGraph->add(new Triple($subject, $predicate, $object));
 
-		foreach ($settings['datasets'] as $identifier => $value) {
+
+		$mapping = array(
+			'license' => 'dcterms:license',
+			'norms' => 'http://vocab.org/waiver/terms/norms',
+			// licenses
+			'pddl' => 'http://www.opendatacommons.org/licenses/pddl/',
+			'odc-by' => 'http://www.opendatacommons.org/licenses/by/',
+			'odc-odbl' => 'http://www.opendatacommons.org/licenses/odbl/',
+			'cc0' => 'http://creativecommons.org/publicdomain/zero/1.0/',
+
+			// community norms
+			'odc-by-sa' => 'http://www.opendatacommons.org/norms/odc-by-sa/',
+		);
+
+		foreach ($settings['datasets'] as $identifier => $datasetConfiguration) {
 			$datasetSubject = new NamedNode($subject . '#' . $identifier);
 
 			$predicate = new NamedNode('foaf:topic');
@@ -73,7 +87,17 @@ class VoidController extends \F3\FLOW3\MVC\Controller\ActionController {
 
 			$predicate = new NamedNode('rdf:type');
 			$object = new NamedNode('void:Dataset');
+			$rdfGraph->add(new Triple($datasetSubject, $predicate, $object));
 
+			foreach ($datasetConfiguration as $key => $value) {
+				if (!isset($mapping[$key])) {
+					throw new \Exception('TODO: Data set configuration ' . $key . ' not found!');
+				}
+				$predicate = new NamedNode($mapping[$key]);
+
+				$object = new NamedNode(isset($mapping[$value])?$mapping[$value]:$value);
+				$rdfGraph->add(new Triple($datasetSubject, $predicate, $object));
+			}
 			// TODO: add the other properties here
 		}
 

@@ -36,7 +36,7 @@ class TemplateViewNodeInterceptorAspect {
 	protected $rdfaInterceptor;
 
 	/**
-	 * @var \F3\Semantic\Resolver\ExternalReferencesInterceptor
+	 * @var \F3\Semantic\ExternalReference\ExternalReferencesInterceptor
 	 * @inject
 	 */
 	protected $externalReferencesInterceptor;

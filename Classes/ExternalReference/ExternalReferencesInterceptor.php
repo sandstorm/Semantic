@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Resolver;
+namespace F3\Semantic\ExternalReference;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "TYPO3".                      *
@@ -55,7 +55,7 @@ class ExternalReferencesInterceptor implements \F3\Fluid\Core\Parser\Interceptor
 				$propertyNode = $arguments['property'];
 
 				$newNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
-					new \F3\Semantic\Resolver\ExternalReferenceEditorViewHelper(),
+					new \F3\Semantic\ExternalReference\ExternalReferenceEditorViewHelper(),
 					array('property' => $propertyNode)
 				);
 				$parsingState->getNodeFromStack()->addChildNode($newNode);
