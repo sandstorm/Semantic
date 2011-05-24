@@ -1,9 +1,9 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic;
+namespace F3\Semantic\Rdfa;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "TYPO3".                      *
+ * This script belongs to the FLOW3 package "Semantic".                   *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License as published by the Free   *
@@ -22,11 +22,12 @@ namespace F3\Semantic;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use \F3\Semantic\Domain\Model\Rdf\Concept\NamedNode;
 /**
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
+class RdfaWrapperViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	protected $tagName = 'span'; // TODO: use a different one later?
 
@@ -82,7 +83,7 @@ class RdfaViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelpe
 		$rdfPredicate = NULL;
 		$rdfSchema = isset($this->settings['PropertyMapping'][get_class($object)]) ? $this->settings['PropertyMapping'][get_class($object)] : array();
 		if (isset($rdfSchema['properties'][$propertyName]['type'])) {  // TODO handle external references
-			$rdfPredicate = new Domain\Model\Rdf\Concept\NamedNode($rdfSchema['properties'][$propertyName]['type']);
+			$rdfPredicate = new NamedNode($rdfSchema['properties'][$propertyName]['type']);
 		}
 
 		$possibleRdfExternalReference = $this->metadataRepository->findOneByObjectAndPropertyName($object, $propertyName);

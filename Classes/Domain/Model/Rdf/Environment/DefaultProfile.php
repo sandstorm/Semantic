@@ -3,7 +3,7 @@ declare(ENCODING = 'utf-8');
 namespace F3\Semantic\Domain\Model\Rdf\Environment;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "TYPO3".                      *
+ * This script belongs to the FLOW3 package "Semantic".                   *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License as published by the Free   *
@@ -23,7 +23,7 @@ namespace F3\Semantic\Domain\Model\Rdf\Environment;
  *                                                                        */
 
 /**
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
 class DefaultProfile extends Profile {

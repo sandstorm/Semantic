@@ -3,7 +3,7 @@ declare(ENCODING = 'utf-8');
 namespace F3\Semantic\Schema\ClassSchemaProvider;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "TYPO3".                      *
+ * This script belongs to the FLOW3 package "Semantic".                   *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License as published by the Free   *
@@ -24,7 +24,7 @@ namespace F3\Semantic\Schema\ClassSchemaProvider;
 
 /**
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
 class ReflectionService implements \F3\Semantic\Schema\ClassSchemaProviderInterface {

@@ -1,9 +1,9 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic;
+namespace F3\Semantic\Rdfa;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "TYPO3".                      *
+ * This script belongs to the FLOW3 package "Semantic".                   *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License as published by the Free   *
@@ -24,10 +24,10 @@ namespace F3\Semantic;
 
 /**
  *
- * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 2 or later
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class FluidInterceptor implements \F3\Fluid\Core\Parser\InterceptorInterface {
+class FluidSyntaxTreeInterceptor implements \F3\Fluid\Core\Parser\InterceptorInterface {
 
 	/**
 	 * Is the interceptor enabled right now?
@@ -61,7 +61,7 @@ class FluidInterceptor implements \F3\Fluid\Core\Parser\InterceptorInterface {
 			$objectPath = $objectPathReflection->getValue($subNode);
 
 			$newNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
-					new \F3\Semantic\RdfaViewHelper(),
+					new RdfaWrapperViewHelper(),
 					array('propertyPath' => new \F3\Fluid\Core\Parser\SyntaxTree\TextNode($objectPath))
 				);
 
