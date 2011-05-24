@@ -33,7 +33,10 @@ class ResourceUriService {
 	 */
 	protected $persistenceManager;
 
-	public function buildResourceUri($domainObject, \F3\FLOW3\MVC\Web\Routing\UriBuilder $uriBuilder) {
+	public function buildResourceUri($domainObject) {
+		$uriBuilder = new \F3\FLOW3\MVC\Web\Routing\UriBuilder();
+		$uriBuilder->setRequest(new FakeRequestForUriBuilder());
+
 		$uri = $uriBuilder
 				->reset()
 				->setCreateAbsoluteUri(TRUE)

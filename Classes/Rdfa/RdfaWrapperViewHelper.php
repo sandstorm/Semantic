@@ -78,7 +78,7 @@ class RdfaWrapperViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedVi
 			return $innerContent;
 		}
 
-		$rdfSubject = $this->resourceUriService->buildResourceUri($object, $this->controllerContext->getUriBuilder());
+		$rdfSubject = $this->resourceUriService->buildResourceUri($object);
 
 		$rdfPredicate = NULL;
 		$rdfSchema = isset($this->settings['PropertyMapping'][get_class($object)]) ? $this->settings['PropertyMapping'][get_class($object)] : array();

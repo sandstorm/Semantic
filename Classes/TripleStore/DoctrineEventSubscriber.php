@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Controller;
+namespace F3\Semantic\TripleStore;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -22,20 +22,14 @@ namespace F3\Semantic\Controller;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use Doctrine\ORM\Events;
+
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
-
-	protected $defaultViewObjectName = 'F3\Semantic\View\ShowNtView';
-
-	/**
-	 * @var \F3\FLOW3\Object\ObjectManagerInterface
-	 * @inject
-	 */
-	protected $objectManager;
+class DoctrineEventSubscriber implements \Doctrine\Common\EventSubscriber {
 
 	/**
 	 * @var \F3\Semantic\Domain\Service\RdfGenerator
@@ -43,24 +37,21 @@ class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
 	 */
 	protected $rdfGenerator;
 
-	/**
-	 * Default action of the backend controller.
-	 *
-	 * @param string $dataType
-	 * @param string $identifier
-	 * @return string
-	 * @skipCsrfProtection
-	 */
-	public function showAction($dataType, $identifier) {
-		$domainModelObjectName = str_replace('_', '\\', $dataType);
+	public function getSubscribedEvents() {
+		return array(Events::postPersist, Events::postUpdate);
+	}
+	public function postPersist() {
+		var_dump("Post persist", func_get_args());
+	}
 
-		if (!$this->objectManager->isRegistered($domainModelObjectName)) {
-			throw new \Exception("TODO: Data Type not found.");
+	public function postUpdate(\Doctrine\ORM\Event\LifecycleEventArgs $lifecycleEventArgs) {
+		$changedEntity = $lifecycleEventArgs->getEntity();
+		$graph = $this->rdfGenerator->buildGraphForObject($changedEntity);
+		$outputAsNtriples = '';
+		foreach ($graph as $triple) {
+			$outputAsNtriples .= (string)$triple . chr(10);
 		}
-
-		$graph = $this->rdfGenerator->buildGraph($domainModelObjectName, $identifier);
-
-		$this->view->assign('graph', $graph);
+		var_dump($outputAsNtriples);
 	}
 }
 ?>

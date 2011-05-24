@@ -1,5 +1,6 @@
 Semantic:
   classSchemaResolvers: ['F3\Semantic\Schema\ClassSchemaProvider\ReflectionService', 'F3\Semantic\Schema\ClassSchemaProvider\SemanticYamlConfiguration']
+  baseUri: 'http://blog.local/'
   namespaces:
     sioc: 'http://rdfs.org/sioc/ns#'
     dcterms: 'http://purl.org/dc/terms/'
@@ -26,6 +27,7 @@ Semantic:
       #  http://rdfs.org/sioc/ns#related to
   rdfa:
     enable: true
+
   datasetDescription:
     title: 'voID description of this blog'
     datasets:

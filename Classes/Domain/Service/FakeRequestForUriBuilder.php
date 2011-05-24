@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Controller;
+namespace F3\Semantic\Domain\Service;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -23,44 +23,21 @@ namespace F3\Semantic\Controller;
  *                                                                        */
 
 /**
- *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @scope singleton
  */
-class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
-
-	protected $defaultViewObjectName = 'F3\Semantic\View\ShowNtView';
+class FakeRequestForUriBuilder extends \F3\FLOW3\MVC\Web\Request {
 
 	/**
-	 * @var \F3\FLOW3\Object\ObjectManagerInterface
-	 * @inject
+	 * @var array
 	 */
-	protected $objectManager;
+	protected $settings;
 
-	/**
-	 * @var \F3\Semantic\Domain\Service\RdfGenerator
-	 * @inject
-	 */
-	protected $rdfGenerator;
+	public function injectSettings($settings) {
+		$this->settings = $settings;
+	}
 
-	/**
-	 * Default action of the backend controller.
-	 *
-	 * @param string $dataType
-	 * @param string $identifier
-	 * @return string
-	 * @skipCsrfProtection
-	 */
-	public function showAction($dataType, $identifier) {
-		$domainModelObjectName = str_replace('_', '\\', $dataType);
-
-		if (!$this->objectManager->isRegistered($domainModelObjectName)) {
-			throw new \Exception("TODO: Data Type not found.");
-		}
-
-		$graph = $this->rdfGenerator->buildGraph($domainModelObjectName, $identifier);
-
-		$this->view->assign('graph', $graph);
+	public function getBaseUri() {
+		return $this->settings['baseUri'];
 	}
 }
 ?>
