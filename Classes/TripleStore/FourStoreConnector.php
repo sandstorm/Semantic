@@ -52,7 +52,12 @@ class FourStoreConnector implements StoreConnectorInterface {
 
 	public function addOrUpdateGraph($graphUri, $dataAsTurtle) {
 		$uri = $this->baseUri . '/data/' . $graphUri;
-		$this->httpRequestService->putStringToUri($dataAsTurtle, $uri, 'Content-Type: text/plain');
+		$this->httpRequestService->putStringToUri($dataAsTurtle, $uri, 'Content-Type: text/plain', 201);
+	}
+
+	public function removeGraph($graphUri) {
+		$uri = $this->baseUri . '/data/' . $graphUri;
+		$this->httpRequestService->delete($uri);
 	}
 }
 ?>

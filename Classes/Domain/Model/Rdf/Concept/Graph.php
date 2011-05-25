@@ -119,5 +119,14 @@ class Graph implements \IteratorAggregate {
 	public function getIterator() {
         return new \ArrayIterator(array_values($this->triples));
     }
+
+	// New API!!
+	public function toNt() {
+		$outputAsNtriples = '';
+		foreach ($this as $triple) {
+			$outputAsNtriples .= (string)$triple;
+		}
+		return $outputAsNtriples;
+	}
 }
 ?>

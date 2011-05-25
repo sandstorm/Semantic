@@ -37,12 +37,7 @@ class ShowNtView extends \F3\FLOW3\MVC\View\AbstractView {
 		}
 
 		$graph = $this->variables['graph'];
-		$output = '';
-
-		foreach ($graph as $triple) {
-			$output .= (string)$triple;
-		}
-		return $output;
+		return $graph->toNt();
 	}
 }
 ?>

@@ -29,21 +29,41 @@ namespace F3\Semantic\TripleStore;
  */
 class HttpRequestService {
 
-	public function putStringToUri($stringToPut, $uri, $header = '') {
+	public function putStringToUri($stringToPut, $uri, $header = '', $expectedHttpResponseCode = NULL) {
 		var_dump($stringToPut, $uri);
 		$fh = fopen('php://memory', 'rw');
 		fwrite($fh, $stringToPut);
 		rewind($fh);
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_INFILE, $fh);
-		curl_setopt($ch, CURLOPT_INFILESIZE, strlen(stringToPut));
-		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
-		curl_setopt($ch, CURLOPT_PUT, 4);
+
+		$ch = $this->initCurl();
 		curl_setopt($ch, CURLOPT_URL, $uri);
-		//curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_PUT, TRUE);
+		curl_setopt($ch, CURLOPT_INFILE, $fh);
+		curl_setopt($ch, CURLOPT_INFILESIZE, strlen($stringToPut));
 		curl_setopt($ch, CURLOPT_HTTPHEADER, array($header));
 		$response = curl_exec($ch);
 		fclose($fh);
+
+		$info = curl_getinfo($ch);
+
+		if ($expectedHttpResponseCode !== NULL && $expectedHttpResponseCode != $info['http_code']) {
+			throw new \Exception('TODO: Error in sending HTTP request. Response:' . $response);
+		}
+	}
+
+	public function delete($uri) {
+		$ch = $this->initCurl();
+		curl_setopt($ch, CURLOPT_URL, $uri);
+		curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+		$response = curl_exec($ch);
+	}
+
+	protected function initCurl() {
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+
+		return $ch;
 	}
 }
 ?>

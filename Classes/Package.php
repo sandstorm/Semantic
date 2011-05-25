@@ -24,20 +24,17 @@ namespace F3\Semantic;
 
 use \F3\FLOW3\Package\Package as BasePackage;
 
+
 /**
  * The TYPO3 Package
  */
 class Package extends BasePackage {
 	public function boot(\F3\FLOW3\Core\Bootstrap $bootstrap) {
 		$dispatcher = $bootstrap->getSignalSlotDispatcher();
-		$dispatcher->connect('F3\FLOW3\Core\Bootstrap', 'bootstrapReadyRuntime', function($slot) use (&$bootstrap) {
-			/*if (!$bootstrap->getObjectManager()->isRegistered('F3\Semantic\TripleStore\DoctrineEventSubscriber')) {
-				var_dump("X");
-				// Hack if we are in Compile-Time object manager
+		$dispatcher->connect('F3\FLOW3\Core\Bootstrap', 'bootstrapReady', function($slot) use (&$bootstrap) {
+			if ($bootstrap->getObjectManager() instanceof \F3\FLOW3\Object\CompileTimeObjectManager) {
 				return;
-			} else {
-				var_dump('Y');
-			}*/
+			}
 			$entityManager = $bootstrap->getObjectManager()->get('Doctrine\Common\Persistence\ObjectManager');
 			$entityManager->getEventManager()->addEventSubscriber($bootstrap->getObjectManager()->get('F3\Semantic\TripleStore\DoctrineEventSubscriber'));
 		});

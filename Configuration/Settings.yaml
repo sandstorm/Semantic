@@ -1,7 +1,7 @@
 Semantic:
   classSchemaResolvers: ['F3\Semantic\Schema\ClassSchemaProvider\ReflectionService', 'F3\Semantic\Schema\ClassSchemaProvider\SemanticYamlConfiguration']
   4Store:
-    baseUri: 'http://localhost:8000/data/'
+    baseUri: 'http://localhost:8000/'
   baseUri: 'http://blog.local/'
   namespaces:
     sioc: 'http://rdfs.org/sioc/ns#'

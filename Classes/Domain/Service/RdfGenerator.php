@@ -76,7 +76,7 @@ class RdfGenerator {
 			$propertySchema = $this->classSchemaResolver->getPropertySchema($domainModelObjectName, $propertyName);
 			$propertyValue = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
 
-			$this->buildTriplesForProperty($propertyValue, $propertySchema, $rdfGraph, $rdfSubject);
+			$this->buildTriplesForProperty($identifier, $propertyName, $propertyValue, $propertySchema, $rdfGraph, $rdfSubject);
 		}
 
 		$classSchema = $this->classSchemaResolver->getClassSchema($domainModelObjectName);
@@ -88,11 +88,10 @@ class RdfGenerator {
 				new NamedNode($classSchema['rdfType'])));
 		}
 
-
 		return $rdfGraph;
 	}
 
-	protected function buildTriplesForProperty($propertyValue, $propertySchema, Graph $graph, $rdfSubject) {
+	protected function buildTriplesForProperty($identifier, $propertyName, $propertyValue, $propertySchema, Graph $graph, $rdfSubject) {
 		if (!isset($propertySchema['rdfType'])) return;
 
 		$rdfPredicate = new NamedNode($propertySchema['rdfType']);

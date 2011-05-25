@@ -50,23 +50,25 @@ class DoctrineEventSubscriber implements \Doctrine\Common\EventSubscriber {
 	protected $storeConnector;
 
 	public function getSubscribedEvents() {
-		return array(Events::postPersist, Events::postUpdate);
+		return array(Events::postPersist, Events::postUpdate, Events::preRemove);
 	}
-	public function postPersist() {
-		var_dump("Post persist", func_get_args());
+	public function postPersist(\Doctrine\ORM\Event\LifecycleEventArgs $lifecycleEventArgs) {
+		$this->postUpdate($lifecycleEventArgs);
+	}
+
+	public function preRemove(\Doctrine\ORM\Event\LifecycleEventArgs $lifecycleEventArgs) {
+		$removedEntity = $lifecycleEventArgs->getEntity();
+		$uri = $this->resourceUriService->buildResourceUri($removedEntity);
+
+		$this->storeConnector->removeGraph($uri);
 	}
 
 	public function postUpdate(\Doctrine\ORM\Event\LifecycleEventArgs $lifecycleEventArgs) {
 		$changedEntity = $lifecycleEventArgs->getEntity();
 		$graph = $this->rdfGenerator->buildGraphForObject($changedEntity);
-		$outputAsNtriples = '';
-		foreach ($graph as $triple) {
-			$outputAsNtriples .= (string)$triple . chr(10);
-		}
-		var_dump($outputAsNtriples);
 
 		$uri = $this->resourceUriService->buildResourceUri($changedEntity);
-		$this->storeConnector->addOrUpdateGraph($uri, $outputAsNtriples);
+		$this->storeConnector->addOrUpdateGraph($uri, $graph->toNt());
 	}
 }
 ?>

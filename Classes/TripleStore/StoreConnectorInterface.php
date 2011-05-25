@@ -28,5 +28,6 @@ namespace F3\Semantic\TripleStore;
  */
 interface StoreConnectorInterface {
 	public function addOrUpdateGraph($graphUri, $dataAsTurtle);
+	public function removeGraph($graphUri);
 }
 ?>
