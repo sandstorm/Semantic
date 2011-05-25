@@ -92,7 +92,7 @@ class LiteralTest extends \F3\FLOW3\Tests\UnitTestCase {
 			array(
 				'title' => 'Literal with Data Type',
 				'literal' => new \DateTime('2010-10-02T10:11:35+01:00'),
-				'expected' => '"2010-10-02T10:11:35+01:00"^^http://www.w3.org/2001/XMLSchema#dateTime'
+				'expected' => '"2010-10-02T10:11:35+01:00"^^<http://www.w3.org/2001/XMLSchema#dateTime>'
 			),
 		);
 	}

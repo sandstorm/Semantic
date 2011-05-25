@@ -77,7 +77,7 @@ class Literal extends RdfNode {
 		$output = '"' . $nominalValue . '"';
 
 		if ($this->dataType !== NULL) {
-			$output .= '^^' . $this->dataType;
+			$output .= '^^' . $this->dataType->toNT();
 		}
 		return $output;
 	}

@@ -22,51 +22,28 @@ namespace F3\Semantic\TripleStore;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use Doctrine\ORM\Events;
-
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class DoctrineEventSubscriber implements \Doctrine\Common\EventSubscriber {
+class HttpRequestService {
 
-	/**
-	 * @var \F3\Semantic\Domain\Service\RdfGenerator
-	 * @inject
-	 */
-	protected $rdfGenerator;
-
-	/**
-	 * @var \F3\Semantic\Domain\Service\ResourceUriService
-	 * @inject
-	 */
-	protected $resourceUriService;
-
-	/**
-	 * @var \F3\Semantic\TripleStore\StoreConnectorInterface
-	 * @inject
-	 */
-	protected $storeConnector;
-
-	public function getSubscribedEvents() {
-		return array(Events::postPersist, Events::postUpdate);
-	}
-	public function postPersist() {
-		var_dump("Post persist", func_get_args());
-	}
-
-	public function postUpdate(\Doctrine\ORM\Event\LifecycleEventArgs $lifecycleEventArgs) {
-		$changedEntity = $lifecycleEventArgs->getEntity();
-		$graph = $this->rdfGenerator->buildGraphForObject($changedEntity);
-		$outputAsNtriples = '';
-		foreach ($graph as $triple) {
-			$outputAsNtriples .= (string)$triple . chr(10);
-		}
-		var_dump($outputAsNtriples);
-
-		$uri = $this->resourceUriService->buildResourceUri($changedEntity);
-		$this->storeConnector->addOrUpdateGraph($uri, $outputAsNtriples);
+	public function putStringToUri($stringToPut, $uri, $header = '') {
+		var_dump($stringToPut, $uri);
+		$fh = fopen('php://memory', 'rw');
+		fwrite($fh, $stringToPut);
+		rewind($fh);
+		$ch = curl_init();
+		curl_setopt($ch, CURLOPT_INFILE, $fh);
+		curl_setopt($ch, CURLOPT_INFILESIZE, strlen(stringToPut));
+		curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+		curl_setopt($ch, CURLOPT_PUT, 4);
+		curl_setopt($ch, CURLOPT_URL, $uri);
+		//curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HTTPHEADER, array($header));
+		$response = curl_exec($ch);
+		fclose($fh);
 	}
 }
 ?>
