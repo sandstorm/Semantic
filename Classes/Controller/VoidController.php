@@ -61,6 +61,10 @@ class VoidController extends \F3\FLOW3\MVC\Controller\ActionController {
 		$object = new NamedNode('void:DatasetDescription');
 		$rdfGraph->add(new Triple($subject, $predicate, $object));
 
+		// TODO: Here, we need to distringuish if we should use a NamedNode
+		// or a literal... We could try to use a NamedNode; and if it is not an URI
+		// and an exception is thrown, use a literal.
+		// Even better would be a lookup in rdfs:range
 		foreach ($datasetDescription as $key => $value) {
 			if ($key === 'datasets') continue;
 			$predicate = new NamedNode('dcterms:title');
