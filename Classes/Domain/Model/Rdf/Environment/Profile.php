@@ -33,16 +33,34 @@ class Profile implements ProfileInterface {
 	 */
 	protected $prefixes;
 
+	/**
+	 * @var F3\Semantic\Domain\Model\Rdf\Environment\TermMap
+	 * @inject
+	 */
+	protected $terms;
+
 	public function getPrefixes() {
 		return $this->prefixes;
 	}
 
+	public function getTerms() {
+		return $this->terms;
+	}
+
 	public function resolve($curieOrTerm) {
-		return $this->prefixes->resolve($curieOrTerm);
+		if (strpos($curieOrTerm, ':') === FALSE) {
+			return $this->terms->resolve($curieOrTerm);
+		} else {
+			return $this->prefixes->resolve($curieOrTerm);
+		}
 	}
 
 	public function setPrefix($prefix, $iri) {
 		$this->prefixes->set($prefix, $iri);
+	}
+
+	public function setTerm($term, $iri) {
+		$this->terms->set($term, $iri);
 	}
 }
 ?>

@@ -54,32 +54,21 @@ class VoidController extends \F3\FLOW3\MVC\Controller\ActionController {
 	protected function buildGraph() {
 		$rdfGraph = new Graph();
 
-		$settings = $this->settings['datasetDescription'];
+		$datasetDescription = $this->settings['datasetDescription'];
 		$subject = new NamedNode($this->uriBuilder->reset()->setCreateAbsoluteUri(TRUE)->uriFor('show'));
 
 		$predicate = new NamedNode('rdf:type');
 		$object = new NamedNode('void:DatasetDescription');
 		$rdfGraph->add(new Triple($subject, $predicate, $object));
 
-		$predicate = new NamedNode('dcterms:title');
-		$object = new Literal($settings['title']);
-		$rdfGraph->add(new Triple($subject, $predicate, $object));
+		foreach ($datasetDescription as $key => $value) {
+			if ($key === 'datasets') continue;
+			$predicate = new NamedNode('dcterms:title');
+			$object = new Literal($datasetDescription['title']);
+			$rdfGraph->add(new Triple($subject, $predicate, $object));
+		}
 
-
-		$mapping = array(
-			'license' => 'dcterms:license',
-			'norms' => 'http://vocab.org/waiver/terms/norms',
-			// licenses
-			'pddl' => 'http://www.opendatacommons.org/licenses/pddl/',
-			'odc-by' => 'http://www.opendatacommons.org/licenses/by/',
-			'odc-odbl' => 'http://www.opendatacommons.org/licenses/odbl/',
-			'cc0' => 'http://creativecommons.org/publicdomain/zero/1.0/',
-
-			// community norms
-			'odc-by-sa' => 'http://www.opendatacommons.org/norms/odc-by-sa/',
-		);
-
-		foreach ($settings['datasets'] as $identifier => $datasetConfiguration) {
+		foreach ($datasetDescription['datasets'] as $identifier => $datasetConfiguration) {
 			$datasetSubject = new NamedNode($subject . '#' . $identifier);
 
 			$predicate = new NamedNode('foaf:topic');

@@ -33,11 +33,11 @@ We implement the RDF Interfaces 1.0 Working Draft (10. May 2011) with the follow
 * the methods "get", "set" and "remove" exist explicitely; we could also use magic methods or ArrayAccess there... Not sure about what to use -- TODO
 
 3.2.2. Term Maps
-* TODO: NOT IMPLEMENTED FOR NOW
+* TODO: implement "setDefault", "addAll"
+* the methods "get", "set" and "remove" exist explicitely; we could also use magic methods or ArrayAccess there... Not sure about what to use -- TODO
 
 3.2.3. Profiles
-* TODO: Term support not yet implemented
-* TODO: implement "importProfile, setDefaultPrefix, setDefaultVocabulary, setTerm"
+* TODO: implement "importProfile, setDefaultPrefix, setDefaultVocabulary"
 
 3.3.1. RDF Environment
 * We do NOT need support for all these *create*-Functions, as one should use Dependency Injection / new in our case.

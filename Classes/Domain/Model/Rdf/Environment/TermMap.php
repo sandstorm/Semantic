@@ -25,22 +25,38 @@ namespace F3\Semantic\Domain\Model\Rdf\Environment;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-interface ProfileInterface {
+class TermMap {
+	protected $terms = array();
 
-	/**
-	 * @return PrefixMap
-	 */
-	public function getPrefixes();
+	public function get($term) {
+		if (!isset($this->terms[$term])) {
+			return NULL;
+		}
+		return $this->terms[$term];
+	}
+	public function set($term, $iri) {
+		$this->terms[(string)$term] = (string)$iri;
+	}
 
-	/**
-	 * @return TermMap
-	 */
-	public function getTerms();
+	public function remove($term) {
+		unset($this->terms[$term]);
+	}
 
-	public function resolve($curieOrTerm);
+	public function resolve($term) {
+		if (!isset($this->terms[$term])) {
+			return NULL;
+		}
+		return $this->terms[$term];
+	}
 
-	public function setPrefix($prefix, $iri);
+	public function shrink($iri) {
+		foreach ($this->terms as $term => $termIri) {
+			if ($iri === $termIri) {
+				return $term;
+			}
+		}
 
-	public function setTerm($term, $iri);
+		return $iri;
+	}
 }
 ?>

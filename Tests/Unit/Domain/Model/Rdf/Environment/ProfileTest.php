@@ -37,12 +37,16 @@ class ProfileTest extends \F3\FLOW3\Tests\UnitTestCase {
 	protected $profile;
 
 	protected $mockPrefixMap;
+	protected $mockTermMap;
 
 	public function setUp() {
 		$this->profile = $this->getAccessibleMock('F3\Semantic\Domain\Model\Rdf\Environment\Profile', array('dummy'));
 
 		$this->mockPrefixMap = $this->getMock('F3\Semantic\Domain\Model\Rdf\Environment\PrefixMap');
 		$this->profile->_set('prefixes', $this->mockPrefixMap);
+
+		$this->mockTermMap = $this->getMock('F3\Semantic\Domain\Model\Rdf\Environment\TermMap');
+		$this->profile->_set('terms', $this->mockTermMap);
 	}
 
 	/**
@@ -55,10 +59,26 @@ class ProfileTest extends \F3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function resolveDispatchesToPrefixMap() {
+	public function getTermsReturnsTermMap() {
+		$this->assertSame($this->mockTermMap, $this->profile->getTerms());
+	}
+
+	/**
+	 * @test
+	 */
+	public function resolveDispatchesToPrefixMapIfStringContainsColon() {
 		$this->mockPrefixMap->expects($this->once())->method('resolve')->with('foo:bar')->will($this->returnValue('http://my.iri/bar'));
 
 		$this->assertSame('http://my.iri/bar', $this->profile->resolve('foo:bar'));
+	}
+
+	/**
+	 * @test
+	 */
+	public function resolveDispatchesToTermMapIfStringDoesNotContainColon() {
+		$this->mockTermMap->expects($this->once())->method('resolve')->with('someString')->will($this->returnValue('http://my.iri/bar'));
+
+		$this->assertSame('http://my.iri/bar', $this->profile->resolve('someString'));
 	}
 
 	/**
@@ -68,6 +88,15 @@ class ProfileTest extends \F3\FLOW3\Tests\UnitTestCase {
 		$this->mockPrefixMap->expects($this->once())->method('set')->with('myPrefix', 'http://the.iri');
 
 		$this->profile->setPrefix('myPrefix', 'http://the.iri');
+	}
+
+	/**
+	 * @test
+	 */
+	public function setTermDispatchesToTermMap() {
+		$this->mockTermMap->expects($this->once())->method('set')->with('myTerm', 'http://the.iri');
+
+		$this->profile->setTerm('myTerm', 'http://the.iri');
 	}
 }
 ?>

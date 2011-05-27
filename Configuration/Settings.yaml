@@ -3,7 +3,7 @@ Semantic:
   4Store:
     baseUri: 'http://localhost:8000/'
   baseUri: 'http://blog.local/'
-  namespaces:
+  prefixes:
     sioc: 'http://rdfs.org/sioc/ns#'
     dcterms: 'http://purl.org/dc/terms/'
     sioctypes: 'http://rdfs.org/sioc/types#'
@@ -31,8 +31,8 @@ Semantic:
     enable: true
 
   datasetDescription:
-    title: 'voID description of this blog'
+    'dcterms:title': 'voID description of this blog'
     datasets:
       blogData:
-        license: odc-odbl
+        'dcterms:license': odc-odbl
         norms: odc-by-sa
