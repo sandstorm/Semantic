@@ -42,6 +42,13 @@ class TemplateViewNodeInterceptorAspect {
 	protected $externalReferencesInterceptor;
 
 	/**
+	 * @var \F3\Semantic\ContinuousTextEnrichment\ContinuousTextInterceptor
+	 * @inject
+	 */
+	protected $continuousTextInterceptor;
+
+
+	/**
 	 * @afterreturning method(F3\Fluid\View\TemplateView->buildParserConfiguration()) && setting(Semantic.rdfa.enable)
 	 * @param \F3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
 	 * @return void
@@ -50,6 +57,7 @@ class TemplateViewNodeInterceptorAspect {
 		$parserConfiguration = $joinPoint->getResult();
 		$parserConfiguration->addInterceptor($this->rdfaInterceptor);
 		$parserConfiguration->addInterceptor($this->externalReferencesInterceptor);
+		$parserConfiguration->addInterceptor($this->continuousTextInterceptor);
 	}
 }
 ?>

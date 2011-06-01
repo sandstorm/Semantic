@@ -1,0 +1,25 @@
+<div class="semantic-rdf-text"><a href="#">Enrich!</a>
+</div>
+<f:if condition="{includeJs}">
+<style>
+
+/* Top Container */
+.semantic-rdf-text {
+	/*display:none;*/
+}
+</style>
+<script>
+widget_serverside_endpoint = '{f:uri.widget(action:"autocomplete", ajax: 1)}';
+//<![CDATA[
+jQuery(document).ready(function() {
+	jQuery(".semantic-rdf-text").each(function(index, element) {
+		var textElement = jQuery(element).prev(),
+			enrichButton = jQuery('a', element);
+		enrichButton.click(function(e) {
+			e.preventDefault();
+			console.log("button clicke", textElement.val());
+		})
+	});
+});
+//]]></script>
+</f:if>

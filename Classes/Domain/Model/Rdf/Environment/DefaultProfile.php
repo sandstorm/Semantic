@@ -49,9 +49,10 @@ class DefaultProfile extends Profile {
 
 			// Non-required prefixes; but we rely on their existence nevertheless
 		$this->prefixes->set('void', 'http://rdfs.org/ns/void#');
-
-		foreach ($this->settings['terms'] as $term => $iri) {
-			$this->terms->set($term, $iri);
+		if (isset($this->settings['terms'])) {
+			foreach ($this->settings['terms'] as $term => $iri) {
+				$this->terms->set($term, $iri);
+			}
 		}
 			// Non-required terms, but we expect them to be there nevertheless
 		$this->terms->set('norms', 'http://vocab.org/waiver/terms/norms');
