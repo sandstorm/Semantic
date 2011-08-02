@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Schema\ClassSchemaProvider;
+namespace SandstormMedia\Semantic\Schema\ClassSchemaProvider;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -27,7 +27,7 @@ namespace F3\Semantic\Schema\ClassSchemaProvider;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class SemanticYamlConfiguration implements \F3\Semantic\Schema\ClassSchemaProviderInterface {
+class SemanticYamlConfiguration implements \SandstormMedia\Semantic\Schema\ClassSchemaProviderInterface {
 
 	/**
 	 * @var array

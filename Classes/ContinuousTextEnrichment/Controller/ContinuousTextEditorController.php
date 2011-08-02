@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\ContinuousTextEnrichment\Controller;
+namespace SandstormMedia\Semantic\ContinuousTextEnrichment\Controller;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -25,7 +25,7 @@ namespace F3\Semantic\ContinuousTextEnrichment\Controller;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ContinuousTextEditorController extends \F3\Fluid\Core\Widget\AbstractWidgetController {
+class ContinuousTextEditorController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 
 	protected static $javaScriptAndCssAlreadyIncluded = FALSE;
 	/**

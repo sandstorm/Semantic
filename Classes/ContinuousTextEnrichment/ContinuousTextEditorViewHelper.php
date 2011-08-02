@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\ContinuousTextEnrichment;
+namespace SandstormMedia\Semantic\ContinuousTextEnrichment;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -26,12 +26,12 @@ namespace F3\Semantic\ContinuousTextEnrichment;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ContinuousTextEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWidgetViewHelper {
+class ContinuousTextEditorViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 
 	protected $settings;
 
 	/**
-	 * @var F3\Semantic\ContinuousTextEnrichment\Controller\ContinuousTextEditorController
+	 * @var SandstormMedia\Semantic\ContinuousTextEnrichment\Controller\ContinuousTextEditorController
 	 * @inject
 	 */
 	protected $controller;
@@ -47,8 +47,8 @@ class ContinuousTextEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWidge
 	}
 
 	public function initialize() {
-		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
-			$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 			$formObjectName = get_class($formObject);
 			if (isset($this->settings['PropertyMapping'][$formObjectName]['properties'][$this->arguments['property']]['textEnricher'])) {
 				$externalResolverConfiguration = $this->settings['PropertyMapping'][$formObjectName]['properties'][$this->arguments['property']]['textEnricher'];
@@ -61,8 +61,8 @@ class ContinuousTextEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWidge
 
 	public function getWidgetConfiguration() {
 		$metadata = NULL;
-		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
-			$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 		}
 		return array('resolver' => $this->resolverConfiguration);
 	}

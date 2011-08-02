@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model\Rdf\Environment;
+namespace SandstormMedia\Semantic\Domain\Model\Rdf\Environment;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -28,13 +28,13 @@ namespace F3\Semantic\Domain\Model\Rdf\Environment;
 class Profile implements ProfileInterface {
 
 	/**
-	 * @var F3\Semantic\Domain\Model\Rdf\Environment\PrefixMap
+	 * @var SandstormMedia\Semantic\Domain\Model\Rdf\Environment\PrefixMap
 	 * @inject
 	 */
 	protected $prefixes;
 
 	/**
-	 * @var F3\Semantic\Domain\Model\Rdf\Environment\TermMap
+	 * @var SandstormMedia\Semantic\Domain\Model\Rdf\Environment\TermMap
 	 * @inject
 	 */
 	protected $terms;

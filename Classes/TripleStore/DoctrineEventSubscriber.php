@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\TripleStore;
+namespace SandstormMedia\Semantic\TripleStore;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -32,19 +32,19 @@ use Doctrine\ORM\Events;
 class DoctrineEventSubscriber implements \Doctrine\Common\EventSubscriber {
 
 	/**
-	 * @var \F3\Semantic\Domain\Service\RdfGenerator
+	 * @var \SandstormMedia\Semantic\Domain\Service\RdfGenerator
 	 * @inject
 	 */
 	protected $rdfGenerator;
 
 	/**
-	 * @var \F3\Semantic\Domain\Service\ResourceUriService
+	 * @var \SandstormMedia\Semantic\Domain\Service\ResourceUriService
 	 * @inject
 	 */
 	protected $resourceUriService;
 
 	/**
-	 * @var \F3\Semantic\TripleStore\StoreConnectorInterface
+	 * @var \SandstormMedia\Semantic\TripleStore\StoreConnectorInterface
 	 * @inject
 	 */
 	protected $storeConnector;

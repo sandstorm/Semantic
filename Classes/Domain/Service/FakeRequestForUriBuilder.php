@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Service;
+namespace SandstormMedia\Semantic\Domain\Service;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -25,7 +25,7 @@ namespace F3\Semantic\Domain\Service;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class FakeRequestForUriBuilder extends \F3\FLOW3\MVC\Web\Request {
+class FakeRequestForUriBuilder extends \TYPO3\FLOW3\MVC\Web\Request {
 
 	/**
 	 * @var array

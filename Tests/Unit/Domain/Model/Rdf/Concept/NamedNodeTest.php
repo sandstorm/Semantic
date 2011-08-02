@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
+namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -22,14 +22,14 @@ namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Rdf\Concept\NamedNode;
-use \F3\Semantic\Domain\Model\Rdf\Concept\Literal;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Literal;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers F3\Semantic\Domain\Model\Rdf\Concept\NamedNode
+ * @covers SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode
  */
-class NamedNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
+class NamedNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
@@ -79,8 +79,8 @@ class NamedNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function conversionToIriIsAttemptedUsingInjectedProfile() {
-		$namedNode = $this->getAccessibleMock('F3\Semantic\Domain\Model\Rdf\Concept\NamedNode', array('dummy'), array('my:curie'));
-		$profile = $this->getMock('F3\Semantic\Domain\Model\Rdf\Environment\ProfileInterface');
+		$namedNode = $this->getAccessibleMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode', array('dummy'), array('my:curie'));
+		$profile = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Environment\ProfileInterface');
 		$namedNode->_set('profile', $profile);
 
 		$profile->expects($this->once())->method('resolve')->with('my:curie')->will($this->returnValue('http://very.long/curie'));
@@ -93,8 +93,8 @@ class NamedNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function ifCurieCouldNotBeResolvedIriIsUsedWithoutModification() {
-		$namedNode = $this->getAccessibleMock('F3\Semantic\Domain\Model\Rdf\Concept\NamedNode', array('dummy'), array('http://my.iri'));
-		$profile = $this->getMock('F3\Semantic\Domain\Model\Rdf\Environment\ProfileInterface');
+		$namedNode = $this->getAccessibleMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode', array('dummy'), array('http://my.iri'));
+		$profile = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Environment\ProfileInterface');
 		$namedNode->_set('profile', $profile);
 
 		$profile->expects($this->once())->method('resolve')->with('http://my.iri')->will($this->returnValue(NULL));

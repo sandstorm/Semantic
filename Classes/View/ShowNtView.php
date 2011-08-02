@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\View;
+namespace SandstormMedia\Semantic\View;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -22,12 +22,12 @@ namespace F3\Semantic\View;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Triple;
+use \SandstormMedia\Semantic\Domain\Model\Triple;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ShowNtView extends \F3\FLOW3\MVC\View\AbstractView {
+class ShowNtView extends \TYPO3\FLOW3\MVC\View\AbstractView {
 
 	public function render() {
 		if ($this->controllerContext->getRequest()->hasArgument('asText')) {

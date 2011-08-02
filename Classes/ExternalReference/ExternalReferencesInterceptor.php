@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\ExternalReference;
+namespace SandstormMedia\Semantic\ExternalReference;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -27,7 +27,7 @@ namespace F3\Semantic\ExternalReference;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class ExternalReferencesInterceptor implements \F3\Fluid\Core\Parser\InterceptorInterface {
+class ExternalReferencesInterceptor implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 
 	/**
 	 * Is the interceptor enabled right now?
@@ -37,25 +37,25 @@ class ExternalReferencesInterceptor implements \F3\Fluid\Core\Parser\Interceptor
 
 	/**
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
-	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
+	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 */
-	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \F3\Fluid\Core\Parser\ParsingState $parsingState) {
+	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState) {
 		if (!$this->interceptorEnabled) {
 			return $node;
 		}
 
 
-		if ($node instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode && $node->getUninitializedViewHelper() instanceof \F3\Fluid\ViewHelpers\Form\TextfieldViewHelper) {
+		if ($node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode && $node->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\Form\TextfieldViewHelper) {
 			$argumentsReflection = new \ReflectionProperty($node, 'arguments');
 			$argumentsReflection->setAccessible(TRUE);
 			$arguments = $argumentsReflection->getValue($node);
 			if (isset($arguments['property'])) {
 				$propertyNode = $arguments['property'];
 
-				$newNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
-					new \F3\Semantic\ExternalReference\ExternalReferenceEditorViewHelper(),
+				$newNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
+					new \SandstormMedia\Semantic\ExternalReference\ExternalReferenceEditorViewHelper(),
 					array('property' => $propertyNode)
 				);
 				$parsingState->getNodeFromStack()->addChildNode($newNode);
@@ -71,7 +71,7 @@ class ExternalReferencesInterceptor implements \F3\Fluid\Core\Parser\Interceptor
 	 */
 	public function getInterceptionPoints() {
 		return array(
-			\F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER
+			\TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER
 		);
 	}
 }

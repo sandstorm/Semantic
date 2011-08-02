@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\ExternalReference;
+namespace SandstormMedia\Semantic\ExternalReference;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -26,18 +26,18 @@ namespace F3\Semantic\ExternalReference;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ExternalReferenceEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWidgetViewHelper {
+class ExternalReferenceEditorViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
 
 	protected $settings;
 
 	/**
-	 * @var F3\Semantic\ExternalReference\Controller\ExternalReferenceEditorController
+	 * @var SandstormMedia\Semantic\ExternalReference\Controller\ExternalReferenceEditorController
 	 * @inject
 	 */
 	protected $controller;
 
 	/**
-	 * @var F3\Semantic\Domain\Repository\ExternalReferenceRepository
+	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
 	protected $externalReferenceRepository;
@@ -53,8 +53,8 @@ class ExternalReferenceEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWi
 	}
 
 	public function initialize() {
-		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
-			$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 			$formObjectName = get_class($formObject);
 			if (isset($this->settings['PropertyMapping'][$formObjectName]['properties'][$this->arguments['property']]['externalResolver'])) {
 				$externalResolverConfiguration = $this->settings['PropertyMapping'][$formObjectName]['properties'][$this->arguments['property']]['externalResolver'];
@@ -67,8 +67,8 @@ class ExternalReferenceEditorViewHelper extends \F3\Fluid\Core\Widget\AbstractWi
 
 	public function getWidgetConfiguration() {
 		$metadata = NULL;
-		if ($this->viewHelperVariableContainer->exists('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
-			$formObject = $this->viewHelperVariableContainer->get('F3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 			$metadata = $this->externalReferenceRepository->findOneByObjectAndPropertyName($formObject, $this->arguments['property']);
 		}
 		return array('resolver' => $this->resolverConfiguration, 'metadata' => $metadata);

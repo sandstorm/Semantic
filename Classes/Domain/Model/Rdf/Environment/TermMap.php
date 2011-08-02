@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model\Rdf\Environment;
+namespace SandstormMedia\Semantic\Domain\Model\Rdf\Environment;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *

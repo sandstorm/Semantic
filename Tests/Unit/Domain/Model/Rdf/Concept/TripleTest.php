@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
+namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -22,13 +22,13 @@ namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Rdf\Concept\Triple;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Triple;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers F3\Semantic\Domain\Model\Rdf\Concept\Triple
+ * @covers SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Triple
  */
-class TripleTest extends \F3\FLOW3\Tests\UnitTestCase {
+class TripleTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	protected $mockSubject;
 
@@ -37,9 +37,9 @@ class TripleTest extends \F3\FLOW3\Tests\UnitTestCase {
 	protected $mockObject;
 
 	public function setUp() {
-		$this->mockSubject = $this->getMock('F3\Semantic\Domain\Model\Rdf\Concept\RdfNode');
-		$this->mockPredicate = $this->getMock('F3\Semantic\Domain\Model\Rdf\Concept\RdfNode');
-		$this->mockObject = $this->getMock('F3\Semantic\Domain\Model\Rdf\Concept\RdfNode');
+		$this->mockSubject = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\RdfNode');
+		$this->mockPredicate = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\RdfNode');
+		$this->mockObject = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\RdfNode');
 	}
 	/**
 	 * @test
@@ -68,18 +68,18 @@ class TripleTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 */
 	public function equalsCheckTestsSubjectPredicateAndObjectForEquality() {
 		$subjectsAreEqual = TRUE;
-		$subject1 = $this->getMock('F3\Semantic\Domain\Model\Rdf\Concept\RdfNode');
-		$subject2 = $this->getMock('F3\Semantic\Domain\Model\Rdf\Concept\RdfNode');
+		$subject1 = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\RdfNode');
+		$subject2 = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\RdfNode');
 		$subject1->expects($this->any())->method('equals')->with($subject2)->will($this->returnValue($subjectsAreEqual));
 
 		$predicatesAreEqual = TRUE;
-		$predicate1 = $this->getMock('F3\Semantic\Domain\Model\Rdf\Concept\RdfNode');
-		$predicate2 = $this->getMock('F3\Semantic\Domain\Model\Rdf\Concept\RdfNode');
+		$predicate1 = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\RdfNode');
+		$predicate2 = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\RdfNode');
 		$predicate1->expects($this->any())->method('equals')->with($predicate2)->will($this->returnValue($predicatesAreEqual));
 
 		$objectsAreEqual = TRUE;
-		$object1 = $this->getMock('F3\Semantic\Domain\Model\Rdf\Concept\RdfNode');
-		$object2 = $this->getMock('F3\Semantic\Domain\Model\Rdf\Concept\RdfNode');
+		$object1 = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\RdfNode');
+		$object2 = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\RdfNode');
 		$object1->expects($this->any())->method('equals')->with($object2)->will($this->returnValue($objectsAreEqual));
 
 		$triple1 = new Triple($subject1, $predicate1, $object1);

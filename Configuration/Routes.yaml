@@ -17,7 +17,7 @@
   name: 'RDF Data'
   uriPattern: 'data/{dataType}/{identifier}'
   defaults:
-    '@package':    'Semantic'
+    '@package':    'SandstormMedia.Semantic'
     '@controller': 'RdfData'
     '@action':     'show'
     '@format':     'nt'
@@ -26,14 +26,14 @@
   name: 'RDF Identity'
   uriPattern: 'id/{dataType}/{identifier}'
   defaults:
-    '@package':    'Semantic'
+    '@package':    'SandstormMedia.Semantic'
     '@controller': 'RdfIdentity'
     '@action':     'show'
 -
   name: 'Description of all datasets using Void'
   uriPattern: 'void'
   defaults:
-    '@package':    'Semantic'
+    '@package':    'SandstormMedia.Semantic'
     '@controller': 'Void'
     '@action':     'show'
     '@format':     'nt'
@@ -41,6 +41,6 @@
   name: 'Description of all datasets using Void'
   uriPattern: '.well-known/void'
   defaults:
-    '@package':    'Semantic'
+    '@package':    'SandstormMedia.Semantic'
     '@controller': 'Void'
     '@action':     'wellKnown'

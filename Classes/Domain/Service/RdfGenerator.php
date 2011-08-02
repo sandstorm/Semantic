@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Service;
+namespace SandstormMedia\Semantic\Domain\Service;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -22,10 +22,10 @@ namespace F3\Semantic\Domain\Service;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Rdf\Concept\Graph;
-use \F3\Semantic\Domain\Model\Rdf\Concept\NamedNode;
-use \F3\Semantic\Domain\Model\Rdf\Concept\Literal;
-use \F3\Semantic\Domain\Model\Rdf\Concept\Triple;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Graph;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Literal;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Triple;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -34,25 +34,25 @@ use \F3\Semantic\Domain\Model\Rdf\Concept\Triple;
 class RdfGenerator {
 
 	/**
-	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
 	 * @inject
 	 */
 	protected $persistenceManager;
 
 	/**
-	 * @var \F3\Semantic\Domain\Service\ResourceUriService
+	 * @var \SandstormMedia\Semantic\Domain\Service\ResourceUriService
 	 * @inject
 	 */
 	protected $resourceUriService;
 
 	/**
-	 * @var F3\Semantic\Domain\Repository\ExternalReferenceRepository
+	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
 	protected $externalReferenceRepository;
 
 	/**
-	 * @var \F3\Semantic\Schema\ClassSchemaResolver
+	 * @var \SandstormMedia\Semantic\Schema\ClassSchemaResolver
 	 * @inject
 	 */
 	protected $classSchemaResolver;
@@ -74,7 +74,7 @@ class RdfGenerator {
 
 		foreach ($propertyNames as $propertyName) {
 			$propertySchema = $this->classSchemaResolver->getPropertySchema($domainModelObjectName, $propertyName);
-			$propertyValue = \F3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
+			$propertyValue = \TYPO3\FLOW3\Reflection\ObjectAccess::getProperty($object, $propertyName);
 
 			$this->buildTriplesForProperty($identifier, $propertyName, $propertyValue, $propertySchema, $rdfGraph, $rdfSubject);
 		}

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Rdfa;
+namespace SandstormMedia\Semantic\Rdfa;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -27,7 +27,7 @@ namespace F3\Semantic\Rdfa;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class FluidSyntaxTreeInterceptor implements \F3\Fluid\Core\Parser\InterceptorInterface {
+class FluidSyntaxTreeInterceptor implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 
 	/**
 	 * Is the interceptor enabled right now?
@@ -37,32 +37,32 @@ class FluidSyntaxTreeInterceptor implements \F3\Fluid\Core\Parser\InterceptorInt
 
 	/**
 	 *
-	 * @param \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
+	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
 	 * @param integer $interceptorPosition One of the INTERCEPT_* constants for the current interception point
-	 * @return \F3\Fluid\Core\Parser\SyntaxTree\NodeInterface
+	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 */
-	public function process(\F3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \F3\Fluid\Core\Parser\ParsingState $parsingState) {
+	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState) {
 		if (!$this->interceptorEnabled) {
 			return $node;
 		}
 
 		$subNode = $node;
 		// Hack for dealing with escape ViewHelper
-		if ($subNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode && $subNode->getUninitializedViewHelper() instanceof \F3\Fluid\ViewHelpers\EscapeViewHelper) {
+		if ($subNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode && $subNode->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\EscapeViewHelper) {
 			$argumentsReflection = new \ReflectionProperty($subNode, 'arguments');
 			$argumentsReflection->setAccessible(TRUE);
 			$arguments = $argumentsReflection->getValue($subNode);
 			$subNode = $arguments['value'];
 		}
 
-		if ($subNode instanceof \F3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode) {
+		if ($subNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ObjectAccessorNode) {
 			$objectPathReflection = new \ReflectionProperty($subNode, 'objectPath');
 			$objectPathReflection->setAccessible(TRUE);
 			$objectPath = $objectPathReflection->getValue($subNode);
 
-			$newNode = new \F3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
+			$newNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
 					new RdfaWrapperViewHelper(),
-					array('propertyPath' => new \F3\Fluid\Core\Parser\SyntaxTree\TextNode($objectPath))
+					array('propertyPath' => new \TYPO3\Fluid\Core\Parser\SyntaxTree\TextNode($objectPath))
 				);
 
 			$newNode->addChildNode($node);
@@ -80,7 +80,7 @@ class FluidSyntaxTreeInterceptor implements \F3\Fluid\Core\Parser\InterceptorInt
 	 */
 	public function getInterceptionPoints() {
 		return array(
-			\F3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OBJECTACCESSOR
+			\TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OBJECTACCESSOR
 		);
 	}
 }

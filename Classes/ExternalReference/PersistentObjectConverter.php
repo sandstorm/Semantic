@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\ExternalReference;
+namespace SandstormMedia\Semantic\ExternalReference;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -22,23 +22,23 @@ namespace F3\Semantic\ExternalReference;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use F3\Semantic\Domain\Model\ExternalReference;
+use SandstormMedia\Semantic\Domain\Model\ExternalReference;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class PersistentObjectConverter extends \F3\FLOW3\Property\TypeConverter\PersistentObjectConverter {
+class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter {
 	protected $priority = 10;
 
 	/**
-	 * @var F3\Semantic\Domain\Repository\ExternalReferenceRepository
+	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
 	protected $externalReferenceRepository;
 
 	/**
-	 * @var F3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @var TYPO3\FLOW3\Persistence\PersistenceManagerInterface
 	 * @inject
 	 */
 	protected $persistenceManager;
@@ -67,11 +67,11 @@ class PersistentObjectConverter extends \F3\FLOW3\Property\TypeConverter\Persist
 	 * @param mixed $source
 	 * @param string $targetType
 	 * @param array $subProperties
-	 * @param \F3\FLOW3\Property\PropertyMappingConfigurationInterface $configuration
+	 * @param \TYPO3\FLOW3\Property\PropertyMappingConfigurationInterface $configuration
 	 * @return object the target type
 	 * @author Sebastian Kurf‚Äö√Ñ√∂‚àö√ë‚àö‚àÇ‚Äö√†√∂‚àö√´‚Äö√†√∂‚Äö√†√á‚Äö√Ñ√∂‚àö‚Ä†‚àö‚àÇ‚Äö√Ñ√∂‚àö√ë‚Äö√Ñ‚Ä†‚Äö√Ñ√∂‚àö‚Ä†‚àö‚àÇ‚Äö√Ñ√∂‚àö‚Ä†‚àö√°¬¨¬®¬¨¬Æ¬¨¬®¬¨√Ü‚Äö√Ñ√∂‚àö√ë‚àö‚àÇ‚Äö√†√∂‚Äö√Ñ‚Ä†¬¨¬®¬¨‚Ä¢rst <sebastian@typo3.org>
 	 */
-	public function convertFrom($source, $targetType, array $subProperties = array(), \F3\FLOW3\Property\PropertyMappingConfigurationInterface $configuration = NULL) {
+	public function convertFrom($source, $targetType, array $subProperties = array(), \TYPO3\FLOW3\Property\PropertyMappingConfigurationInterface $configuration = NULL) {
 		$object = parent::convertFrom($source, $targetType, $subProperties, $configuration);
 
 		foreach ($source as $key => $value) {

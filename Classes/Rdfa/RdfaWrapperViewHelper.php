@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Rdfa;
+namespace SandstormMedia\Semantic\Rdfa;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -22,31 +22,31 @@ namespace F3\Semantic\Rdfa;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Rdf\Concept\NamedNode;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class RdfaWrapperViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
+class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
 	protected $tagName = 'span'; // TODO: use a different one later?
 
 	protected $settings;
 
 	/**
-	 * @var \F3\Semantic\Domain\Service\ResourceUriService
+	 * @var \SandstormMedia\Semantic\Domain\Service\ResourceUriService
 	 * @inject
 	 */
 	protected $resourceUriService;
 
 	/**
-	 * @var F3\Semantic\Domain\Model\Rdf\Environment\ProfileInterface
+	 * @var SandstormMedia\Semantic\Domain\Model\Rdf\Environment\ProfileInterface
 	 * @inject
 	 */
 	protected $profile;
 
 	/**
-	 * @var F3\Semantic\Domain\Repository\ExternalReferenceRepository
+	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
 	protected $metadataRepository;
@@ -72,7 +72,7 @@ class RdfaWrapperViewHelper extends \F3\Fluid\Core\ViewHelper\AbstractTagBasedVi
 
 		if (strlen($objectPath) == 0) return $innerContent;
 
-		$object = \F3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->templateVariableContainer, $objectPath);
+		$object = \TYPO3\FLOW3\Reflection\ObjectAccess::getPropertyPath($this->templateVariableContainer, $objectPath);
 		if (!is_object($object)) {
 			// Could be that this is a simple value, and no object.
 			return $innerContent;

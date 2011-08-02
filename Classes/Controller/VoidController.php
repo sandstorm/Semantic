@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Controller;
+namespace SandstormMedia\Semantic\Controller;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -22,19 +22,19 @@ namespace F3\Semantic\Controller;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use F3\Semantic\Domain\Model\Rdf\Concept\NamedNode;
-use F3\Semantic\Domain\Model\Rdf\Concept\Literal;
-use F3\Semantic\Domain\Model\Rdf\Concept\Triple;
-use F3\Semantic\Domain\Model\Rdf\Concept\Graph;
+use SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode;
+use SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Literal;
+use SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Triple;
+use SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Graph;
 
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class VoidController extends \F3\FLOW3\MVC\Controller\ActionController {
+class VoidController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
-	protected $defaultViewObjectName = 'F3\Semantic\View\ShowNtView';
+	protected $defaultViewObjectName = 'SandstormMedia\Semantic\View\ShowNtView';
 
 	/**
 	 * Default action of the backend controller.

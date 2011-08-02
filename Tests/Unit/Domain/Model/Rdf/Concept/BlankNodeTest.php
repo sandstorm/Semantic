@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
+namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -22,13 +22,13 @@ namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Rdf\Concept\BlankNode;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\BlankNode;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers F3\Semantic\Domain\Model\Rdf\Concept\BlankNode
+ * @covers SandstormMedia\Semantic\Domain\Model\Rdf\Concept\BlankNode
  */
-class BlankNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
+class BlankNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
@@ -76,7 +76,7 @@ class BlankNodeTest extends \F3\FLOW3\Tests\UnitTestCase {
 	 */
 	public function isNotEqualWithANamedNode() {
 		$blankNode = new BlankNode();
-		$namedNode = new \F3\Semantic\Domain\Model\Rdf\Concept\NamedNode('http://foo.bar');
+		$namedNode = new \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode('http://foo.bar');
 		$this->assertFalse($blankNode->equals($namedNode));
 	}
 }

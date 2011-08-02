@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Service;
+namespace SandstormMedia\Semantic\Domain\Service;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -28,13 +28,13 @@ namespace F3\Semantic\Domain\Service;
  */
 class ResourceUriService {
 	/**
-	 * @var \F3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
 	 * @inject
 	 */
 	protected $persistenceManager;
 
 	public function buildResourceUri($domainObject) {
-		$uriBuilder = new \F3\FLOW3\MVC\Web\Routing\UriBuilder();
+		$uriBuilder = new \TYPO3\FLOW3\MVC\Web\Routing\UriBuilder();
 		$uriBuilder->setRequest(new FakeRequestForUriBuilder());
 
 		$uri = $uriBuilder
@@ -43,9 +43,9 @@ class ResourceUriService {
 				->uriFor('show', array(
 					'dataType' => str_replace('\\', '_', get_class($domainObject)),
 					'identifier' => $this->persistenceManager->getIdentifierByObject($domainObject)),
-				'RdfIdentity', 'Semantic');
+				'RdfIdentity', 'SandstormMedia.Semantic');
 
-		return new \F3\Semantic\Domain\Model\Rdf\Concept\NamedNode($uri);
+		return new \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode($uri);
 	}
 }
 ?>

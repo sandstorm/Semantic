@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Schema;
+namespace SandstormMedia\Semantic\Schema;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -29,7 +29,7 @@ namespace F3\Semantic\Schema;
  */
 class ClassSchemaResolver {
 	/**
-	 * @var \F3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
 	 * @inject
 	 */
 	protected $objectManager;
@@ -40,7 +40,7 @@ class ClassSchemaResolver {
 	protected $settings;
 
 	/**
-	 * @var array<F3\Semantic\Schema\ClassSchemaProvider\ReflectionService>
+	 * @var array<SandstormMedia\Semantic\Schema\ClassSchemaProvider\ReflectionService>
 	 */
 	protected $classSchemaProviders = array();
 

@@ -1,39 +1,40 @@
-Semantic:
-  classSchemaResolvers: ['F3\Semantic\Schema\ClassSchemaProvider\ReflectionService', 'F3\Semantic\Schema\ClassSchemaProvider\SemanticYamlConfiguration']
-  4Store:
-    baseUri: 'http://localhost:8000/'
-  baseUri: 'http://blog.local/'
-  prefixes:
-    sioc: 'http://rdfs.org/sioc/ns#'
-    dcterms: 'http://purl.org/dc/terms/'
-    sioctypes: 'http://rdfs.org/sioc/types#'
-    foaf: 'http://xmlns.com/foaf/0.1/'
-  PropertyMapping:
-    F3\Blog\Domain\Model\Post:
-      type: sioctypes:BlogPost
-      properties:
-        content:
-          type: sioc:content
-          textEnricher: true
-        title:
-          type: dcterms:title
-        date:
-          type: dcterms:created
-        relatedPosts:
-          type: sioc:related_to
-        author:
-          type: foaf:maker
-          externalResolver: F3\Semantic\ExternalReference\DbpediaResolver
-      #
-      #  http://rdfs.org/sioc/ns#avatar
-      #  http://rdfs.org/sioc/ns#creator_of
-      #  http://rdfs.org/sioc/ns#related to
-  rdfa:
-    enable: true
+SandstormMedia:
+  Semantic:
+    classSchemaResolvers: ['SandstormMedia\Semantic\Schema\ClassSchemaProvider\ReflectionService', 'SandstormMedia\Semantic\Schema\ClassSchemaProvider\SemanticYamlConfiguration']
+    4Store:
+      baseUri: 'http://localhost:8000/'
+    baseUri: 'http://blog.local/'
+    prefixes:
+      sioc: 'http://rdfs.org/sioc/ns#'
+      dcterms: 'http://purl.org/dc/terms/'
+      sioctypes: 'http://rdfs.org/sioc/types#'
+      foaf: 'http://xmlns.com/foaf/0.1/'
+    PropertyMapping:
+      TYPO3\Blog\Domain\Model\Post:
+        type: sioctypes:BlogPost
+        properties:
+          content:
+            type: sioc:content
+            textEnricher: true
+          title:
+            type: dcterms:title
+          date:
+            type: dcterms:created
+          relatedPosts:
+            type: sioc:related_to
+          author:
+            type: foaf:maker
+            externalResolver: SandstormMedia\Semantic\ExternalReference\DbpediaResolver
+        #
+        #  http://rdfs.org/sioc/ns#avatar
+        #  http://rdfs.org/sioc/ns#creator_of
+        #  http://rdfs.org/sioc/ns#related to
+    rdfa:
+      enable: true
 
-  datasetDescription:
-    'dcterms:title': 'voID description of this blog'
-    datasets:
-      blogData:
-        'dcterms:license': odc-odbl
-        norms: odc-by-sa
+    datasetDescription:
+      'dcterms:title': 'voID description of this blog'
+      datasets:
+        blogData:
+          'dcterms:license': odc-odbl
+          norms: odc-by-sa

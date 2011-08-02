@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Schema\ClassSchemaProvider;
+namespace SandstormMedia\Semantic\Schema\ClassSchemaProvider;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -27,10 +27,10 @@ namespace F3\Semantic\Schema\ClassSchemaProvider;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class ReflectionService implements \F3\Semantic\Schema\ClassSchemaProviderInterface {
+class ReflectionService implements \SandstormMedia\Semantic\Schema\ClassSchemaProviderInterface {
 
 	/**
-	 * @var \F3\FLOW3\Reflection\ReflectionService
+	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
 	 * @inject
 	 */
 	protected $reflectionService;

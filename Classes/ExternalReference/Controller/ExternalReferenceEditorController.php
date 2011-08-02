@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\ExternalReference\Controller;
+namespace SandstormMedia\Semantic\ExternalReference\Controller;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Fluid".                      *
@@ -25,7 +25,7 @@ namespace F3\Semantic\ExternalReference\Controller;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ExternalReferenceEditorController extends \F3\Fluid\Core\Widget\AbstractWidgetController {
+class ExternalReferenceEditorController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 
 	protected static $javaScriptAndCssAlreadyIncluded = FALSE;
 	/**

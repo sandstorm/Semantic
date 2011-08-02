@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Controller;
+namespace SandstormMedia\Semantic\Controller;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -22,13 +22,13 @@ namespace F3\Semantic\Controller;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\Semantic\Domain\Model\Triple;
+use \SandstormMedia\Semantic\Domain\Model\Triple;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class RdfIdentityController extends \F3\FLOW3\MVC\Controller\ActionController {
+class RdfIdentityController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * Default action of the backend controller.

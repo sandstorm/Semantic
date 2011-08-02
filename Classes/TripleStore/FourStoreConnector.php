@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\TripleStore;
+namespace SandstormMedia\Semantic\TripleStore;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -30,7 +30,7 @@ namespace F3\Semantic\TripleStore;
 class FourStoreConnector implements StoreConnectorInterface {
 
 	/**
-	 * @var \F3\Semantic\TripleStore\HttpRequestService
+	 * @var \SandstormMedia\Semantic\TripleStore\HttpRequestService
 	 * @inject
 	 */
 	protected $httpRequestService;

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic;
+namespace SandstormMedia\Semantic;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -22,22 +22,22 @@ namespace F3\Semantic;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \F3\FLOW3\Package\Package as BasePackage;
+use \TYPO3\FLOW3\Package\Package as BasePackage;
 
 
 /**
  * The TYPO3 Package
  */
 class Package extends BasePackage {
-	public function boot(\F3\FLOW3\Core\Bootstrap $bootstrap) {
+	public function boot(\TYPO3\FLOW3\Core\Bootstrap $bootstrap) {
 		$dispatcher = $bootstrap->getSignalSlotDispatcher();
-		$dispatcher->connect('F3\FLOW3\Core\Bootstrap', 'bootstrapReady', function($slot) use (&$bootstrap) {
-			if ($bootstrap->getObjectManager() instanceof \F3\FLOW3\Object\CompileTimeObjectManager) {
+		/*$dispatcher->connect('TYPO3\FLOW3\Core\Bootstrap', 'bootstrapReady', function($slot) use (&$bootstrap) {
+			if ($bootstrap->getObjectManager() instanceof \TYPO3\FLOW3\Object\CompileTimeObjectManager) {
 				return;
 			}
 			$entityManager = $bootstrap->getObjectManager()->get('Doctrine\Common\Persistence\ObjectManager');
-			$entityManager->getEventManager()->addEventSubscriber($bootstrap->getObjectManager()->get('F3\Semantic\TripleStore\DoctrineEventSubscriber'));
-		});
+			$entityManager->getEventManager()->addEventSubscriber($bootstrap->getObjectManager()->get('SandstormMedia\Semantic\TripleStore\DoctrineEventSubscriber'));
+		});*/
 	}
 }
 

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Aspect;
+namespace SandstormMedia\Semantic\Aspect;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -30,30 +30,30 @@ namespace F3\Semantic\Aspect;
 class TemplateViewNodeInterceptorAspect {
 
 	/**
-	 * @var \F3\Semantic\Rdfa\FluidSyntaxTreeInterceptor
+	 * @var \SandstormMedia\Semantic\Rdfa\FluidSyntaxTreeInterceptor
 	 * @inject
 	 */
 	protected $rdfaInterceptor;
 
 	/**
-	 * @var \F3\Semantic\ExternalReference\ExternalReferencesInterceptor
+	 * @var \SandstormMedia\Semantic\ExternalReference\ExternalReferencesInterceptor
 	 * @inject
 	 */
 	protected $externalReferencesInterceptor;
 
 	/**
-	 * @var \F3\Semantic\ContinuousTextEnrichment\ContinuousTextInterceptor
+	 * @var \SandstormMedia\Semantic\ContinuousTextEnrichment\ContinuousTextInterceptor
 	 * @inject
 	 */
 	protected $continuousTextInterceptor;
 
 
 	/**
-	 * @afterreturning method(F3\Fluid\View\TemplateView->buildParserConfiguration()) && setting(Semantic.rdfa.enable)
-	 * @param \F3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
+	 * @afterreturning method(TYPO3\Fluid\View\TemplateView->buildParserConfiguration()) && setting(SandstormMedia.Semantic.rdfa.enable)
+	 * @param \TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
 	 * @return void
 	 */
-	public function addTemplateViewInterceptor(\F3\FLOW3\AOP\JoinPointInterface $joinPoint) {
+	public function addTemplateViewInterceptor(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
 		$parserConfiguration = $joinPoint->getResult();
 		$parserConfiguration->addInterceptor($this->rdfaInterceptor);
 		$parserConfiguration->addInterceptor($this->externalReferencesInterceptor);

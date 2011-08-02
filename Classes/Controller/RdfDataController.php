@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Controller;
+namespace SandstormMedia\Semantic\Controller;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -27,18 +27,18 @@ namespace F3\Semantic\Controller;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class RdfDataController extends \F3\FLOW3\MVC\Controller\ActionController {
+class RdfDataController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
-	protected $defaultViewObjectName = 'F3\Semantic\View\ShowNtView';
+	protected $defaultViewObjectName = 'SandstormMedia\Semantic\View\ShowNtView';
 
 	/**
-	 * @var \F3\FLOW3\Object\ObjectManagerInterface
+	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
 	 * @inject
 	 */
 	protected $objectManager;
 
 	/**
-	 * @var \F3\Semantic\Domain\Service\RdfGenerator
+	 * @var \SandstormMedia\Semantic\Domain\Service\RdfGenerator
 	 * @inject
 	 */
 	protected $rdfGenerator;

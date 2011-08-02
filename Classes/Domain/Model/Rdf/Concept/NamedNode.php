@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Model\Rdf\Concept;
+namespace SandstormMedia\Semantic\Domain\Model\Rdf\Concept;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -28,7 +28,7 @@ namespace F3\Semantic\Domain\Model\Rdf\Concept;
 class NamedNode extends RdfNode {
 
 	/**
-	 * @var F3\Semantic\Domain\Model\Rdf\Environment\ProfileInterface
+	 * @var SandstormMedia\Semantic\Domain\Model\Rdf\Environment\ProfileInterface
 	 * @inject
 	 */
 	protected $profile;

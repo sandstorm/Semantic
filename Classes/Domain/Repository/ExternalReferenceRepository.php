@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Domain\Repository;
+namespace SandstormMedia\Semantic\Domain\Repository;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Conference".                 *
@@ -25,10 +25,10 @@ namespace F3\Semantic\Domain\Repository;
 /**
  * @scope singleton
  */
-class ExternalReferenceRepository extends \F3\FLOW3\Persistence\Repository {
+class ExternalReferenceRepository extends \TYPO3\FLOW3\Persistence\Repository {
 
 	/**
-	 * @var F3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @var TYPO3\FLOW3\Persistence\PersistenceManagerInterface
 	 * @inject
 	 */
 	protected $persistenceManager;

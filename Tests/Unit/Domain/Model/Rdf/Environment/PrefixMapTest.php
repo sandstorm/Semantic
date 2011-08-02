@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Environment;
+namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Environment;
 
 /*                                                                        *
  * This script belongs to the FLOW3 framework.                            *
@@ -22,13 +22,13 @@ namespace F3\Semantic\Tests\Unit\Domain\Model\Rdf\Environment;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use F3\Semantic\Domain\Model\Rdf\Environment\PrefixMap;
+use SandstormMedia\Semantic\Domain\Model\Rdf\Environment\PrefixMap;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers F3\Semantic\Domain\Model\Rdf\Environment\PrefixMap
+ * @covers SandstormMedia\Semantic\Domain\Model\Rdf\Environment\PrefixMap
  */
-class PrefixMapTest extends \F3\FLOW3\Tests\UnitTestCase {
+class PrefixMapTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 *
