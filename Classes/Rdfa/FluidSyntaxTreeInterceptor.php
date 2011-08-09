@@ -48,7 +48,7 @@ class FluidSyntaxTreeInterceptor implements \TYPO3\Fluid\Core\Parser\Interceptor
 
 		$subNode = $node;
 		// Hack for dealing with escape ViewHelper
-		if ($subNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode && $subNode->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\EscapeViewHelper) {
+		if ($subNode instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode && $subNode->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\Format\HtmlspecialcharsViewHelper) {
 			$argumentsReflection = new \ReflectionProperty($subNode, 'arguments');
 			$argumentsReflection->setAccessible(TRUE);
 			$arguments = $argumentsReflection->getValue($subNode);

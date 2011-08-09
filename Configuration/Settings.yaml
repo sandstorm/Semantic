@@ -15,7 +15,7 @@ SandstormMedia:
         properties:
           content:
             type: sioc:content
-            textEnricher: true
+#            textEnricher: true
           title:
             type: dcterms:title
           date:

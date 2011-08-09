@@ -29,7 +29,7 @@ use SandstormMedia\Semantic\Domain\Model\ExternalReference;
  * @scope singleton
  */
 class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\PersistentObjectConverter {
-	protected $priority = 10;
+	protected $priority = 10000;
 
 	/**
 	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
@@ -50,8 +50,8 @@ class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\Pers
 	 * @return array
 	 * @author Sebastian Kurf‚Äö√Ñ√∂‚àö√ë‚àö‚àÇ‚Äö√†√∂‚àö√´‚Äö√†√∂‚Äö√†√á‚Äö√Ñ√∂‚àö‚Ä†‚àö‚àÇ‚Äö√Ñ√∂‚àö√ë‚Äö√Ñ‚Ä†‚Äö√Ñ√∂‚àö‚Ä†‚àö‚àÇ‚Äö√Ñ√∂‚àö‚Ä†‚àö√°¬¨¬®¬¨¬Æ¬¨¬®¬¨√Ü‚Äö√Ñ√∂‚àö√ë‚àö‚àÇ‚Äö√†√∂‚Äö√Ñ‚Ä†¬¨¬®¬¨‚Ä¢rst <sebastian@typo3.org>
 	 */
-	public function getProperties($source) {
-		$result = parent::getProperties($source);
+	public function getSourceChildPropertiesToBeConverted($source) {
+		$result = parent::getSourceChildPropertiesToBeConverted($source);
 		foreach ($result as $key => $value) {
 			if (preg_match('/_metadata$/', $key)) {
 				unset($result[$key]);
@@ -74,23 +74,25 @@ class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\Pers
 	public function convertFrom($source, $targetType, array $subProperties = array(), \TYPO3\FLOW3\Property\PropertyMappingConfigurationInterface $configuration = NULL) {
 		$object = parent::convertFrom($source, $targetType, $subProperties, $configuration);
 
-		foreach ($source as $key => $value) {
-			$matches = array();
-			if (preg_match('/^(.*)_metadata$/', $key, $matches)) {
-				$uuid = $this->persistenceManager->getIdentifierByObject($object);
-				$propertyName = $matches[1];
-				$externalReference = $this->externalReferenceRepository->findOneByUuidAndPropertyName($uuid, $propertyName);
+		if (is_array($source)) {
+			foreach ($source as $key => $value) {
+				$matches = array();
+				if (preg_match('/^(.*)_metadata$/', $key, $matches)) {
+					$uuid = $this->persistenceManager->getIdentifierByObject($object);
+					$propertyName = $matches[1];
+					$externalReference = $this->externalReferenceRepository->findOneByUuidAndPropertyName($uuid, $propertyName);
 
-				if ($value == '' && $externalReference !== NULL) {
-					$this->externalReferenceRepository->remove($externalReference);
-				} elseif ($externalReference === NULL) {
-					$externalReference = new ExternalReference();
-					$externalReference->setObjectUuid($uuid);
-					$externalReference->setPropertyName($propertyName);
+					if ($value == '' && $externalReference !== NULL) {
+						$this->externalReferenceRepository->remove($externalReference);
+					} elseif ($externalReference === NULL) {
+						$externalReference = new ExternalReference();
+						$externalReference->setObjectUuid($uuid);
+						$externalReference->setPropertyName($propertyName);
 
-					$this->externalReferenceRepository->add($externalReference);
+						$this->externalReferenceRepository->add($externalReference);
+					}
+					$externalReference->setValue($value);
 				}
-				$externalReference->setValue($value);
 			}
 		}
 
