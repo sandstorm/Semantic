@@ -38,9 +38,16 @@
     '@action':     'show'
     '@format':     'nt'
 -
-  name: 'Description of all datasets using Void'
+  name: 'Description of all datasets using Void, well-known shortcut'
   uriPattern: '.well-known/void'
   defaults:
     '@package':    'SandstormMedia.Semantic'
     '@controller': 'Void'
     '@action':     'wellKnown'
+--
+  name: 'RDF Enrichment test'
+  uriPattern: 'enrich(/{@action})'
+  defaults:
+    '@package':    'SandstormMedia.Semantic'
+    '@controller': 'ContinuousTextEnrichment'
+    '@action':     'index'
