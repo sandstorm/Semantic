@@ -1,25 +1,100 @@
-<div class="semantic-rdf-text"><a href="#">Enrich!</a>
-</div>
+<div class="semantic-rdf-controls"><a href="#">Enrich!</a></div>
+<div class="semantic-rdf-text"></div>
 <f:if condition="{includeJs}">
 <style>
 
 /* Top Container */
-.semantic-rdf-text {
+.semantic-rdf-controls {
 	/*display:none;*/
+}
+.semantic-rdf-text {
+	display:none;
+}
+.rdf-annotation {
+	background:green;
+}
+
+.rdf-annotation.rdf-annotation-nolinkification {
+	background:red;
 }
 </style>
 <script>
-widget_serverside_endpoint = '{f:uri.widget(action:"autocomplete", ajax: 1)}';
+semantifier_endpoint = 'http://localhost:8080/semantifier/';
 //<![CDATA[
 jQuery(document).ready(function() {
-	jQuery(".semantic-rdf-text").each(function(index, element) {
-		var textElement = jQuery(element).prev(),
-			enrichButton = jQuery('a', element);
-		enrichButton.click(function(e) {
+
+	function addResultToTag(results, $enrichmentControl) {
+		var text = $enrichmentControl.html();
+		var resultingText = '';
+		var currentResultIndex = 0;
+		var entities = results['entities'];
+
+		console.log(entities);
+		for (var i=0; i<text.length; i++) {
+			if (entities[currentResultIndex] && entities[currentResultIndex]['offset'] == i) {
+				resultingText += '<span class="rdf-annotation' + (entities[currentResultIndex]['links'].length == 0 ? ' rdf-annotation-nolinkification' : '') + '" data-annotation="' + JSON.stringify(entities[currentResultIndex]).replace(/"/g, '&quot;') + '">';
+				resultingText += text[i];
+			} else if (entities[currentResultIndex] && entities[currentResultIndex]['offset'] + entities[currentResultIndex]['length']-1 == i) {
+				currentResultIndex++;
+				resultingText += text[i];
+				resultingText += '</span>';
+			} else {
+				resultingText += text[i];
+			}
+		}
+		$enrichmentControl.html(resultingText);
+
+		var $helper = jQuery('<div />');
+		$enrichmentControl.after($helper);
+		$helper.css('position', 'absolute');
+		$helper.css('border', '1px solid red');
+		var position = $enrichmentControl.position();
+
+		$helper.css('left', position.left + $enrichmentControl.width());
+		$helper.css('top', position.top);
+		$helper.width('200px');
+		$helper.height($enrichmentControl.height());
+
+		$('.rdf-annotation', $enrichmentControl[0]).live('click', function() {
+			var annotationData = JSON.parse($(this).attr('data-annotation'));
+			showAnnotationData(annotationData, $helper);
+		});
+	};
+
+	function showAnnotationData(annotationData, $helper) {
+
+	};
+
+	jQuery('.semantic-rdf-controls').each(function(index, element) {
+		var $textarea = jQuery(element).prev(),
+			$enrichButton = jQuery('a', element),
+			$enrichmentControl = jQuery(element).next();
+
+		$enrichButton.click(function(e) {
 			e.preventDefault();
-			console.log("button clicke", textElement.val());
-		})
+
+			var h = $textarea.height();
+			var w = $textarea.width();
+
+			$textarea.hide();
+			$(element).hide();
+
+			$enrichmentControl.html($textarea.val());
+			$enrichmentControl.height(h);
+			$enrichmentControl.width(w);
+			$enrichmentControl.css('overflow', 'auto');
+			$enrichmentControl.css('font-size', $textarea.css('font-size'));
+			$enrichmentControl.css('border', '1px solid #ccc');
+			$enrichmentControl.show();
+
+			jQuery.post(semantifier_endpoint + 'annotate', {
+					text: $textarea.val()
+				}, function(results) {
+					addResultToTag(results, $enrichmentControl);
+				});
+		});
 	});
 });
-//]]></script>
+//]]>
+</script>
 </f:if>
