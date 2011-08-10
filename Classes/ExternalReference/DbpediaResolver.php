@@ -29,8 +29,8 @@ namespace SandstormMedia\Semantic\ExternalReference;
  * @scope singleton
  */
 class DbpediaResolver {
-	public function resolve($query) {
-		$data = file_get_contents('http://lookup.dbpedia.org/api/search.asmx/PrefixSearch?QueryClass=Person&MaxHits=5&QueryString=' . urlencode($query));
+	public function resolve($query) {// QueryClass=Person&
+		$data = file_get_contents('http://lookup.dbpedia.org/api/search.asmx/PrefixSearch?MaxHits=5&QueryString=' . urlencode($query));
 		$results = new \SimpleXMLElement($data);
 
 		$processedResults = array();

@@ -39,7 +39,7 @@ class RdfIdentityController extends \TYPO3\FLOW3\MVC\Controller\ActionController
 	 * @skipCsrfProtection
 	 */
 	public function showAction($dataType, $identifier) {
-		$this->redirect('show', 'rdfdata', 'Semantic', array('dataType' => $dataType, 'identifier' => $identifier), NULL, 303, 'nt');
+		$this->redirect('show', 'rdfdata', 'SandstormMedia.Semantic', array('dataType' => $dataType, 'identifier' => $identifier), NULL, 303, 'nt');
 	}
 }
 ?>
