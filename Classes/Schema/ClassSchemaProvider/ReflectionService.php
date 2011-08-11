@@ -40,7 +40,13 @@ class ReflectionService implements \SandstormMedia\Semantic\Schema\ClassSchemaPr
 	}
 
 	public function getPropertySchema($className, $propertyName) {
-		return $this->reflectionService->getClassSchema($className)->getProperty($propertyName);
+		return array_map(function($value) {
+			if (is_array($value) && count($value) === 1) {
+				return $value[0];
+			} else {
+				return $value;
+			}
+		}, $this->reflectionService->getPropertyTagsValues($className, $propertyName));
 	}
 
 	public function getClassSchema($className) {

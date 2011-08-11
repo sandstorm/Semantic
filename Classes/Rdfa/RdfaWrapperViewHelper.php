@@ -52,6 +52,12 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 	protected $metadataRepository;
 
 	/**
+	 * @var \SandstormMedia\Semantic\Schema\ClassSchemaResolver
+	 * @inject
+	 */
+	protected $classSchemaResolver;
+
+	/**
 	 * @param array $settings
 	 */
 	public function injectSettings($settings) {
@@ -67,7 +73,6 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 
 		$propertyName = array_pop($propertyPathParts);
 		$objectPath = implode('.', $propertyPathParts);
-
 		$innerContent = $this->renderChildren();
 
 		if (strlen($objectPath) == 0) return $innerContent;
@@ -81,9 +86,10 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 		$rdfSubject = $this->resourceUriService->buildResourceUri($object);
 
 		$rdfPredicate = NULL;
-		$rdfSchema = isset($this->settings['PropertyMapping'][get_class($object)]) ? $this->settings['PropertyMapping'][get_class($object)] : array();
-		if (isset($rdfSchema['properties'][$propertyName]['type'])) {  // TODO handle external references
-			$rdfPredicate = new NamedNode($rdfSchema['properties'][$propertyName]['type']);
+		$propertySchema = $this->classSchemaResolver->getPropertySchema(get_class($object), $propertyName);
+
+		if (isset($propertySchema['rdfType'])) {
+			$rdfPredicate = new NamedNode($propertySchema['rdfType']);
 		}
 
 		$possibleRdfExternalReference = $this->metadataRepository->findOneByObjectAndPropertyName($object, $propertyName);
@@ -91,7 +97,6 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 			$value = $possibleRdfExternalReference->getValue();
 			$this->tag->addAttribute('content', $value);
 		}
-
 
 		if ($rdfPredicate !== NULL && !is_object($innerContent)) { // TODO: hack to prevent conversion of f.e. DateTime
 			$this->tag->setContent($innerContent);
