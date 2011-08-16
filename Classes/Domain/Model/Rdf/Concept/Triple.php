@@ -23,6 +23,8 @@ namespace SandstormMedia\Semantic\Domain\Model\Rdf\Concept;
  *                                                                        */
 
 /**
+ * Triple, containing Subject, Predicate and Object.
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class Triple {

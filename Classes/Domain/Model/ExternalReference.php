@@ -23,6 +23,8 @@ namespace SandstormMedia\Semantic\Domain\Model;
  *                                                                        */
 
 /**
+ * An "external reference" contains for a given object and property a URI which should be used instead.
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @entity
  */

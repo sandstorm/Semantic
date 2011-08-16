@@ -23,6 +23,8 @@ namespace SandstormMedia\Semantic\Domain\Model\Rdf\Concept;
  *                                                                        */
 
 /**
+ * A literal node is a simple value like a string, a date, ...
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class Literal extends RdfNode {

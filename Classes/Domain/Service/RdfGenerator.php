@@ -57,11 +57,24 @@ class RdfGenerator {
 	 */
 	protected $classSchemaResolver;
 
+	/**
+	 * Build a graph for a given object
+	 *
+	 * @param object $object
+	 * @return Graph
+	 */
 	public function buildGraphForObject($object) {
 		$domainModelObjectName = get_class($object);
 		$identifier = $this->persistenceManager->getIdentifierByObject($object);
 		return $this->buildGraph($domainModelObjectName, $identifier);
 	}
+
+	/**
+	 *
+	 * @param string $domainModelObjectName
+	 * @param string $identifier
+	 * @return Graph
+	 */
 	public function buildGraph($domainModelObjectName, $identifier) {
 		$object = $this->persistenceManager->getObjectByIdentifier($identifier, $domainModelObjectName);
 		if ($object === NULL) {

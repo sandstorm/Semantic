@@ -23,6 +23,8 @@ namespace SandstormMedia\Semantic\Domain\Model\Rdf\Concept;
  *                                                                        */
 
 /**
+ * A NamedNodes is the RDF node for URIs.
+ *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 class NamedNode extends RdfNode {
