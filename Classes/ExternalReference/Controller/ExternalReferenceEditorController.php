@@ -28,23 +28,13 @@ namespace SandstormMedia\Semantic\ExternalReference\Controller;
 class ExternalReferenceEditorController extends \TYPO3\Fluid\Core\Widget\AbstractWidgetController {
 
 	protected static $javaScriptAndCssAlreadyIncluded = FALSE;
+
 	/**
 	 * @return void
 	 */
 	public function indexAction() {
-		if (!self::$javaScriptAndCssAlreadyIncluded) $this->view->assign('includeJs', TRUE);
-		self::$javaScriptAndCssAlreadyIncluded = TRUE;
 		$this->view->assign('metadata', $this->widgetConfiguration['metadata']);
 
-	}
-
-	/**
-	 * @param string $search
-	 */
-	public function autocompleteAction($search) {
-		$resolver = $this->objectManager->get($this->widgetConfiguration['resolver']);
-		$results = $resolver->resolve($search);
-		return json_encode($results);
 	}
 }
 ?>

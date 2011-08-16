@@ -26,15 +26,9 @@ namespace SandstormMedia\Semantic\ExternalReference;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ExternalReferenceEditorViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
+class ExternalReferenceEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
-	protected $settings;
-
-	/**
-	 * @var SandstormMedia\Semantic\ExternalReference\Controller\ExternalReferenceEditorController
-	 * @inject
-	 */
-	protected $controller;
+	protected $tagName = 'input';
 
 	/**
 	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
@@ -42,47 +36,38 @@ class ExternalReferenceEditorViewHelper extends \TYPO3\Fluid\Core\Widget\Abstrac
 	 */
 	protected $externalReferenceRepository;
 
-	protected $enabled = FALSE;
-
-	protected $resolverConfiguration = array();
 	/**
-	 * @param array $settings
+	 * @var \SandstormMedia\Semantic\Schema\ClassSchemaResolver
+	 * @inject
 	 */
-	public function injectSettings($settings) {
-		$this->settings = $settings;
-	}
-
-	public function initialize() {
-		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
-			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
-			$formObjectName = get_class($formObject);
-			if (isset($this->settings['PropertyMapping'][$formObjectName]['properties'][$this->arguments['property']]['externalResolver'])) {
-				$externalResolverConfiguration = $this->settings['PropertyMapping'][$formObjectName]['properties'][$this->arguments['property']]['externalResolver'];
-				$this->ajaxWidget = TRUE;
-				$this->enabled = TRUE;
-				$this->resolverConfiguration = $externalResolverConfiguration;
-			}
-		}
-	}
-
-	public function getWidgetConfiguration() {
-		$metadata = NULL;
-		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
-			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
-			$metadata = $this->externalReferenceRepository->findOneByObjectAndPropertyName($formObject, $this->arguments['property']);
-		}
-		return array('resolver' => $this->resolverConfiguration, 'metadata' => $metadata);
-	}
+	protected $classSchemaResolver;
 
 	/**
 	 * @param string $property
 	 * @return string
 	 */
 	public function render($property) {
-		if (!$this->enabled) return '';
 
-		$response = $this->initiateSubRequest();
-		return $response->getContent();
+		$metadata = NULL;
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+			$metadata = $this->externalReferenceRepository->findOneByObjectAndPropertyName($formObject, $property);
+
+			$propertySchema = $this->classSchemaResolver->getPropertySchema(get_class($formObject), $property);
+			if (!isset($propertySchema['rdfLinkify'])) {
+				return '';
+			}
+		} else {
+			return '';
+		}
+
+		$this->tag->addAttribute('type', 'hidden');
+		if ($metadata) {
+			$this->tag->addAttribute('value', $metadata->getValue());
+		}
+		$this->tag->addAttribute('class', 'sm-semantic externalReference');
+
+		return $this->tag->render();
 	}
 }
 ?>
