@@ -31,8 +31,6 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 
 	protected $tagName = 'span'; // TODO: use a different one later?
 
-	protected $settings;
-
 	/**
 	 * @var \SandstormMedia\Semantic\Domain\Service\ResourceUriService
 	 * @inject
@@ -58,11 +56,10 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 	protected $classSchemaResolver;
 
 	/**
-	 * @param array $settings
+	 * @var SandstormMedia\Semantic\Domain\Repository\TextAnnotationsRepository
+	 * @inject
 	 */
-	public function injectSettings($settings) {
-		$this->settings = $settings;
-	}
+	protected $textAnnotationsRepository;
 
 	/**
 	 * @param string $propertyPath
@@ -87,6 +84,11 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 
 		$rdfPredicate = NULL;
 		$propertySchema = $this->classSchemaResolver->getPropertySchema(get_class($object), $propertyName);
+
+		$annotatedText = $this->textAnnotationsRepository->findOneByObjectAndPropertyName($object, $propertyName);
+		if ($annotatedText !== NULL) {
+			$innerContent = $annotatedText->getStringWithAnnotations($innerContent);
+		}
 
 		if (isset($propertySchema['rdfType'])) {
 			$rdfPredicate = new NamedNode($propertySchema['rdfType']);

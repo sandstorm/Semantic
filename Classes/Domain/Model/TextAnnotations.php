@@ -60,26 +60,29 @@ class TextAnnotations {
 	}
 
 	// TODO: fix method below
-	public function getStringWithAnnotations() {
+	public function getStringWithAnnotations($text) {
 		$output = '';
-		$length = strlen($this->string);
+		$length = strlen($text);
 
+		$beginAtPosition = array();
+		$endAtPosition = array();
+		foreach ($this->annotations as $annotation) {
+			$beginAtPosition[$annotation['offset']] = $annotation;
+			$endAtPosition[$annotation['offset'] + $annotation['length']] = $annotation;
+		}
+		// TODO: check that ranges do not overlap!
+		// TODO: below code could still be broken...
 		for ($i = 0; $i < $length; $i++) {
-			if (isset($this->endOfData[$i])) {
-				foreach ($this->endOfData[$i] as $storage) {
-					$output .= '</span>'; // HACK; which creates not correctly nested HTML as soon as ranges OVERLAP!!
-				}
+			if (isset($endAtPosition[$i])) {
+				$output .= $text[$i];
+				$output .= '</span>';
+			} elseif (isset($beginAtPosition[$i])) {
+				$annotation = $beginAtPosition[$i];
+				$output .= '<span about="' . $annotation['uri'] . '">';
+				$output .= $text[$i];
+			} else {
+				$output .= $text[$i];
 			}
-
-			if (isset($this->beginOfData[$i])) {
-				foreach ($this->beginOfData[$i] as $storage) {
-					$output .= '<span
-						about="' . $storage->subject . '"
-						typeof="' . $storage->type . '">'; // TODO: HTML Special Chars // use TagBuilder!
-				}
-			}
-
-			$output .= $this->string[$i];
 		}
 
 		return $output;
@@ -87,6 +90,10 @@ class TextAnnotations {
 
 	public function setAnnotations($annotations) {
 		$this->annotations = $annotations;
+	}
+
+	public function getAnnotations() {
+		return $this->annotations;
 	}
 }
 ?>

@@ -52,6 +52,13 @@ class RdfGenerator {
 	protected $externalReferenceRepository;
 
 	/**
+	 * @var SandstormMedia\Semantic\Domain\Repository\TextAnnotationsRepository
+	 * @inject
+	 */
+	protected $textAnnotationsRepository;
+
+
+	/**
 	 * @var \SandstormMedia\Semantic\Schema\ClassSchemaResolver
 	 * @inject
 	 */
@@ -116,7 +123,7 @@ class RdfGenerator {
 			return;
 		}
 
-		switch ($propertySchema['type']) {
+		switch ($propertySchema['var']) {
 			case 'string':
 			case 'DateTime':
 				$rdfObject = new Literal($propertyValue);
@@ -135,7 +142,27 @@ class RdfGenerator {
 				}
 				break;
 			default:
-				throw new \Exception('TODO: Type ' . $propertySchema['type'] . ' not supported');
+				throw new \Exception('TODO: Type ' . $propertySchema['var'] . ' not supported');
+		}
+
+		$possibleTextAnnotations = $this->textAnnotationsRepository->findOneByUuidAndPropertyName($identifier, $propertyName);
+		if ($possibleTextAnnotations) {
+			$annotationType = new NamedNode('annot:Annotation');
+
+			foreach ($possibleTextAnnotations->getAnnotations() as $annotation) {
+				$annotationInstance = new \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\BlankNode();
+				$siocAbout = new NamedNode('sioc:about');
+				$rdfObject = new NamedNode($annotation['uri']);
+				$graph->add(new Triple($rdfSubject, $siocAbout, $rdfObject));
+
+				$graph->add(new Triple($rdfSubject, new NamedNode('annot:annotatedBy'), $annotationInstance));
+				$graph->add(new Triple($annotationInstance, new NamedNode('rdf:type'), $annotationType));
+				$graph->add(new Triple($annotationInstance, new NamedNode('annot:predicate'), $rdfPredicate));
+				//$graph->add(new Triple($annotationInstance, new NamedNode('annot:annotatedText'), $rdfPredicate)); // TODO
+				$graph->add(new Triple($annotationInstance, new NamedNode('annot:offset'), new Literal($annotation['offset'])));
+				$graph->add(new Triple($annotationInstance, new NamedNode('annot:length'), new Literal($annotation['length'])));
+				$graph->add(new Triple($annotationInstance, new NamedNode('annot:about'), $rdfObject));
+			}
 		}
 	}
 }

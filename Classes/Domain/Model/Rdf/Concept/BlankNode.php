@@ -38,7 +38,7 @@ class BlankNode extends RdfNode {
 	 * @test
 	 */
 	public function __construct() {
-		$this->nominalValue = uniqid('b', TRUE);
+		$this->nominalValue = uniqid('b');
 	}
 
 	/**
