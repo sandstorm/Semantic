@@ -38,6 +38,12 @@ class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\Pers
 	protected $externalReferenceRepository;
 
 	/**
+	 * @var SandstormMedia\Semantic\Domain\Repository\TextAnnotationsRepository
+	 * @inject
+	 */
+	protected $textAnnotationsRepository;
+
+	/**
 	 * @var TYPO3\FLOW3\Persistence\PersistenceManagerInterface
 	 * @inject
 	 */
@@ -53,7 +59,7 @@ class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\Pers
 	public function getSourceChildPropertiesToBeConverted($source) {
 		$result = parent::getSourceChildPropertiesToBeConverted($source);
 		foreach ($result as $key => $value) {
-			if (preg_match('/_metadata$/', $key)) {
+			if (preg_match('/_metadata$/', $key) || preg_match('/_continuousTextMetadata$/', $key)) {
 				unset($result[$key]);
 			}
 		}
@@ -92,6 +98,24 @@ class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\Pers
 						$this->externalReferenceRepository->add($externalReference);
 					}
 					$externalReference->setValue($value);
+				} elseif (preg_match('/^(.*)_continuousTextMetadata$/', $key, $matches)) {
+					$uuid = $this->persistenceManager->getIdentifierByObject($object);
+					$propertyName = $matches[1];
+
+					$value = json_decode($value, TRUE);
+
+					$textAnnotation = $this->textAnnotationsRepository->findOneByUuidAndPropertyName($uuid, $propertyName);
+
+					if (count($value) == 0 && $textAnnotation !== NULL) {
+						$this->textAnnotationsRepository->remove($textAnnotation);
+					} elseif ($textAnnotation === NULL) {
+						$textAnnotation = new \SandstormMedia\Semantic\Domain\Model\TextAnnotations();
+						$textAnnotation->setObjectUuid($uuid);
+						$textAnnotation->setPropertyName($propertyName);
+
+						$this->textAnnotationsRepository->add($textAnnotation);
+					}
+					$textAnnotation->setAnnotations($value);
 				}
 			}
 		}

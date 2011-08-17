@@ -1,11 +1,12 @@
+// Foo bar
+// =======
 (function($){
 
-	/**
-	 * ===============
-	 * Generic Helpers
-	 * ===============
-	 */
-	// Taken from https://github.com/jollytoad/jquery.plugins/blob/master/src/jquery.defer.js
+	// Generic Helpers
+	// ---------------
+	//
+	// * Taken from https://github.com/jollytoad/jquery.plugins/blob/master/src/jquery.defer.js
+	//
 	$.defer = function(delay, timerDataName, callback) {
 		var timer;
 
@@ -212,6 +213,20 @@
 			$enrichmentWidget.after('<div class="sm-semantic enrichmentButton">Enrich!</div>');
 			$enrichmentButton = $enrichmentWidget.next('.sm-semantic.enrichmentButton');
 
+			// Helper which can store all annotations which are selected in a hidden field
+			var storeAnnotationsInHiddenField = function() {
+				var annotations = [];
+				$enrichmentWidget.find('.rdf-annotation[about]').each(function() {
+					var $annotation = $(this);
+					annotations.push({
+						uri: $annotation.attr('about'),
+						offset: $annotation.attr('data-offset'),
+						length: $annotation.attr('data-length')
+					});
+				});
+				$storageInputField.val(JSON.stringify(annotations));
+			};
+
 			// Helper which shows the annotations from the server in the enrichment widget.
 			var showAnnotationsInEnrichmentWidget = function(results) {
 				var text = $this.html();
@@ -221,7 +236,7 @@
 
 				for (var i=0; i<text.length; i++) {
 					if (entities[currentResultIndex] && entities[currentResultIndex]['offset'] == i) {
-						resultingText += '<span class="rdf-annotation' + (entities[currentResultIndex]['links'].length == 0 ? ' rdf-annotation-nolinkification' : '') + '" data-linkificationresults="' + JSON.stringify(entities[currentResultIndex]).replace(/"/g, '&quot;') + '">';
+						resultingText += '<span data-offset="' + i + '" data-length="' + entities[currentResultIndex]['length'] + '" class="rdf-annotation' + (entities[currentResultIndex]['links'].length == 0 ? ' rdf-annotation-nolinkification' : '') + '" data-linkificationresults="' + JSON.stringify(entities[currentResultIndex]).replace(/"/g, '&quot;') + '">';
 						resultingText += text[i];
 					} else if (entities[currentResultIndex] && entities[currentResultIndex]['offset'] + entities[currentResultIndex]['length']-1 == i) {
 						currentResultIndex++;
@@ -245,6 +260,7 @@
 					},
 					storeLinkedDataUri: function($targetElement, uri) {
 						$targetElement.attr('about', uri);
+						storeAnnotationsInHiddenField();
 					},
 					getLinkedDataUri: function($targetElement) {
 						return $targetElement.attr('about');

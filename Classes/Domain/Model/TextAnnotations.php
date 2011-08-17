@@ -22,52 +22,44 @@ namespace SandstormMedia\Semantic\Domain\Model;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode;
-
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @entity
  */
-class AnnotatedString {
+class TextAnnotations {
 
 	/**
-	 * The underlying string which is being annotated
-	 *
 	 * @var string
 	 */
-	protected $string;
-
-	protected $beginOfData;
-	protected $endOfData;
+	protected $objectUuid;
 
 	/**
-	 * @var SandstormMedia\Semantic\Domain\Model\Rdf\Environment\ProfileInterface
-	 * @inject
+	 * @var string
 	 */
-	protected $profile;
+	protected $propertyName;
 
-	public function __construct($string) {
-		$this->string = $string;
-	}
-	public function add(NamedNode $subject, NamedNode $type, $offset, $length) {
-		$end = $offset + $length;
+	/**
+	 * @var array
+	 */
+	protected $annotations;
 
-		$storage = new \stdClass();
-		$storage->subject = $subject;
-		$storage->begin = $offset;
-		$storage->end = $end;
-		$storage->type = $type;
-
-		if (!isset($this->beginOfData[$offset])) {
-			$this->beginOfData[$offset] = array();
-		}
-		$this->beginOfData[$offset][] = $storage;
-
-		if (!isset($this->endOfData[$end])) {
-			$this->endOfData[$end] = array();
-		}
-		$this->endOfData[$end][] = $storage;
+	public function getObjectUuid() {
+		return $this->objectUuid;
 	}
 
+	public function setObjectUuid($objectUuid) {
+		$this->objectUuid = $objectUuid;
+	}
+
+	public function getPropertyName() {
+		return $this->propertyName;
+	}
+
+	public function setPropertyName($propertyName) {
+		$this->propertyName = $propertyName;
+	}
+
+	// TODO: fix method below
 	public function getStringWithAnnotations() {
 		$output = '';
 		$length = strlen($this->string);
@@ -91,6 +83,10 @@ class AnnotatedString {
 		}
 
 		return $output;
+	}
+
+	public function setAnnotations($annotations) {
+		$this->annotations = $annotations;
 	}
 }
 ?>
