@@ -5,12 +5,6 @@
 	font-size:12px;
 	color: black;
 
-	// Master container for all external references
-	// TODO
-	&.externalReferenceContainer {
-		display:inline;
-	}
-
 	// Linkification popup
 	&.linkification {
 		width: 250px;
@@ -28,60 +22,21 @@
 		}
 	}
 
+	// Enrichment widget
+	&.enrichmentWidget {
+		display:none;
+		border: 1px solid #ccc;
+		overflow:auto;
 
+		.rdf-annotation {
+			background:yellow;
+		}
+		.rdf-annotation[about] {
+			background:greenyellow;
+		}
 
-
-
-/* Tooltip showing the RDF link */
-.semantic-rdf-tooltip {
-	position:relative;
-	padding:15px;
-	margin:1em 0 3em;
-	border:5px solid #70706C;
-	color:white;
-	background:#70706C;
-	min-width:300px;
-
-	-webkit-border-radius:10px;
-	-moz-border-radius:10px;
-	border-radius:10px;
-
-	display:none;
-}
-
-.semantic-rdf-tooltip:before {
-	content:"";
-	position:absolute;
-    border-style:solid;
-    /* reduce the damage in FF3.0 */
-    display:block;
-    width:0;
-
-	top:10px; /* controls vertical position */
-	bottom:auto;
-	left:-30px; /* value = - border-left-width - border-right-width */
-	border-width:15px 30px 15px 0;
-	border-color:transparent #70706C;
-}
-.semantic-rdf-reference-searchResults {
-	display:none;
-	background-color: #000;
-	padding: 0;
-	width:250px;
-	min-height: 100px;
-	text-align:left;
-	overflow: hidden;
-	font-size:12px;
-	color: white;
-}
-.semantic-rdf-reference-searchResults .result {
-	padding:5px;
-}
-.semantic-rdf-reference-searchResults .result:hover {
-	background-color: #444;
-}
-.semantic-rdf-reference-searchResults .description {
-	font-size:9px;
-}
-
+		.rdf-annotation.rdf-annotation-nolinkification {
+			background:red;
+		}
+	}
 }

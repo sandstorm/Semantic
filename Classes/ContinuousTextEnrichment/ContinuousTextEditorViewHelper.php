@@ -26,56 +26,40 @@ namespace SandstormMedia\Semantic\ContinuousTextEnrichment;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ContinuousTextEditorViewHelper extends \TYPO3\Fluid\Core\Widget\AbstractWidgetViewHelper {
+class ContinuousTextEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
 
-	protected $settings;
+	protected $tagName = 'input';
 
 	/**
-	 * @var SandstormMedia\Semantic\ContinuousTextEnrichment\Controller\ContinuousTextEditorController
+	 * @var \SandstormMedia\Semantic\Schema\ClassSchemaResolver
 	 * @inject
 	 */
-	protected $controller;
-
-	protected $enabled = FALSE;
-
-	protected $resolverConfiguration = array();
-	/**
-	 * @param array $settings
-	 */
-	public function injectSettings($settings) {
-		$this->settings = $settings;
-	}
-
-	public function initialize() {
-		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
-			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
-			$formObjectName = get_class($formObject);
-			if (isset($this->settings['PropertyMapping'][$formObjectName]['properties'][$this->arguments['property']]['textEnricher'])) {
-				$externalResolverConfiguration = $this->settings['PropertyMapping'][$formObjectName]['properties'][$this->arguments['property']]['textEnricher'];
-				$this->ajaxWidget = TRUE;
-				$this->enabled = TRUE;
-				$this->resolverConfiguration = $externalResolverConfiguration;
-			}
-		}
-	}
-
-	public function getWidgetConfiguration() {
-		$metadata = NULL;
-		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
-			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
-		}
-		return array('resolver' => $this->resolverConfiguration);
-	}
+	protected $classSchemaResolver;
 
 	/**
 	 * @param string $property
 	 * @return string
 	 */
 	public function render($property) {
-		if (!$this->enabled) return '';
+		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
+			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
+			$formObjectName = get_class($formObject);
 
-		$response = $this->initiateSubRequest();
-		return $response->getContent();
+			$propertySchema = $this->classSchemaResolver->getPropertySchema(get_class($formObject), $property);
+			if (!isset($propertySchema['rdfEnrichText'])) {
+				return '';
+			}
+		} else {
+			return '';
+		}
+
+
+		$this->tag->addAttribute('type', 'hidden');
+		// TODO: get serialized annotations, and insert them in the tag
+		$this->tag->addAttribute('class', 'sm-semantic continuousText');
+
+		return $this->tag->render();
+
 	}
 }
 ?>
