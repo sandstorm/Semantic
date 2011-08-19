@@ -37,13 +37,21 @@ class ContinuousTextEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstra
 	protected $classSchemaResolver;
 
 	/**
+	 * @var SandstormMedia\Semantic\Domain\Repository\TextAnnotationsRepository
+	 * @inject
+	 */
+	protected $textAnnotationsRepository;
+
+	/**
 	 * @param string $property
 	 * @return string
 	 */
 	public function render($property) {
+		$annotation = NULL;
 		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
 			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
 			$formObjectName = get_class($formObject);
+			$annotation = $this->textAnnotationsRepository->findOneByObjectAndPropertyName($formObject, $property);
 
 			$propertySchema = $this->classSchemaResolver->getPropertySchema(get_class($formObject), $property);
 			if (!isset($propertySchema['rdfEnrichText'])) {
@@ -53,9 +61,10 @@ class ContinuousTextEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstra
 			return '';
 		}
 
-
 		$this->tag->addAttribute('type', 'hidden');
-		// TODO: get serialized annotations, and insert them in the tag
+		if ($annotation !== NULL) {
+			$this->tag->addAttribute('value', json_encode($annotation->getAnnotations()));
+		}
 		$this->tag->addAttribute('class', 'sm-semantic continuousText');
 
 		return $this->tag->render();
