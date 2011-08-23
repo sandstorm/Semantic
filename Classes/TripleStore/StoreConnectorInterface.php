@@ -27,7 +27,7 @@ namespace SandstormMedia\Semantic\TripleStore;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
 interface StoreConnectorInterface {
-	public function addOrUpdateGraph($graphUri, $dataAsTurtle);
-	public function removeGraph($graphUri);
+	public function addOrUpdateObject($object);
+	public function removeObject($object);
 }
 ?>

@@ -30,7 +30,6 @@ namespace SandstormMedia\Semantic\TripleStore;
 class HttpRequestService {
 
 	public function putStringToUri($stringToPut, $uri, $header = '', $expectedHttpResponseCode = NULL) {
-		var_dump($stringToPut, $uri);
 		$fh = fopen('php://memory', 'rw');
 		fwrite($fh, $stringToPut);
 		rewind($fh);

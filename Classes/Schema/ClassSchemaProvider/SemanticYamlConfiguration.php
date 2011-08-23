@@ -69,5 +69,9 @@ class SemanticYamlConfiguration implements \SandstormMedia\Semantic\Schema\Class
 
 		return $result;
 	}
+	
+	public function getClassNamesWithSchema() {
+		return array_keys($this->settings['PropertyMapping']);
+	}
 }
 ?>

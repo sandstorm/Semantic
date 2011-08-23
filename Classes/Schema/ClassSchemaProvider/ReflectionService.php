@@ -52,5 +52,9 @@ class ReflectionService implements \SandstormMedia\Semantic\Schema\ClassSchemaPr
 	public function getClassSchema($className) {
 		return array();
 	}
+	
+	public function getClassNamesWithSchema() {
+		return $this->reflectionService->getClassNamesByTag('rdfType');
+	}
 }
 ?>

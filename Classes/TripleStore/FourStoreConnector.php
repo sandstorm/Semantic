@@ -27,7 +27,7 @@ namespace SandstormMedia\Semantic\TripleStore;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class FourStoreConnector implements StoreConnectorInterface {
+class FourStoreConnector extends AbstractConnector {
 
 	/**
 	 * @var \SandstormMedia\Semantic\TripleStore\HttpRequestService
@@ -48,6 +48,10 @@ class FourStoreConnector implements StoreConnectorInterface {
 			throw new \Exception('TODO: 4store Base Uri not set.');
 		}
 		$this->baseUri = rtrim($settings['4Store']['baseUri'], '/');
+	}
+	
+	public function storeObject($object) {
+		
 	}
 
 	public function addOrUpdateGraph($graphUri, $dataAsTurtle) {

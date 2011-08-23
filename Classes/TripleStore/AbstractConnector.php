@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace SandstormMedia\Semantic\Schema;
+namespace SandstormMedia\Semantic\TripleStore;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -25,15 +25,36 @@ namespace SandstormMedia\Semantic\Schema;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @scope singleton
  */
-interface ClassSchemaProviderInterface {
+abstract class AbstractConnector implements StoreConnectorInterface {
 
-	public function getPropertyNames($className);
-
-	public function getPropertySchema($className, $propertyName);
-
-	public function getClassSchema($className);
+	/**
+	 * @var \SandstormMedia\Semantic\Domain\Service\RdfGenerator
+	 * @inject
+	 */
+	protected $rdfGenerator;
 	
-	public function getClassNamesWithSchema();
+	
+	/**
+	 * @var \SandstormMedia\Semantic\Domain\Service\ResourceUriService
+	 * @inject
+	 */
+	protected $resourceUriService;
+	
+	public function addOrUpdateObject($object) {
+		$graph = $this->rdfGenerator->buildGraphForObject($object);
+
+		$uri = $this->resourceUriService->buildResourceUri($object);
+		$this->addOrUpdateGraph($uri, $graph->toNt());
+	}
+	
+	public function removeObject($object) {
+		$uri = $this->resourceUriService->buildResourceUri($object);
+		$this->removeGraph($uri);
+	}
+
+	abstract public function addOrUpdateGraph($graphUri, $dataAsTurtle);
+	abstract public function removeGraph($graphUri);
 }
 ?>

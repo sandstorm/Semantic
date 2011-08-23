@@ -32,18 +32,6 @@ use Doctrine\ORM\Events;
 class DoctrineEventSubscriber implements \Doctrine\Common\EventSubscriber {
 
 	/**
-	 * @var \SandstormMedia\Semantic\Domain\Service\RdfGenerator
-	 * @inject
-	 */
-	protected $rdfGenerator;
-
-	/**
-	 * @var \SandstormMedia\Semantic\Domain\Service\ResourceUriService
-	 * @inject
-	 */
-	protected $resourceUriService;
-
-	/**
 	 * @var \SandstormMedia\Semantic\TripleStore\StoreConnectorInterface
 	 * @inject
 	 */
@@ -58,17 +46,12 @@ class DoctrineEventSubscriber implements \Doctrine\Common\EventSubscriber {
 
 	public function preRemove(\Doctrine\ORM\Event\LifecycleEventArgs $lifecycleEventArgs) {
 		$removedEntity = $lifecycleEventArgs->getEntity();
-		$uri = $this->resourceUriService->buildResourceUri($removedEntity);
-
-		$this->storeConnector->removeGraph($uri);
+		$this->storeConnector->removeObject($removedEntity);
 	}
 
 	public function postUpdate(\Doctrine\ORM\Event\LifecycleEventArgs $lifecycleEventArgs) {
 		$changedEntity = $lifecycleEventArgs->getEntity();
-		$graph = $this->rdfGenerator->buildGraphForObject($changedEntity);
-
-		$uri = $this->resourceUriService->buildResourceUri($changedEntity);
-		$this->storeConnector->addOrUpdateGraph($uri, $graph->toNt());
+		$this->storeConnector->addOrUpdateObject($changedEntity);
 	}
 }
 ?>

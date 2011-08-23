@@ -28,7 +28,7 @@ namespace SandstormMedia\Semantic\Command;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  * @scope singleton
  */
-class TestCommandController extends \TYPO3\FLOW3\MVC\Controller\CommandController {
+class TripleStoreCommandController extends \TYPO3\FLOW3\MVC\Controller\CommandController {
 
 	/**
 	 * @inject
@@ -41,23 +41,46 @@ class TestCommandController extends \TYPO3\FLOW3\MVC\Controller\CommandControlle
 	 * @var \TYPO3\FLOW3\Configuration\ConfigurationManager
 	 */
 	protected $configurationManager;
-
+	
 	/**
 	 * @inject
-	 * @var \SandstormMedia\Semantic\Domain\Service\ResourceUriService
+	 * @var \SandstormMedia\Semantic\Schema\ClassSchemaResolver
 	 */
-	protected $resourceUriService;
+	protected $classSchemaResolver;
+
+	/**
+	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
+	 * @inject
+	 */
+	protected $persistenceManager;
+
+	/**
+	 * @var \SandstormMedia\Semantic\TripleStore\StoreConnectorInterface
+	 * @inject
+	 */
+	protected $storeConnector;
+	
 	/**
 	 * Sets up a a blog with a lot of posts and comments which is a nice test bed
 	 * for profiling.
 	 *
 	 * @return string
 	 */
-	public function testCommand() {
+	public function importCommand() {
+		putenv('FLOW3_REWRITEURLS=1');
 		$routesConfiguration = $this->configurationManager->getConfiguration(\TYPO3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_ROUTES);
 		$this->router->setRoutesConfiguration($routesConfiguration);
-
-		return $this->resourceUriService->buildResourceUri(new \stdClass());
+		
+		$objectCount = 0;
+		foreach ($this->classSchemaResolver->getClassNamesWhichHaveASchema() as $className) {
+			$query = $this->persistenceManager->createQueryForType($className);
+			$objects = $query->execute();
+			foreach ($objects as $object) {
+				$this->storeConnector->addOrUpdateObject($object);
+				$objectCount++;
+			}
+		}
+		return sprintf('Updated/Created %d objects', $objectCount);
 	}
 }
 ?>
