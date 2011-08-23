@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace SandstormMedia\Semantic\ExternalReference;
+namespace SandstormMedia\Semantic\FluidConnector;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -25,49 +25,32 @@ namespace SandstormMedia\Semantic\ExternalReference;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
+ * @aspect
  */
-class ExternalReferenceEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBasedViewHelper {
-
-	protected $tagName = 'input';
+class TemplateViewNodeInterceptorAspect {
 
 	/**
-	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
+	 * @var \SandstormMedia\Semantic\Rdfa\FluidSyntaxTreeInterceptor
 	 * @inject
 	 */
-	protected $externalReferenceRepository;
+	protected $rdfaInterceptor;
 
 	/**
-	 * @var \SandstormMedia\Semantic\Schema\ClassSchemaResolver
+	 * @var \SandstormMedia\Semantic\Linkification\FluidSyntaxTreeInterceptor
 	 * @inject
 	 */
-	protected $classSchemaResolver;
+	protected $linkificationInterceptor;
+
 
 	/**
-	 * @param string $property
-	 * @return string
+	 * @afterreturning method(TYPO3\Fluid\View\TemplateView->buildParserConfiguration()) && setting(SandstormMedia.Semantic.rdfa.enable)
+	 * @param \TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
+	 * @return void
 	 */
-	public function render($property) {
-
-		$metadata = NULL;
-		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
-			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
-			$metadata = $this->externalReferenceRepository->findOneByObjectAndPropertyName($formObject, $property);
-
-			$propertySchema = $this->classSchemaResolver->getPropertySchema(get_class($formObject), $property);
-			if (!isset($propertySchema['rdfLinkify'])) {
-				return '';
-			}
-		} else {
-			return '';
-		}
-
-		$this->tag->addAttribute('type', 'hidden');
-		if ($metadata) {
-			$this->tag->addAttribute('value', $metadata->getValue());
-		}
-		$this->tag->addAttribute('class', 'sm-semantic externalReference');
-
-		return $this->tag->render();
+	public function addTemplateViewInterceptor(\TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint) {
+		$parserConfiguration = $joinPoint->getResult();
+		$parserConfiguration->addInterceptor($this->rdfaInterceptor);
+		$parserConfiguration->addInterceptor($this->linkificationInterceptor);
 	}
 }
 ?>

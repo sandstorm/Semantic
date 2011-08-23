@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace SandstormMedia\Semantic\ExternalReference;
+namespace SandstormMedia\Semantic\Linkification;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *

@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace SandstormMedia\Semantic\ContinuousTextEnrichment;
+namespace SandstormMedia\Semantic\Linkification;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -27,14 +27,9 @@ namespace SandstormMedia\Semantic\ContinuousTextEnrichment;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class ContinuousTextInterceptor implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
+class FluidSyntaxTreeInterceptor implements \TYPO3\Fluid\Core\Parser\InterceptorInterface {
 
-	/**
-	 * Is the interceptor enabled right now?
-	 * @var boolean
-	 */
-	protected $interceptorEnabled = TRUE;
-
+	protected $formObjectArguments = array();
 	/**
 	 *
 	 * @param \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node
@@ -42,21 +37,50 @@ class ContinuousTextInterceptor implements \TYPO3\Fluid\Core\Parser\InterceptorI
 	 * @return \TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface
 	 */
 	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState) {
-		if (!$this->interceptorEnabled) {
+
+		if ($node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode &&
+			$node->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\FormViewHelper) {
+			var_dump("Form VH", $interceptorPosition);
+
+			$argumentsReflection = new \ReflectionProperty($node, 'arguments');
+			$argumentsReflection->setAccessible(TRUE);
+			$arguments = $argumentsReflection->getValue($node);
+			
+			if (isset($arguments['action'])) {
+				var_dump("action set");
+				$this->formObjectArguments['action'] = $arguments['action'];
+			}
+			
+			if (isset($arguments['controller'])) {
+				$this->formObjectArguments['controller'] = $arguments['controller'];
+			}
+			
+			if (isset($arguments['package'])) {
+				$this->formObjectArguments['package'] = $arguments['package'];
+			}
+			
+			if (isset($arguments['subpackage'])) {
+				$this->formObjectArguments['subpackage'] = $arguments['subpackage'];
+			}
+			
 			return $node;
 		}
+		
 
-
-		if ($node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode && $node->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\Form\TextareaViewHelper) {
+		if ($interceptorPosition === self::INTERCEPT_CLOSING_VIEWHELPER
+				&& $node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
+				&&($node->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\Form\TextfieldViewHelper
+					|| $node->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\Form\TextareaViewHelper
+					)) {
+			var_dump($this->formObjectArguments);
 			$argumentsReflection = new \ReflectionProperty($node, 'arguments');
 			$argumentsReflection->setAccessible(TRUE);
 			$arguments = $argumentsReflection->getValue($node);
 			if (isset($arguments['property'])) {
-				$propertyNode = $arguments['property'];
-
+				$this->formObjectArguments['property'] = $arguments['property'];
 				$newNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
-					new ContinuousTextEditorViewHelper(),
-					array('property' => $propertyNode)
+					new \SandstormMedia\Semantic\Linkification\LinkificationEditorViewHelper(),
+					$this->formObjectArguments
 				);
 				$parsingState->getNodeFromStack()->addChildNode($newNode);
 			}
@@ -71,6 +95,7 @@ class ContinuousTextInterceptor implements \TYPO3\Fluid\Core\Parser\InterceptorI
 	 */
 	public function getInterceptionPoints() {
 		return array(
+			\TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_OPENING_VIEWHELPER,
 			\TYPO3\Fluid\Core\Parser\InterceptorInterface::INTERCEPT_CLOSING_VIEWHELPER
 		);
 	}
