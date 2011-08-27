@@ -68,14 +68,16 @@ class ClassSchemaResolver {
 		return $propertyNames;
 	}
 
-	public function getClassSchema($className) {
+	public function getClassSchema($classNameOrObject) {
+		$className = is_object($classNameOrObject) ? get_class($classNameOrObject) : $classNameOrObject;
+
 		$classSchema = array();
 		foreach ($this->classSchemaProviders as $provider) {
 			$classSchema = array_merge($classSchema, $provider->getClassSchema($className));
 		}
 		return $classSchema;
 	}
-	
+
 	public function getClassNamesWhichHaveASchema() {
 		$classNamesWithSchema = array();
 		foreach ($this->classSchemaProviders as $provider) {

@@ -34,23 +34,16 @@ abstract class AbstractConnector implements StoreConnectorInterface {
 	 * @inject
 	 */
 	protected $rdfGenerator;
-	
-	
-	/**
-	 * @var \SandstormMedia\Semantic\Domain\Service\ResourceUriService
-	 * @inject
-	 */
-	protected $resourceUriService;
-	
+
 	public function addOrUpdateObject($object) {
 		$graph = $this->rdfGenerator->buildGraphForObject($object);
 
-		$uri = $this->resourceUriService->buildResourceUri($object);
+		$uri = $this->rdfGenerator->getResourceUriForObject($object);
 		$this->addOrUpdateGraph($uri, $graph->toNt());
 	}
-	
+
 	public function removeObject($object) {
-		$uri = $this->resourceUriService->buildResourceUri($object);
+		$uri = $this->rdfGenerator->getResourceUriForObject($object);
 		$this->removeGraph($uri);
 	}
 

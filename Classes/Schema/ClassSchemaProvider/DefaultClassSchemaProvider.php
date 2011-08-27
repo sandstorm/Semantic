@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace SandstormMedia\Semantic\Domain\Service;
+namespace SandstormMedia\Semantic\Schema\ClassSchemaProvider;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -23,31 +23,28 @@ namespace SandstormMedia\Semantic\Domain\Service;
  *                                                                        */
 
 /**
- * NO API!!!
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class ResourceUriService implements IdentityProviderInterface {
-	/**
-	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
-	 * @inject
-	 */
-	protected $persistenceManager;
+class DefaultClassSchemaProvider implements \SandstormMedia\Semantic\Schema\ClassSchemaProviderInterface {
 
-	public function buildResourceUri($domainObject) {
-		$uriBuilder = new \TYPO3\FLOW3\MVC\Web\Routing\UriBuilder();
-		$uriBuilder->setRequest(new FakeRequestForUriBuilder());
+	public function getPropertyNames($className) {
+		return array();
+	}
 
-		$uri = $uriBuilder
-				->reset()
-				->setCreateAbsoluteUri(TRUE)
-				->uriFor('show', array(
-					'dataType' => str_replace('\\', '_', get_class($domainObject)),
-					'identifier' => $this->persistenceManager->getIdentifierByObject($domainObject)),
-				'RdfIdentity', 'SandstormMedia.Semantic');
+	public function getPropertySchema($className, $propertyName) {
+		return array();
+	}
 
-		return new \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode($uri);
+	public function getClassSchema($className) {
+		return array(
+			'rdfIdentityProvider' => 'SandstormMedia\Semantic\Domain\Service\ResourceUriService'
+		);
+	}
+
+	public function getClassNamesWithSchema() {
+		return array();
 	}
 }
 ?>

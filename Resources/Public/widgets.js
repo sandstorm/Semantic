@@ -315,15 +315,24 @@
 				var resultingText = '';
 				var currentResultIndex = 0;
 				var entities = results['entities'];
-				var alreadyStoredAnnotations = JSON.parse($storageInputField.val());
+				var alreadyStoredAnnotations = [];
+				if ($storageInputField.val()) {
+					try {
+						alreadyStoredAnnotations = JSON.parse($storageInputField.val());
+					} catch(e) {
+						alreadyStoredAnnotations = [];
+					}
+				}
 
 				var getUri = function(offset) {
 					var uri = null;
-					$.each(alreadyStoredAnnotations, function(index, annotation) {
-						if (parseInt(annotation.offset) == offset) {
-							uri = annotation.uri;
-						}
-					});
+					if (alreadyStoredAnnotations) {
+						$.each(alreadyStoredAnnotations, function(index, annotation) {
+							if (parseInt(annotation.offset) == offset) {
+								uri = annotation.uri;
+							}
+						});
+					}	
 					return uri;
 				}
 
@@ -395,7 +404,14 @@
 			// Monitor text changes, and move annotations around if needed
 			$this.monitorTextChanges();
 			$this.bind('textChangeWithDiff', function(event, diff) {
-				var oldAnnotations = JSON.parse($storageInputField.val());
+				var oldAnnotations = [];
+				if ($storageInputField.val()) {
+					try {
+						oldAnnotations = JSON.parse($storageInputField.val());
+					} catch(e) {
+						oldAnnotations = [];
+					}
+				}
 				var newAnnotations = [];
 				$.each(oldAnnotations, function(index, annotation) {
 					annotation.offset = parseInt(annotation.offset);

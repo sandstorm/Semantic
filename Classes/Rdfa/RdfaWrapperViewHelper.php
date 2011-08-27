@@ -32,10 +32,10 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 	protected $tagName = 'span'; // TODO: use a different one later?
 
 	/**
-	 * @var \SandstormMedia\Semantic\Domain\Service\ResourceUriService
+	 * @var \SandstormMedia\Semantic\Domain\Service\RdfGenerator
 	 * @inject
 	 */
-	protected $resourceUriService;
+	protected $rdfGenerator;
 
 	/**
 	 * @var SandstormMedia\Semantic\Domain\Model\Rdf\Environment\ProfileInterface
@@ -80,7 +80,7 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 			return $innerContent;
 		}
 
-		$rdfSubject = $this->resourceUriService->buildResourceUri($object);
+		$rdfSubject = $this->rdfGenerator->getResourceUriForObject($object);
 
 		$rdfPredicate = NULL;
 		$propertySchema = $this->classSchemaResolver->getPropertySchema(get_class($object), $propertyName);

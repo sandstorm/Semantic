@@ -41,7 +41,7 @@ class TextAnnotations {
 	/**
 	 * @var array
 	 */
-	protected $annotations;
+	protected $annotations = array();
 
 	public function getObjectUuid() {
 		return $this->objectUuid;
@@ -66,6 +66,8 @@ class TextAnnotations {
 
 		$beginAtPosition = array();
 		$endAtPosition = array();
+		if ($this->annotations === NULL || count($this->annotations) === 0) return $text;
+		
 		foreach ($this->annotations as $annotation) {
 			$beginAtPosition[$annotation['offset']] = $annotation;
 			$endAtPosition[$annotation['offset'] + $annotation['length']] = $annotation;

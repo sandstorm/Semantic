@@ -34,16 +34,16 @@ use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Triple;
 class RdfGenerator {
 
 	/**
+	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
+	 * @inject
+	 */
+	protected $objectManager;
+
+	/**
 	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
 	 * @inject
 	 */
 	protected $persistenceManager;
-
-	/**
-	 * @var \SandstormMedia\Semantic\Domain\Service\ResourceUriService
-	 * @inject
-	 */
-	protected $resourceUriService;
 
 	/**
 	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
@@ -88,7 +88,7 @@ class RdfGenerator {
 			throw new \Exception("TODO: Object not found.");
 		}
 		$rdfGraph = new Graph();
-		$rdfSubject = $this->resourceUriService->buildResourceUri($object);
+		$rdfSubject = $this->getResourceUriForObject($object);
 
 		$propertyNames = $this->classSchemaResolver->getPropertyNames($domainModelObjectName);
 
@@ -134,7 +134,7 @@ class RdfGenerator {
 				$collection = $propertyValue;
 				if (class_exists($propertySchema['elementType'])) {
 					foreach ($collection as $element) {
-						$rdfObject = $this->resourceUriService->buildResourceUri($element);
+						$rdfObject = $this->getResourceUriForObject($element);
 						$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
 					}
 				} else {
@@ -164,6 +164,23 @@ class RdfGenerator {
 				$graph->add(new Triple($annotationInstance, new NamedNode('annot:about'), $rdfObject));
 			}
 		}
+	}
+
+	/**
+	 * @api
+	 */
+	public function getResourceUriForObject($object) {
+		$classSchema = $this->classSchemaResolver->getClassSchema($object);
+		if (!isset($classSchema['rdfIdentityProvider'])) {
+			throw new \Exception('rdfIdentityProvider not set for object ' . get_class($object), 1314440839);
+		}
+		$rdfIdentityProvider = $this->objectManager->get($classSchema['rdfIdentityProvider']);
+
+		if ($rdfIdentityProvider === NULL || !($rdfIdentityProvider instanceof IdentityProviderInterface)) {
+			throw new \Exception('rdfIdentityProvider not found or no instance of IdentityProviderInterface: "' . $classSchema['rdfIdentityProvider'] . '",', 1314440848);
+		}
+
+		return $rdfIdentityProvider->buildResourceUri($object);
 	}
 }
 ?>

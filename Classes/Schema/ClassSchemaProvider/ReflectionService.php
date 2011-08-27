@@ -39,20 +39,44 @@ class ReflectionService implements \SandstormMedia\Semantic\Schema\ClassSchemaPr
 		return $this->reflectionService->getClassPropertyNames($className);
 	}
 
-	public function getPropertySchema($className, $propertyName) {
+	protected function cleanupValues($values) {
 		return array_map(function($value) {
 			if (is_array($value) && count($value) === 1) {
 				return $value[0];
+			} elseif (is_array($value) && count($value) === 0) {
+				return NULL;
 			} else {
 				return $value;
 			}
-		}, $this->reflectionService->getPropertyTagsValues($className, $propertyName));
+		}, $values);
+	}
+
+	protected function filterValues($values) {
+		$filteredValues = array();
+		foreach ($values as $key => $value) {
+			if (strpos($key, 'rdf') === 0) { // only keep the element if it *starts* with rdf
+				$filteredValues[$key] = $value;
+			}
+		}
+		return $filteredValues;
+	}
+
+	public function getPropertySchema($className, $propertyName) {
+		$values = $this->cleanupValues($this->reflectionService->getPropertyTagsValues($className, $propertyName));
+
+		$propertySchema = $this->reflectionService->getClassSchema($className)->getProperty($propertyName);
+		if ($propertySchema) {
+			$values['rdfSourceType'] = $propertySchema['type'];
+			$values['rdfSourceElementType'] = $propertySchema['elementType'];
+		}
+		return $this->filterValues($values);
 	}
 
 	public function getClassSchema($className) {
-		return array();
+		$values = $this->cleanupValues($this->reflectionService->getClassTagsValues($className));
+		return $this->filterValues($values);
 	}
-	
+
 	public function getClassNamesWithSchema() {
 		return $this->reflectionService->getClassNamesByTag('rdfType');
 	}

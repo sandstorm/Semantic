@@ -1,0 +1,80 @@
+{namespace semantic=SandstormMedia\Semantic\ViewHelpers}
+<!--
+To change this template, choose Tools | Templates
+and open the template in the editor.
+-->
+<!DOCTYPE html>
+<html>
+<head>
+<title></title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<script src="{f:uri.resource(path: 'JSV/lib/uri/uri.js')}"></script>
+<script src="{f:uri.resource(path: 'JSV/lib/jsv.js')}"></script>
+<script src="{f:uri.resource(path: 'JSV/lib/json-schema-draft-03.js')}"></script>
+
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+
+<script>
+(function($) {
+$(document).ready(function() {
+
+	var classSchema = {
+		type: 'object',
+		additionalProperties: false,
+		properties: {
+			'rdfType': {type: 'string', required: true},
+			'rdfIdentityProvider': {type: 'string', required: true}
+		}
+	};
+	var propertySchema = {
+		type: 'object',
+		additionalProperties: false,
+		properties: {
+			'rdfSourceType': {type: 'string', required: true},
+			'rdfSourceElementType': {type: ['string', 'null']},
+			'rdfType': {type: 'string', required: true, title: 'RDF type', description: 'RDF property this property should be mapped to. Example: foaf:name, or fully qualified name'},
+
+			'rdfLinkify': {type: 'boolean'},
+			'rdfEnrichText': {type: 'boolean'}
+		}
+	};
+
+	var env = JSV.createEnvironment();
+
+	var displayResults = function(report, el) {
+		if (report.errors.length === 0) {
+			$(el).css('background-color', '#00FF00');
+		} else {
+			$(el).css('background-color', '#FF0000');
+			$(el).after($('<pre />').addClass('result').html(JSON.stringify(report.errors)));
+		}
+	}
+
+	$('pre.classSchema').each(function() {
+		var report = env.validate(JSON.parse($(this).html()), classSchema);
+		displayResults(report, this);
+	});
+
+	$('pre.propertySchema').each(function() {
+		var report = env.validate(JSON.parse($(this).html()), propertySchema);
+		displayResults(report, this);
+	});
+});
+})(jQuery);
+</script>
+</head>
+	<body>
+		<h1>Debugger</h1>
+
+		<f:for each="{schema}" key="className" as="val">
+			<h2>{className}</h2>
+
+			<pre class="classSchema">{val.schema -> semantic:json()}</pre>
+
+			<f:for each="{val.properties}" key="propertyName" as="propertySchema">
+				<h3>{propertyName}</h3>
+				<pre class="propertySchema">{propertySchema -> semantic:json()}</pre>
+			</f:for>
+		</f:for>
+	</body>
+</html>
