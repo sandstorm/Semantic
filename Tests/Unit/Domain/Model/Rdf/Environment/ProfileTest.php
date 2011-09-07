@@ -22,11 +22,11 @@ namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Environment;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use SandstormMedia\Semantic\Domain\Model\Rdf\Environment\Profile;
+use SandstormMedia\Semantic\Core\Rdf\Environment\Profile;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers SandstormMedia\Semantic\Domain\Model\Rdf\Environment\Profile
+ * @covers SandstormMedia\Semantic\Core\Rdf\Environment\Profile
  */
 class ProfileTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
@@ -40,12 +40,12 @@ class ProfileTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	protected $mockTermMap;
 
 	public function setUp() {
-		$this->profile = $this->getAccessibleMock('SandstormMedia\Semantic\Domain\Model\Rdf\Environment\Profile', array('dummy'));
+		$this->profile = $this->getAccessibleMock('SandstormMedia\Semantic\Core\Rdf\Environment\Profile', array('dummy'));
 
-		$this->mockPrefixMap = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Environment\PrefixMap');
+		$this->mockPrefixMap = $this->getMock('SandstormMedia\Semantic\Core\Rdf\Environment\PrefixMap');
 		$this->profile->_set('prefixes', $this->mockPrefixMap);
 
-		$this->mockTermMap = $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Environment\TermMap');
+		$this->mockTermMap = $this->getMock('SandstormMedia\Semantic\Core\Rdf\Environment\TermMap');
 		$this->profile->_set('terms', $this->mockTermMap);
 	}
 

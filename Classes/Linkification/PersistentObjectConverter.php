@@ -22,7 +22,7 @@ namespace SandstormMedia\Semantic\Linkification;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use SandstormMedia\Semantic\Domain\Model\ExternalReference;
+use SandstormMedia\Semantic\Linkification\Domain\Model\ExternalReference;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -32,13 +32,13 @@ class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\Pers
 	protected $priority = 10000;
 
 	/**
-	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
+	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
 	protected $externalReferenceRepository;
 
 	/**
-	 * @var SandstormMedia\Semantic\Domain\Repository\TextAnnotationsRepository
+	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\TextAnnotationsRepository
 	 * @inject
 	 */
 	protected $textAnnotationsRepository;
@@ -109,7 +109,7 @@ class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\Pers
 					if (count($value) == 0 && $textAnnotation !== NULL) {
 						$this->textAnnotationsRepository->remove($textAnnotation);
 					} elseif ($textAnnotation === NULL) {
-						$textAnnotation = new \SandstormMedia\Semantic\Domain\Model\TextAnnotations();
+						$textAnnotation = new \SandstormMedia\Semantic\Linkification\Domain\Model\TextAnnotations();
 						$textAnnotation->setObjectUuid($uuid);
 						$textAnnotation->setPropertyName($propertyName);
 

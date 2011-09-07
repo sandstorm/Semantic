@@ -1,8 +1,9 @@
 <?php
-namespace SandstormMedia\Semantic\Command;
+declare(ENCODING = 'utf-8');
+namespace SandstormMedia\Semantic\Rdf\Controller;
 
 /*                                                                        *
- * This script belongs to the FLOW3 package "Blog".                       *
+ * This script belongs to the FLOW3 package "Semantic".                   *
  *                                                                        *
  * It is free software; you can redistribute it and/or modify it under    *
  * the terms of the GNU General Public License as published by the Free   *
@@ -22,65 +23,35 @@ namespace SandstormMedia\Semantic\Command;
  *                                                                        */
 
 /**
- * The setup controller for the Blog package, for setting up some
- * data to play with.
  *
- * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
+ * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class TripleStoreCommandController extends \TYPO3\FLOW3\MVC\Controller\CommandController {
+class DebuggerController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 	/**
+	 * @var SandstormMedia\Semantic\Core\Schema\ClassSchemaResolver
 	 * @inject
-	 * @var \TYPO3\FLOW3\MVC\Web\Routing\RouterInterface
-	 */
-	protected $router;
-
-	/**
-	 * @inject
-	 * @var \TYPO3\FLOW3\Configuration\ConfigurationManager
-	 */
-	protected $configurationManager;
-
-	/**
-	 * @inject
-	 * @var \SandstormMedia\Semantic\Core\Schema\ClassSchemaResolver
 	 */
 	protected $classSchemaResolver;
 
 	/**
-	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
-	 * @inject
-	 */
-	protected $persistenceManager;
-
-	/**
-	 * @var \SandstormMedia\Semantic\Rdf\TripleStore\StoreConnectorInterface
-	 * @inject
-	 */
-	protected $storeConnector;
-
-	/**
-	 * Sets up a a blog with a lot of posts and comments which is a nice test bed
-	 * for profiling.
-	 *
 	 * @return string
+	 * @skipCsrfProtection
 	 */
-	public function importCommand() {
-		putenv('FLOW3_REWRITEURLS=1');
-		$routesConfiguration = $this->configurationManager->getConfiguration(\TYPO3\FLOW3\Configuration\ConfigurationManager::CONFIGURATION_TYPE_ROUTES);
-		$this->router->setRoutesConfiguration($routesConfiguration);
-
-		$objectCount = 0;
+	public function indexAction() {
+		$output = array();
 		foreach ($this->classSchemaResolver->getClassNamesWhichHaveASchema() as $className) {
-			$query = $this->persistenceManager->createQueryForType($className);
-			$objects = $query->execute();
-			foreach ($objects as $object) {
-				$this->storeConnector->addOrUpdateObject($object);
-				$objectCount++;
+			$propertySchema = array();
+			foreach ($this->classSchemaResolver->getPropertyNames($className) as $propertyName) {
+				$propertySchema[$propertyName] = $this->classSchemaResolver->getPropertySchema($className, $propertyName);
 			}
+			$output[$className] = array(
+				'schema' => $this->classSchemaResolver->getClassSchema($className),
+				'properties' => $propertySchema
+			);
 		}
-		return sprintf('Updated/Created %d objects', $objectCount);
+		$this->view->assign('schema', $output);
 	}
 }
 ?>

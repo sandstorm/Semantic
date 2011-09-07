@@ -22,11 +22,11 @@ namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Environment;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use SandstormMedia\Semantic\Domain\Model\Rdf\Environment\TermMap;
+use SandstormMedia\Semantic\Core\Rdf\Environment\TermMap;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers SandstormMedia\Semantic\Domain\Model\Rdf\Environment\TermMap
+ * @covers SandstormMedia\Semantic\Core\Rdf\Environment\TermMap
  */
 class TermMapTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 

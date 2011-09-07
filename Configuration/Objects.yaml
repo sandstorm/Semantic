@@ -1,2 +1,2 @@
-SandstormMedia\Semantic\Domain\Model\Rdf\Environment\ProfileInterface:
-  className: SandstormMedia\Semantic\Domain\Model\Rdf\Environment\DefaultProfile
+SandstormMedia\Semantic\Core\Rdf\Environment\ProfileInterface:
+  className: SandstormMedia\Semantic\Core\Rdf\Environment\DefaultProfile

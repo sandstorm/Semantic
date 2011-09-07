@@ -22,7 +22,7 @@ namespace SandstormMedia\Semantic\Rdfa;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode;
+use \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -32,31 +32,31 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 	protected $tagName = 'span'; // TODO: use a different one later?
 
 	/**
-	 * @var \SandstormMedia\Semantic\Domain\Service\RdfGenerator
+	 * @var \SandstormMedia\Semantic\Core\RdfGenerator
 	 * @inject
 	 */
 	protected $rdfGenerator;
 
 	/**
-	 * @var SandstormMedia\Semantic\Domain\Model\Rdf\Environment\ProfileInterface
+	 * @var SandstormMedia\Semantic\Core\Rdf\Environment\ProfileInterface
 	 * @inject
 	 */
 	protected $profile;
 
 	/**
-	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
+	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
 	protected $metadataRepository;
 
 	/**
-	 * @var \SandstormMedia\Semantic\Schema\ClassSchemaResolver
+	 * @var \SandstormMedia\Semantic\Core\Schema\ClassSchemaResolver
 	 * @inject
 	 */
 	protected $classSchemaResolver;
 
 	/**
-	 * @var SandstormMedia\Semantic\Domain\Repository\TextAnnotationsRepository
+	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\TextAnnotationsRepository
 	 * @inject
 	 */
 	protected $textAnnotationsRepository;

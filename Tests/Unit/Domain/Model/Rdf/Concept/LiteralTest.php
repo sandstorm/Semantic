@@ -22,8 +22,8 @@ namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Literal;
-use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode;
+use \SandstormMedia\Semantic\Core\Rdf\Concept\Literal;
+use \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -71,7 +71,7 @@ class LiteralTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 * @test
 	 */
 	public function dataTypeCanBeSetInConstructor() {
-		$dataType = new \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode('http://foo,bar/named');
+		$dataType = new \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode('http://foo,bar/named');
 		$literal = new Literal(42, NULL, $dataType);
 		$this->assertSame($dataType, $literal->getDataType());
 	}

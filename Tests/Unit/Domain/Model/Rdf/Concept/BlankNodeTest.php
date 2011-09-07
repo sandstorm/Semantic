@@ -22,11 +22,11 @@ namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\BlankNode;
+use \SandstormMedia\Semantic\Core\Rdf\Concept\BlankNode;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers SandstormMedia\Semantic\Domain\Model\Rdf\Concept\BlankNode
+ * @covers SandstormMedia\Semantic\Core\Rdf\Concept\BlankNode
  */
 class BlankNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
@@ -76,7 +76,7 @@ class BlankNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	 */
 	public function isNotEqualWithANamedNode() {
 		$blankNode = new BlankNode();
-		$namedNode = new \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\NamedNode('http://foo.bar');
+		$namedNode = new \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode('http://foo.bar');
 		$this->assertFalse($blankNode->equals($namedNode));
 	}
 }

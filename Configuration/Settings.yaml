@@ -1,6 +1,6 @@
 SandstormMedia:
   Semantic:
-    classSchemaProviders: ['SandstormMedia\Semantic\Schema\ClassSchemaProvider\ReflectionService', 'SandstormMedia\Semantic\Schema\ClassSchemaProvider\SemanticYamlConfiguration', 'SandstormMedia\Semantic\Schema\ClassSchemaProvider\DefaultClassSchemaProvider']
+    classSchemaProviders: ['SandstormMedia\Semantic\Core\Schema\ClassSchemaProvider\AnnotationProvider', 'SandstormMedia\Semantic\Core\Schema\ClassSchemaProvider\YamlProvider', 'SandstormMedia\Semantic\Core\Schema\ClassSchemaProvider\DefaultProvider']
     4Store:
       baseUri: 'http://localhost:8000/'
     baseUri: 'http://blog.local/'
@@ -24,17 +24,9 @@ SandstormMedia:
             type: sioc:related_to
           author:
             type: foaf:maker
-            externalResolver: SandstormMedia\Semantic\ExternalReference\DbpediaResolver
         #
         #  http://rdfs.org/sioc/ns#avatar
         #  http://rdfs.org/sioc/ns#creator_of
         #  http://rdfs.org/sioc/ns#related to
     rdfa:
       enable: true
-
-    datasetDescription:
-      'dcterms:title': 'voID description of this blog'
-      datasets:
-        blogData:
-          'dcterms:license': odc-odbl
-          norms: odc-by-sa

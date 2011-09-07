@@ -22,11 +22,11 @@ namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Environment;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use SandstormMedia\Semantic\Domain\Model\Rdf\Environment\PrefixMap;
+use SandstormMedia\Semantic\Core\Rdf\Environment\PrefixMap;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers SandstormMedia\Semantic\Domain\Model\Rdf\Environment\PrefixMap
+ * @covers SandstormMedia\Semantic\Core\Rdf\Environment\PrefixMap
  */
 class PrefixMapTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 

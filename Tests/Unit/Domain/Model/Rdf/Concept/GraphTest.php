@@ -22,12 +22,12 @@ namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Literal;
-use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Graph;
-use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Triple;
+use \SandstormMedia\Semantic\Core\Rdf\Concept\Literal;
+use \SandstormMedia\Semantic\Core\Rdf\Concept\Graph;
+use \SandstormMedia\Semantic\Core\Rdf\Concept\Triple;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Graph
+ * @covers SandstormMedia\Semantic\Core\Rdf\Concept\Graph
  */
 class GraphTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
@@ -265,7 +265,7 @@ class GraphTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	}
 
 	protected function getMockTriple() {
-		return $this->getMock('SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Triple', array(), array(), '', FALSE);
+		return $this->getMock('SandstormMedia\Semantic\Core\Rdf\Concept\Triple', array(), array(), '', FALSE);
 	}
 
 	protected function getMockTriples() {

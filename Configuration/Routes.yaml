@@ -18,6 +18,7 @@
   uriPattern: 'data/{dataType}/{identifier}'
   defaults:
     '@package':    'SandstormMedia.Semantic'
+    '@subpackage': 'Rdf'
     '@controller': 'RdfData'
     '@action':     'show'
     '@format':     'nt'
@@ -27,27 +28,15 @@
   uriPattern: 'id/{dataType}/{identifier}'
   defaults:
     '@package':    'SandstormMedia.Semantic'
+    '@subpackage': 'Rdf'
     '@controller': 'RdfIdentity'
     '@action':     'show'
+
 -
-  name: 'Description of all datasets using Void'
-  uriPattern: 'void'
+  name: 'RDF Debugger'
+  uriPattern: 'rdf/debug'
   defaults:
     '@package':    'SandstormMedia.Semantic'
-    '@controller': 'Void'
-    '@action':     'show'
-    '@format':     'nt'
--
-  name: 'Description of all datasets using Void, well-known shortcut'
-  uriPattern: '.well-known/void'
-  defaults:
-    '@package':    'SandstormMedia.Semantic'
-    '@controller': 'Void'
-    '@action':     'wellKnown'
---
-  name: 'RDF Enrichment test'
-  uriPattern: 'enrich(/{@action})'
-  defaults:
-    '@package':    'SandstormMedia.Semantic'
-    '@controller': 'ContinuousTextEnrichment'
+    '@subpackage': 'Rdf'
+    '@controller': 'Debugger'
     '@action':     'index'

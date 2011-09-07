@@ -31,29 +31,29 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 	protected $tagName = 'input';
 
 	/**
-	 * @var \SandstormMedia\Semantic\Schema\ClassSchemaResolver
+	 * @var \SandstormMedia\Semantic\Core\Schema\ClassSchemaResolver
 	 * @inject
 	 */
 	protected $classSchemaResolver;
 
 	/**
-	 * @var SandstormMedia\Semantic\Domain\Repository\TextAnnotationsRepository
+	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\TextAnnotationsRepository
 	 * @inject
 	 */
 	protected $textAnnotationsRepository;
-	
+
 	/**
-	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
+	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\ExternalReferenceRepository
 	 * @inject
 	 */
 	protected $externalReferenceRepository;
-	
+
 	/**
 	 * @var \TYPO3\FLOW3\MVC\Web\Routing\RouterInterface
 	 * @inject
 	 */
 	protected $router;
-	
+
 	/**
 	 * @inject
 	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
@@ -84,10 +84,10 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 			if ($package === NULL) {
 				$package = $this->controllerContext->getRequest()->getControllerPackageKey();
 			}
-			
+
 			$controllerObjectName = $this->router->getControllerObjectName($package, $subpackage, $controller);
 			if ($controllerObjectName === NULL) return '';
-			
+
 			$methodParametersOfTargetAction = $this->myReflectionService->getMethodParameters($controllerObjectName, $action . 'Action');
 
 			if (!$this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName')) {
@@ -100,7 +100,7 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 			$className = $methodParametersOfTargetAction[$formObjectName]['class'];
 			$formObject = NULL;
 		}
-		
+
 		$propertySchema = $this->classSchemaResolver->getPropertySchema($className, $property);
 		if (!isset($propertySchema['rdfEnrichText']) && !isset($propertySchema['rdfLinkify'])) {
 			return '';
@@ -116,7 +116,7 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 
 		return $this->tag->render();
 	}
-	
+
 	protected function buildLinkificationTag($formObject) {
 		$this->tag->addAttribute('class', 'sm-semantic externalReference');
 
@@ -127,12 +127,12 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 			$this->tag->addAttribute('value', $metadata->getValue());
 		}
 	}
-	
+
 	protected function buildContinuousTextEnrichmentTag($formObject) {
 		$this->tag->addAttribute('class', 'sm-semantic continuousText');
-		
+
 		if (!$formObject) return;
-		
+
 		$annotation = $this->textAnnotationsRepository->findOneByObjectAndPropertyName($formObject, $this->arguments['property']);
 
 		if ($annotation !== NULL) {
