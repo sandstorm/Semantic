@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace SandstormMedia\Semantic\Schema\ClassSchemaProvider;
+namespace SandstormMedia\Semantic\Rdf;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -22,56 +22,14 @@ namespace SandstormMedia\Semantic\Schema\ClassSchemaProvider;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\RdfNode;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Graph;
+use \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\Triple;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @scope singleton
  */
-class SemanticYamlConfiguration implements \SandstormMedia\Semantic\Schema\ClassSchemaProviderInterface {
-
-	/**
-	 * @var array
-	 */
-	protected $settings;
-
-	public function injectSettings($settings) {
-		$this->settings = $settings;
-	}
-
-	public function getPropertyNames($className, array $existingPropertyNames) {
-		$result = $existingPropertyNames;
-		if (isset($this->settings['PropertyMapping'][$className]['properties'])) {
-			$result = array_merge($result, array_keys($this->settings['PropertyMapping'][$className]['properties']));
-		}
-		return $result;
-	}
-
-	public function getPropertySchema($className, $propertyName, array $existingPropertySchema) {
-		$result = $existingPropertySchema;
-		if (isset($this->settings['PropertyMapping'][$className]['properties'][$propertyName])) {
-			foreach ($this->settings['PropertyMapping'][$className]['properties'][$propertyName] as $k => $v) {
-				$result['rdf' . ucfirst($k)] = $v;
-			}
-		}
-
-		return $result;
-	}
-
-	public function getClassSchema($className, array $existingClassSchema) {
-		$result = $existingClassSchema;
-		if (isset($this->settings['PropertyMapping'][$className])) {
-			foreach ($this->settings['PropertyMapping'][$className] as $k => $v) {
-				if ($k === 'properties') continue;
-
-				$result['rdf' . ucfirst($k)] = $v;
-			}
-		}
-
-		return $result;
-	}
-
-	public function getClassNamesWithSchema(array $existingClassNamesWithSchema) {
-		return array_merge($existingClassNamesWithSchema, array_keys($this->settings['PropertyMapping']));
-	}
+interface TripleGeneratorInterface {
+	public function generate($subjectDomainModelIdentifier, $propertyName, $propertyValue, array $propertySchema, RdfNode $rdfSubject, RdfNode $rdfPredicate, Graph $graph);
 }
 ?>

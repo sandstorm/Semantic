@@ -28,12 +28,12 @@ namespace SandstormMedia\Semantic\Schema;
  */
 interface ClassSchemaProviderInterface {
 
-	public function getPropertyNames($className);
+	public function getPropertyNames($className, array $existingPropertyNames);
 
-	public function getPropertySchema($className, $propertyName);
+	public function getPropertySchema($className, $propertyName, array $existingPropertySchema);
 
-	public function getClassSchema($className);
-	
-	public function getClassNamesWithSchema();
+	public function getClassSchema($className, array $existingClassSchema);
+
+	public function getClassNamesWithSchema(array $existingClassNamesWithSchema);
 }
 ?>

@@ -30,12 +30,14 @@ $(document).ready(function() {
 		type: 'object',
 		additionalProperties: false,
 		properties: {
-			'rdfSourceType': {type: 'string', required: true},
+			'rdfSourceType': {type: ['string'], required: true},
 			'rdfSourceElementType': {type: ['string', 'null']},
-			'rdfType': {type: 'string', required: true, title: 'RDF type', description: 'RDF property this property should be mapped to. Example: foaf:name, or fully qualified name'},
+			'rdfType': {type: ['string'], required: true, title: 'RDF type', description: 'RDF property this property should be mapped to. Example: foaf:name, or fully qualified name'},
 
-			'rdfLinkify': {type: 'boolean'},
-			'rdfEnrichText': {type: 'boolean'}
+			'rdfLinkify': {type: ['boolean']},
+			'rdfEnrichText': {type: ['boolean']},
+
+			'rdfTripleGenerator': {type: ['string'], required: true}
 		}
 	};
 

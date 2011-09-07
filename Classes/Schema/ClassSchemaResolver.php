@@ -55,25 +55,29 @@ class ClassSchemaResolver {
 	 * @return void
 	 */
 	public function initializeObject() {
-		foreach ($this->settings['classSchemaResolvers'] as $resolverClassName) {
-			$this->classSchemaProviders[] = $this->objectManager->get($resolverClassName);
+		foreach ($this->settings['classSchemaProviders'] as $classSchemaProviderClassName) {
+			$this->classSchemaProviders[] = $this->objectManager->get($classSchemaProviderClassName);
 		}
 	}
 
 	public function getPropertyNames($className) {
 		$propertyNames = array();
 		foreach ($this->classSchemaProviders as $provider) {
-			$propertyNames = array_unique(array_merge($propertyNames, $provider->getPropertyNames($className)));
+			$propertyNames = $provider->getPropertyNames($className, $propertyNames);
 		}
 		return $propertyNames;
 	}
 
 	public function getClassSchema($classNameOrObject) {
+		if (is_object($classNameOrObject) && $classNameOrObject instanceof \Doctrine\ORM\Proxy\Proxy) {
+			$classNameOrObject = get_parent_class($classNameOrObject);
+		}
+
 		$className = is_object($classNameOrObject) ? get_class($classNameOrObject) : $classNameOrObject;
 
 		$classSchema = array();
 		foreach ($this->classSchemaProviders as $provider) {
-			$classSchema = array_merge($classSchema, $provider->getClassSchema($className));
+			$classSchema = $provider->getClassSchema($className, $classSchema);
 		}
 		return $classSchema;
 	}
@@ -81,15 +85,20 @@ class ClassSchemaResolver {
 	public function getClassNamesWhichHaveASchema() {
 		$classNamesWithSchema = array();
 		foreach ($this->classSchemaProviders as $provider) {
-			$classNamesWithSchema = array_merge($classNamesWithSchema, $provider->getClassNamesWithSchema());
+			$classNamesWithSchema = $provider->getClassNamesWithSchema($classNamesWithSchema);
 		}
 		return $classNamesWithSchema;
 	}
 
 	public function getPropertySchema($className, $propertyName) {
+		$reflectionClass = new \ReflectionClass($className);
+		if ($reflectionClass->implementsInterface('Doctrine\ORM\Proxy\Proxy')) {
+			$className = get_parent_class($className);
+		}
+
 		$result = array();
 		foreach ($this->classSchemaProviders as $provider) {
-			$result = array_merge($result, $provider->getPropertySchema($className, $propertyName));
+			$result = $provider->getPropertySchema($className, $propertyName, $result);
 		}
 		return $result;
 	}

@@ -35,8 +35,8 @@ class ReflectionService implements \SandstormMedia\Semantic\Schema\ClassSchemaPr
 	 */
 	protected $reflectionService;
 
-	public function getPropertyNames($className) {
-		return $this->reflectionService->getClassPropertyNames($className);
+	public function getPropertyNames($className, array $existingPropertyNames) {
+		return array_merge($existingPropertyNames, $this->reflectionService->getClassPropertyNames($className));
 	}
 
 	protected function cleanupValues($values) {
@@ -61,24 +61,27 @@ class ReflectionService implements \SandstormMedia\Semantic\Schema\ClassSchemaPr
 		return $filteredValues;
 	}
 
-	public function getPropertySchema($className, $propertyName) {
+	public function getPropertySchema($className, $propertyName, array $existingPropertySchema) {
 		$values = $this->cleanupValues($this->reflectionService->getPropertyTagsValues($className, $propertyName));
 
-		$propertySchema = $this->reflectionService->getClassSchema($className)->getProperty($propertyName);
+		$classSchema = $this->reflectionService->getClassSchema($className);
+		if (!$classSchema) return $existingPropertySchema;
+		if (!$classSchema->hasProperty($propertyName)) return $existingPropertySchema;
+		$propertySchema = $classSchema->getProperty($propertyName);
 		if ($propertySchema) {
 			$values['rdfSourceType'] = $propertySchema['type'];
 			$values['rdfSourceElementType'] = $propertySchema['elementType'];
 		}
-		return $this->filterValues($values);
+		return array_merge($existingPropertySchema, $this->filterValues($values));
 	}
 
-	public function getClassSchema($className) {
+	public function getClassSchema($className, array $existingClassSchema) {
 		$values = $this->cleanupValues($this->reflectionService->getClassTagsValues($className));
-		return $this->filterValues($values);
+		return array_merge($existingClassSchema, $this->filterValues($values));
 	}
 
-	public function getClassNamesWithSchema() {
-		return $this->reflectionService->getClassNamesByTag('rdfType');
+	public function getClassNamesWithSchema(array $existingClassNamesWithSchema) {
+		return array_merge($existingClassNamesWithSchema, $this->reflectionService->getClassNamesByTag('rdfType'));
 	}
 }
 ?>

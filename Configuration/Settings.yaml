@@ -1,6 +1,6 @@
 SandstormMedia:
   Semantic:
-    classSchemaResolvers: ['SandstormMedia\Semantic\Schema\ClassSchemaProvider\DefaultClassSchemaProvider', 'SandstormMedia\Semantic\Schema\ClassSchemaProvider\ReflectionService', 'SandstormMedia\Semantic\Schema\ClassSchemaProvider\SemanticYamlConfiguration']
+    classSchemaProviders: ['SandstormMedia\Semantic\Schema\ClassSchemaProvider\ReflectionService', 'SandstormMedia\Semantic\Schema\ClassSchemaProvider\SemanticYamlConfiguration', 'SandstormMedia\Semantic\Schema\ClassSchemaProvider\DefaultClassSchemaProvider']
     4Store:
       baseUri: 'http://localhost:8000/'
     baseUri: 'http://blog.local/'

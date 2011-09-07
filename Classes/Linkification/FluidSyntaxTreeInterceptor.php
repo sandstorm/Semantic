@@ -40,39 +40,36 @@ class FluidSyntaxTreeInterceptor implements \TYPO3\Fluid\Core\Parser\Interceptor
 
 		if ($node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode &&
 			$node->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\FormViewHelper) {
-			var_dump("Form VH", $interceptorPosition);
 
 			$argumentsReflection = new \ReflectionProperty($node, 'arguments');
 			$argumentsReflection->setAccessible(TRUE);
 			$arguments = $argumentsReflection->getValue($node);
-			
+
 			if (isset($arguments['action'])) {
-				var_dump("action set");
 				$this->formObjectArguments['action'] = $arguments['action'];
 			}
-			
+
 			if (isset($arguments['controller'])) {
 				$this->formObjectArguments['controller'] = $arguments['controller'];
 			}
-			
+
 			if (isset($arguments['package'])) {
 				$this->formObjectArguments['package'] = $arguments['package'];
 			}
-			
+
 			if (isset($arguments['subpackage'])) {
 				$this->formObjectArguments['subpackage'] = $arguments['subpackage'];
 			}
-			
+
 			return $node;
 		}
-		
+
 
 		if ($interceptorPosition === self::INTERCEPT_CLOSING_VIEWHELPER
 				&& $node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode
 				&&($node->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\Form\TextfieldViewHelper
 					|| $node->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\Form\TextareaViewHelper
 					)) {
-			var_dump($this->formObjectArguments);
 			$argumentsReflection = new \ReflectionProperty($node, 'arguments');
 			$argumentsReflection->setAccessible(TRUE);
 			$arguments = $argumentsReflection->getValue($node);

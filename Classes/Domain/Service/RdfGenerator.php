@@ -45,18 +45,6 @@ class RdfGenerator {
 	 */
 	protected $persistenceManager;
 
-	/**
-	 * @var SandstormMedia\Semantic\Domain\Repository\ExternalReferenceRepository
-	 * @inject
-	 */
-	protected $externalReferenceRepository;
-
-	/**
-	 * @var SandstormMedia\Semantic\Domain\Repository\TextAnnotationsRepository
-	 * @inject
-	 */
-	protected $textAnnotationsRepository;
-
 
 	/**
 	 * @var \SandstormMedia\Semantic\Schema\ClassSchemaResolver
@@ -111,25 +99,23 @@ class RdfGenerator {
 		return $rdfGraph;
 	}
 
-	protected function buildTriplesForProperty($identifier, $propertyName, $propertyValue, $propertySchema, Graph $graph, $rdfSubject) {
+	protected function buildTriplesForProperty($subjectDomainModelIdentifier, $propertyName, $propertyValue, $propertySchema, Graph $graph, $rdfSubject) {
 		if (!isset($propertySchema['rdfType'])) return;
 
 		$rdfPredicate = new NamedNode($propertySchema['rdfType']);
 
-		$possibleExternalRdfReference = $this->externalReferenceRepository->findOneByUuidAndPropertyName($identifier, $propertyName);
-		if ($possibleExternalRdfReference) {
-			$rdfObject = new NamedNode($possibleExternalRdfReference->getValue());
-			$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
-			return;
+		if (!isset($propertySchema['rdfTripleGenerator'])) {
+			throw new \Exception('rdfTripleGenerator not set for object ' . get_class($object), 1314440839);
 		}
+		$rdfTripleGenerator = $this->objectManager->get($propertySchema['rdfTripleGenerator']);
 
-		switch ($propertySchema['var']) {
-			case 'string':
-			case 'DateTime':
-				$rdfObject = new Literal($propertyValue);
+		if ($rdfTripleGenerator === NULL || !($rdfTripleGenerator instanceof \SandstormMedia\Semantic\Rdf\TripleGeneratorInterface)) {
+			throw new \Exception('rdTripleGenerator not found or no instance of TripleGeneratorInterface: "' . $propertySchema['rdfTripleGenerator'] . '",', 1314440848);
+		}
+		$rdfTripleGenerator->generate($subjectDomainModelIdentifier, $propertyName, $propertyValue, $propertySchema, $rdfSubject, $rdfPredicate, $graph);
 
-				$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
-				break;
+/*
+ * 		switch ($propertySchema['rdfSourceType']) {
 			case 'Doctrine\Common\Collections\ArrayCollection':
 				$collection = $propertyValue;
 				if (class_exists($propertySchema['elementType'])) {
@@ -142,28 +128,8 @@ class RdfGenerator {
 				}
 				break;
 			default:
-				throw new \Exception('TODO: Type ' . $propertySchema['var'] . ' not supported');
-		}
-
-		$possibleTextAnnotations = $this->textAnnotationsRepository->findOneByUuidAndPropertyName($identifier, $propertyName);
-		if ($possibleTextAnnotations) {
-			$annotationType = new NamedNode('annot:Annotation');
-
-			foreach ($possibleTextAnnotations->getAnnotations() as $annotation) {
-				$annotationInstance = new \SandstormMedia\Semantic\Domain\Model\Rdf\Concept\BlankNode();
-				$siocAbout = new NamedNode('sioc:about');
-				$rdfObject = new NamedNode($annotation['uri']);
-				$graph->add(new Triple($rdfSubject, $siocAbout, $rdfObject));
-
-				$graph->add(new Triple($rdfSubject, new NamedNode('annot:annotatedBy'), $annotationInstance));
-				$graph->add(new Triple($annotationInstance, new NamedNode('rdf:type'), $annotationType));
-				$graph->add(new Triple($annotationInstance, new NamedNode('annot:predicate'), $rdfPredicate));
-				//$graph->add(new Triple($annotationInstance, new NamedNode('annot:annotatedText'), $rdfPredicate)); // TODO
-				$graph->add(new Triple($annotationInstance, new NamedNode('annot:offset'), new Literal($annotation['offset'])));
-				$graph->add(new Triple($annotationInstance, new NamedNode('annot:length'), new Literal($annotation['length'])));
-				$graph->add(new Triple($annotationInstance, new NamedNode('annot:about'), $rdfObject));
-			}
-		}
+				throw new \Exception('TODO: Type ' . $propertySchema['rdfSourceType'] . ' not supported');
+		}*/
 	}
 
 	/**
