@@ -10,6 +10,8 @@
         background-color: #888; }
       .sm-semantic.linkification .linkification-result .description {
         font-size: 9px; }
+    .sm-semantic.linkification input {
+      width: 195px; }
   .sm-semantic.enrichmentWidget {
     display: none;
     border: 1px solid #ccc;

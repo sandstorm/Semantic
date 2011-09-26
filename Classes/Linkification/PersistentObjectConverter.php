@@ -95,9 +95,14 @@ class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\Pers
 						$externalReference->setObjectUuid($uuid);
 						$externalReference->setPropertyName($propertyName);
 
+						$externalReference->setValue($value);
 						$this->externalReferenceRepository->add($externalReference);
+					} else {
+						// Update
+						$externalReference->setValue($value);
+						$this->externalReferenceRepository->update($externalReference);
 					}
-					$externalReference->setValue($value);
+
 				} elseif (preg_match('/^(.*)_continuousTextMetadata$/', $key, $matches)) {
 					$uuid = $this->persistenceManager->getIdentifierByObject($object);
 					$propertyName = $matches[1];
@@ -113,9 +118,14 @@ class PersistentObjectConverter extends \TYPO3\FLOW3\Property\TypeConverter\Pers
 						$textAnnotation->setObjectUuid($uuid);
 						$textAnnotation->setPropertyName($propertyName);
 
+						$textAnnotation->setAnnotations($value);
 						$this->textAnnotationsRepository->add($textAnnotation);
+					} else {
+						// Update
+						$textAnnotation->setAnnotations($value);
+						$this->textAnnotationsRepository->update($textAnnotation);
 					}
-					$textAnnotation->setAnnotations($value);
+
 				}
 			}
 		}

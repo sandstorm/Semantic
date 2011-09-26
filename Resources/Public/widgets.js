@@ -123,9 +123,10 @@
 	 * used for linkification of *single entities*
 	 */
 	$.fn.semanticLookup = function(overrideOptions) {
-		var options;
-		options = {
-
+		var options = {
+			linkificationType: null
+		};
+		options = $.extend(options, {
 			/**
 			 * Lifecycle method which does further initialization.
 			 * In our case, it binds text field changes to the entityTextChange event
@@ -152,10 +153,15 @@
 			 * @param {Function} resultRendererCallback the result rendering function must be triggered as soon as data is available.
 			 */
 			getLinkificationResults: function($this, value, resultRendererCallback) {
-				$.get('http://localhost:8080/semantifier/linkify', {
+				var params = {
 					text: value
-					// TODO: support for entity type
-				}, function(results) {
+				};
+				if (options.linkificationType) {
+					console.log("SET TYPE");
+					params.type = options.linkificationType;
+				}
+
+				$.get('http://localhost:8080/semantifier/linkify', params, function(results) {
 					resultRendererCallback(results);
 				});
 			},
@@ -177,6 +183,17 @@
 				options.findStorageInputField(targetElement).val(uri);
 			},
 
+			learnNewLinkedDataUri: function($targetElement, uri) {
+				var params = {
+					uri: uri,
+					text: $targetElement.val(),
+					type: options.linkificationType
+				};
+
+				// TODO: covnert to POST again
+				$.post('http://localhost:8080/semantifier/learnEntity', params);
+			},
+
 			/**
 			 * Helper. Does *not* belong to public API.
 			 *
@@ -190,14 +207,14 @@
 
 				return $inputField;
 			}
-		};
+		});
 
 		$.extend(options, overrideOptions);
 
 		return this.each(function() {
 			var $this = $(this),
 			lastValue = null,
-			$popoverContent = $('<div class="sm-semantic linkification">Loading...</div>');
+			$popoverContent = $('<div class="sm-semantic linkification"><div class="linkification-results">Loading...</div><input type="text" placeholder="Insert custom Linked Data URI" /><button>Save!</button></div>');
 
 			// Configuring the popover
 			$this.popover({
@@ -209,6 +226,13 @@
 					if (lastValue === null) {
 						// We opened the popup for the first time, and no data has been fetched yet. Thus we need to trigger an "entity text change" event
 						$this.trigger('semantic-entityTextChange');
+						// .. and we initialize the "custom data URI" save button
+						$popoverContent.find('button').click(function() {
+							options.storeLinkedDataUri($this, $popoverContent.find('input').val());
+							options.learnNewLinkedDataUri($this, $popoverContent.find('input').val());
+							// Trigger change event on the linked data URI, such that the UI highlights the currently selected element.
+							$this.trigger('semantic-linkedDataUriChange');
+						});
 					}
 				}
 			});
@@ -229,9 +253,12 @@
 					html += '<div class="linkification-result" title="' + result.id + '">';
 					html += '<b>' + result.name + '</b>';
 					html += '<div class="description">' + description + '</div>';
+					html += '<a href="' + result.id + '">More Information...</a>';
 					html += '</div>';
 				});
-				$popoverContent.html(html);
+
+				$popoverContent.find('.linkification-results').html(html);
+
 
 				// Trigger change event on the linked data URI, such that the UI highlights the currently selected element.
 				$this.trigger('semantic-linkedDataUriChange');
@@ -256,7 +283,13 @@
 			$this.bind('semantic-linkedDataUriChange', function() {
 				var currentUri = options.getLinkedDataUri($this);
 				$('.linkification-result.selected', $popoverContent[0]).removeClass('selected');
-				$('.linkification-result[title="' + currentUri + '"]', $popoverContent[0]).addClass('selected');
+				var $selectedLinkedDataElement = $('.linkification-result[title="' + currentUri + '"]', $popoverContent[0]);
+				if ($selectedLinkedDataElement.length >= 1) {
+					$selectedLinkedDataElement.addClass('selected');
+				} else {
+					// No selected element found; thus we update the input field
+					$popoverContent.find('input').val(currentUri);
+				}
 			});
 
 			// Custom Initialization
@@ -332,7 +365,7 @@
 								uri = annotation.uri;
 							}
 						});
-					}	
+					}
 					return uri;
 				}
 
@@ -443,7 +476,12 @@
 	 * =====================
 	 */
 	$(document).ready(function() {
-		$('.sm-semantic.externalReference').prev().semanticLookup();
+		$('.sm-semantic.externalReference').each(function() {
+			var $this = $(this);
+			$this.prev().semanticLookup({
+				linkificationType: $this.data('rdf-linkification-type')
+			});
+		});
 		$('.sm-semantic.continuousText').prev().continuousTextEnrichment();
 	});
 

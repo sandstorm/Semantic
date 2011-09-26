@@ -1,4 +1,4 @@
-{namespace semantic=SandstormMedia\Semantic\ViewHelpers}
+{namespace semantic=SandstormMedia\Semantic\Rdf\ViewHelpers}
 <!--
 To change this template, choose Tools | Templates
 and open the template in the editor.
@@ -6,7 +6,7 @@ and open the template in the editor.
 <!DOCTYPE html>
 <html>
 <head>
-<title></title>
+<title>RDF Configuration Debugger</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <script src="{f:uri.resource(path: 'JSV/lib/uri/uri.js')}"></script>
 <script src="{f:uri.resource(path: 'JSV/lib/jsv.js')}"></script>
@@ -35,6 +35,7 @@ $(document).ready(function() {
 			'rdfType': {type: ['string'], required: true, title: 'RDF type', description: 'RDF property this property should be mapped to. Example: foaf:name, or fully qualified name'},
 
 			'rdfLinkify': {type: ['boolean']},
+			'rdfLinkificationType': {type: ['string'], description: 'A *universal type* understood by the Semantifier. If set, is used to return only results of the given type.'},
 			'rdfEnrichText': {type: ['boolean']},
 
 			'rdfTripleGenerator': {type: ['string'], required: true}

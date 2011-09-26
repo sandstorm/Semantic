@@ -109,16 +109,20 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 		$this->tag->addAttribute('type', 'hidden');
 
 		if (isset($propertySchema['rdfLinkify'])) {
-			$this->buildLinkificationTag($formObject);
+			$this->buildLinkificationTag($formObject, $propertySchema);
 		} else {
-			$this->buildContinuousTextEnrichmentTag($formObject);
+			$this->buildContinuousTextEnrichmentTag($formObject, $propertySchema);
 		}
 
 		return $this->tag->render();
 	}
 
-	protected function buildLinkificationTag($formObject) {
+	protected function buildLinkificationTag($formObject, $propertySchema) {
 		$this->tag->addAttribute('class', 'sm-semantic externalReference');
+
+		if (isset($propertySchema['rdfLinkificationType'])) {
+			$this->tag->addAttribute('data-rdf-linkification-type', $propertySchema['rdfLinkificationType']);
+		}
 
 		if (!$formObject) return;
 
@@ -128,7 +132,7 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 		}
 	}
 
-	protected function buildContinuousTextEnrichmentTag($formObject) {
+	protected function buildContinuousTextEnrichmentTag($formObject, $propertySchema) {
 		$this->tag->addAttribute('class', 'sm-semantic continuousText');
 
 		if (!$formObject) return;
