@@ -253,7 +253,7 @@
 					html += '<div class="linkification-result" title="' + result.id + '">';
 					html += '<b>' + result.name + '</b>';
 					html += '<div class="description">' + description + '</div>';
-					html += '<a href="' + result.id + '">More Information...</a>';
+					html += '<a href="' + result.id + '" target="_blank">More Information...</a>';
 					html += '</div>';
 				});
 
