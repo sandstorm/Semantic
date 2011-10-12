@@ -62,12 +62,8 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 
 	/**
 	 * @param string $property
-	 * @param string $action
-	 * @param string $controller
-	 * @param string $subpackage
-	 * @param string $package
 	 */
-	public function render($property, $action = NULL, $controller = NULL, $subpackage = NULL, $package = NULL) {
+	public function render($property) {
 		$annotation = NULL;
 		if ($this->viewHelperVariableContainer->exists('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject')) {
 			$formObject = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObject');
@@ -75,15 +71,15 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 		} else {
 			// Enrichment should also work with "NEW" action. For that, we need to analyze the data type of the target action of the form.
 			// and that's precisely what we do in this block
-			if ($controller === NULL) {
-				$controller = $this->controllerContext->getRequest()->getControllerName();
+			$action = $this->viewHelperVariableContainer->get('SandstormMedia\Semantic\Linkification\FormHelperViewHelper', 'action');
+			$controller = $this->viewHelperVariableContainer->get('SandstormMedia\Semantic\Linkification\FormHelperViewHelper', 'controller');
+
+			$subpackage = NULL;
+			if ($this->viewHelperVariableContainer->exists('SandstormMedia\Semantic\Linkification\FormHelperViewHelper', 'subpackage')) {
+				$subpackage = $this->viewHelperVariableContainer->get('SandstormMedia\Semantic\Linkification\FormHelperViewHelper', 'subpackage');
 			}
-			if ($package === NULL && $subpackage === NULL) {
-				$subpackage = $this->controllerContext->getRequest()->getControllerSubpackageKey();
-			}
-			if ($package === NULL) {
-				$package = $this->controllerContext->getRequest()->getControllerPackageKey();
-			}
+
+			$package = $this->viewHelperVariableContainer->get('SandstormMedia\Semantic\Linkification\FormHelperViewHelper', 'package');
 
 			$controllerObjectName = $this->router->getControllerObjectName($package, $subpackage, $controller);
 			if ($controllerObjectName === NULL) return '';
@@ -94,6 +90,7 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 				return '';
 			}
 			$formObjectName = $this->viewHelperVariableContainer->get('TYPO3\Fluid\ViewHelpers\FormViewHelper', 'formObjectName');
+
 			if (!isset($methodParametersOfTargetAction[$formObjectName]) || !isset($methodParametersOfTargetAction[$formObjectName]['class'])) {
 				return '';
 			}

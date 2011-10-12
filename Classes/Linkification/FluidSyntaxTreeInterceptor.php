@@ -39,27 +39,37 @@ class FluidSyntaxTreeInterceptor implements \TYPO3\Fluid\Core\Parser\Interceptor
 	public function process(\TYPO3\Fluid\Core\Parser\SyntaxTree\NodeInterface $node, $interceptorPosition, \TYPO3\Fluid\Core\Parser\ParsingState $parsingState) {
 
 		if ($node instanceof \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode &&
-			$node->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\FormViewHelper) {
+			$node->getUninitializedViewHelper() instanceof \TYPO3\Fluid\ViewHelpers\FormViewHelper
+				&& $interceptorPosition === self::INTERCEPT_OPENING_VIEWHELPER) {
 
 			$argumentsReflection = new \ReflectionProperty($node, 'arguments');
 			$argumentsReflection->setAccessible(TRUE);
 			$arguments = $argumentsReflection->getValue($node);
 
+			$formObjectArguments = array();
 			if (isset($arguments['action'])) {
-				$this->formObjectArguments['action'] = $arguments['action'];
+				$formObjectArguments['action'] = $arguments['action'];
 			}
 
 			if (isset($arguments['controller'])) {
-				$this->formObjectArguments['controller'] = $arguments['controller'];
+				$formObjectArguments['controller'] = $arguments['controller'];
 			}
 
 			if (isset($arguments['package'])) {
-				$this->formObjectArguments['package'] = $arguments['package'];
+				$formObjectArguments['package'] = $arguments['package'];
 			}
 
 			if (isset($arguments['subpackage'])) {
-				$this->formObjectArguments['subpackage'] = $arguments['subpackage'];
+				$formObjectArguments['subpackage'] = $arguments['subpackage'];
 			}
+
+			$newNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
+				new \SandstormMedia\Semantic\Linkification\FormHelperViewHelper(),
+				$formObjectArguments
+			);
+
+			// Add the interception VH as first child to the form VH
+			$node->addChildNode($newNode);
 
 			return $node;
 		}
@@ -74,10 +84,9 @@ class FluidSyntaxTreeInterceptor implements \TYPO3\Fluid\Core\Parser\Interceptor
 			$argumentsReflection->setAccessible(TRUE);
 			$arguments = $argumentsReflection->getValue($node);
 			if (isset($arguments['property'])) {
-				$this->formObjectArguments['property'] = $arguments['property'];
 				$newNode = new \TYPO3\Fluid\Core\Parser\SyntaxTree\ViewHelperNode(
 					new \SandstormMedia\Semantic\Linkification\LinkificationEditorViewHelper(),
-					$this->formObjectArguments
+					array('property' => $arguments['property'])
 				);
 				$parsingState->getNodeFromStack()->addChildNode($newNode);
 			}
