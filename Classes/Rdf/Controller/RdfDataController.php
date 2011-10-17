@@ -54,11 +54,13 @@ class RdfDataController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 	public function showAction($dataType, $identifier) {
 		$domainModelObjectName = str_replace('_', '\\', $dataType);
 
-		if (!$this->objectManager->isRegistered($domainModelObjectName)) {
+		$caseSensitiveDomainModelObjectName = $this->objectManager->getCaseSensitiveObjectName($domainModelObjectName);
+
+		if (!$this->objectManager->isRegistered($caseSensitiveDomainModelObjectName)) {
 			throw new \Exception("TODO: Data Type not found.");
 		}
 
-		$graph = $this->rdfGenerator->buildGraph($domainModelObjectName, $identifier);
+		$graph = $this->rdfGenerator->buildGraph($caseSensitiveDomainModelObjectName, $identifier);
 
 		$this->view->assign('graph', $graph);
 	}

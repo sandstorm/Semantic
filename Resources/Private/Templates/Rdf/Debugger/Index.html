@@ -32,7 +32,7 @@ $(document).ready(function() {
 		properties: {
 			'rdfSourceType': {type: ['string'], required: true},
 			'rdfSourceElementType': {type: ['string', 'null']},
-			'rdfType': {type: ['string'], required: true, title: 'RDF type', description: 'RDF property this property should be mapped to. Example: foaf:name, or fully qualified name'},
+			'rdfType': {type: ['string'], required: false, title: 'RDF type', description: 'RDF property this property should be mapped to. Example: foaf:name, or fully qualified name'},
 
 			'rdfLinkify': {type: ['boolean']},
 			'rdfLinkificationType': {type: ['string'], description: 'A *universal type* understood by the Semantifier. If set, is used to return only results of the given type.'},

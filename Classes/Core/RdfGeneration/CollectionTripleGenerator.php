@@ -1,6 +1,6 @@
 <?php
 declare(ENCODING = 'utf-8');
-namespace SandstormMedia\Semantic\Linkification\TripleGenerator;
+namespace SandstormMedia\Semantic\Core\RdfGeneration;
 
 /*                                                                        *
  * This script belongs to the FLOW3 package "Semantic".                   *
@@ -26,26 +26,16 @@ use \SandstormMedia\Semantic\Core\Rdf\Concept\RdfNode;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Graph;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Triple;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Literal;
-use \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @scope singleton
  */
-class LinkificationTripleGenerator implements \SandstormMedia\Semantic\Core\RdfGeneration\TripleGeneratorInterface {
-
-	/**
-	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\ExternalReferenceRepository
-	 * @inject
-	 */
-	protected $externalReferenceRepository;
+class CollectionTripleGenerator extends RelationTripleGenerator {
 
 	public function generate($subjectDomainModelIdentifier, $propertyName, $propertyValue, array $propertySchema, RdfNode $rdfSubject, RdfNode $rdfPredicate, Graph $graph) {
-
-		$possibleExternalRdfReference = $this->externalReferenceRepository->findOneByUuidAndPropertyName($subjectDomainModelIdentifier, $propertyName);
-		if ($possibleExternalRdfReference) {
-			$rdfObject = new NamedNode($possibleExternalRdfReference->getValue());
-			$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
+		foreach ($propertyValue as $value) {
+			parent::generate($subjectDomainModelIdentifier, $propertyName, $value, $propertySchema, $rdfSubject, $rdfPredicate, $graph);
 		}
 	}
 }

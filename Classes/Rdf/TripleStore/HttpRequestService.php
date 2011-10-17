@@ -46,7 +46,7 @@ class HttpRequestService {
 		$info = curl_getinfo($ch);
 
 		if ($expectedHttpResponseCode !== NULL && $expectedHttpResponseCode != $info['http_code']) {
-			throw new \Exception('TODO: Error in sending HTTP request. Response:' . $response);
+			throw new \Exception('TODO: Error in sending HTTP request. Response:' . curl_error($ch) . $response);
 		}
 	}
 

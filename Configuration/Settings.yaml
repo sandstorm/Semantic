@@ -2,7 +2,7 @@ SandstormMedia:
   Semantic:
     classSchemaProviders: ['SandstormMedia\Semantic\Core\Schema\ClassSchemaProvider\AnnotationProvider', 'SandstormMedia\Semantic\Core\Schema\ClassSchemaProvider\YamlProvider', 'SandstormMedia\Semantic\Core\Schema\ClassSchemaProvider\DefaultProvider']
     4Store:
-      baseUri: 'http://localhost:8000/'
+      baseUri: 'http://localhost:8080/'
     baseUri: 'http://blog.local/'
     prefixes:
       sioc: 'http://rdfs.org/sioc/ns#'

@@ -56,7 +56,7 @@ class FourStoreConnector extends AbstractConnector {
 
 	public function addOrUpdateGraph($graphUri, $dataAsTurtle) {
 		$uri = $this->baseUri . '/data/' . $graphUri;
-		$this->httpRequestService->putStringToUri($dataAsTurtle, $uri, 'Content-Type: text/plain', 201);
+		$this->httpRequestService->putStringToUri($dataAsTurtle, $uri, 'Content-Type: application/x-turtle', 201);
 	}
 
 	public function removeGraph($graphUri) {
