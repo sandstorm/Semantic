@@ -157,7 +157,6 @@
 					text: value
 				};
 				if (options.linkificationType) {
-					console.log("SET TYPE");
 					params.type = options.linkificationType;
 				}
 
@@ -423,9 +422,9 @@
 				});
 			};
 
+			var currentAnnotationResults = null;
 			// Main entry point: when enrichment button is clicked, we start
 			$enrichmentButton.click(function() {
-
 				//$this.hide();
 				$enrichmentButton.hide();
 
@@ -433,16 +432,62 @@
 
 				$enrichmentWidget.css('display', 'inline-block');
 				$enrichmentButton.parents('.externalReferenceWrapperOuter').first().addClass('foo');
-				$.post('http://localhost:8080/semantifier/annotate', {
-					text: $this.val()
-				}, function(results) {
-					showAnnotationsInEnrichmentWidget(results);
-				}
-			)
+
+				showAnnotationsInEnrichmentWidget(currentAnnotationResults);
+
 			});
 
 			// Monitor text changes, and move annotations around if needed
 			$this.monitorTextChanges();
+
+			var semantifierCurrentlyRunning = false;
+			var diffStack = [];
+			var applyDiffStackToCurrentAnnotationResults = function() {
+				for (var i=0; i < diffStack.length; i++) {
+					var diff = diffStack[i];
+
+					var annotationIndexesToThrowAway = [];
+					for (var a=0; a < currentAnnotationResults.entities.length; a++) {
+						var annotation = currentAnnotationResults.entities[a];
+						// TODO: the following code is almost identical with the code which moves the *already existing* annotations around. can we share it??
+						if (annotation.offset < diff.position && annotation.offset + annotation.length < diff.position) {
+							// Annotation is fully before the changed area, we do not need to modify it at all.
+						} else if (annotation.offset > diff.position + diff.lengthBefore) {
+							// Start of annotation is *after* the modified section; so we need to just move it around
+							annotation.offset += diff.lengthAfter - diff.lengthBefore;
+						} else {
+							// Here, annotation is somehow touched by the changed area.
+							// Thus, we throw it away, as it needs to be re-annotated.
+							annotationIndexesToThrowAway.push(a);
+						}
+					}
+
+					// Deleting every index which was touched
+					for (var index in annotationIndexesToThrowAway) {
+						delete currentAnnotationResults.entities[index];
+					}
+				}
+			};
+			// Already annotate in the background
+			$this.bind('textChangeWithDiff', function(event, diff) {
+				if (semantifierCurrentlyRunning) {
+					diffStack.push(diff);
+					return;
+				} else {
+					semantifierCurrentlyRunning = true;
+					$.post('http://localhost:8080/semantifier/annotate', {
+						text: $this.val()
+					}, function(results) {
+						semantifierCurrentlyRunning = false;
+						currentAnnotationResults = results;
+						applyDiffStackToCurrentAnnotationResults();
+						diffStack = [];
+					});
+
+				}
+			});
+
+			// Adjust already saved annotations
 			$this.bind('textChangeWithDiff', function(event, diff) {
 				var oldAnnotations = [];
 				if ($storageInputField.val()) {
