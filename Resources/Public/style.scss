@@ -25,9 +25,43 @@
 		}
 	}
 
+	&.externalReferenceWrapperOuter {
+		perspective: 1000;
+		position: relative;
+
+		z-index:1;
+		textarea {
+			-webkit-backface-visibility:hidden;
+			-webkit-transition: all 1.0s linear;
+			opacity: 1;
+		}
+	}
+
+	&.externalReferenceWrapperOuter.foo textarea {
+		opacity: 0;
+	}
+
+	&.externalReferenceWrapperOuter.foo .externalReferenceWrapper {
+			-webkit-transition: all 1.0s linear;
+			-webkit-transform: rotateY(180deg);
+	}
+
+	&.externalReferenceWrapper {
+		position:relative;
+
+		-webkit-transform-style: preserve-3d;
+		-webkit-transition: all 1.0s linear;
+
+	}
+
 	// Enrichment widget
 	&.enrichmentWidget {
-		display:none;
+		position:absolute;
+		left:0;
+		top:0;
+		-webkit-backface-visibility:hidden;
+		-webkit-transform: rotateY(180deg);
+
 		border: 1px solid #ccc;
 		overflow:auto;
 
@@ -40,6 +74,23 @@
 
 		.rdf-annotation.rdf-annotation-nolinkification {
 			background:red;
+		}
+	}
+
+	&.enrichmentButton {
+		border: 1px solid #ccc;
+		width:90px;
+		text-align:center;
+		padding:15px;
+		background: #ccc;
+		font-size: 18px;
+		font-weight: bold;
+		color: black;
+		cursor:pointer;
+
+		&:hover {
+			background: #eee;
+			color: #333;
 		}
 	}
 }

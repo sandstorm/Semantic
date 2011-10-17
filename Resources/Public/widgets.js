@@ -259,6 +259,9 @@
 
 				$popoverContent.find('.linkification-results').html(html);
 
+				if (!$.fn.popover.openedPopup || $.fn.popover.openedPopup.length == 0 || $.fn.popover.openedPopup[0] !== $this[0]) {
+					$this.trigger('showPopover');
+				}
 
 				// Trigger change event on the linked data URI, such that the UI highlights the currently selected element.
 				$this.trigger('semantic-linkedDataUriChange');
@@ -327,6 +330,17 @@
 
 			$enrichmentWidget.after('<div class="sm-semantic enrichmentButton">Enrich!</div>');
 			$enrichmentButton = $enrichmentWidget.next('.sm-semantic.enrichmentButton');
+
+			// Set up enrichment widget
+			var h = $this.height();
+			var w = $this.width();
+			$enrichmentWidget.height(h);
+			$enrichmentWidget.width(w);
+			$enrichmentWidget.css('font-size', $this.css('font-size'));
+			$enrichmentWidget.css('font-family', $this.css('font-family'));
+			$enrichmentWidget.css('margin', $this.css('margin'));
+			$enrichmentWidget.css('padding', $this.css('padding'));
+
 
 			// Helper which can store all annotations which are selected in a hidden field
 			var storeAnnotationsInHiddenField = function() {
@@ -411,21 +425,14 @@
 
 			// Main entry point: when enrichment button is clicked, we start
 			$enrichmentButton.click(function() {
-				var h = $this.height();
-				var w = $this.width();
 
-				$this.hide();
+				//$this.hide();
 				$enrichmentButton.hide();
 
 				$enrichmentWidget.html($this.val().replace(/\n/g, '<br />'));
-				$enrichmentWidget.height(h);
-				$enrichmentWidget.width(w);
-				$enrichmentWidget.css('font-size', $this.css('font-size'));
-				$enrichmentWidget.css('font-family', $this.css('font-family'));
-				$enrichmentWidget.css('margin', $this.css('margin'));
-				$enrichmentWidget.css('padding', $this.css('padding'));
-				$enrichmentWidget.css('display', 'inline-block');
 
+				$enrichmentWidget.css('display', 'inline-block');
+				$enrichmentButton.parents('.externalReferenceWrapperOuter').first().addClass('foo');
 				$.post('http://localhost:8080/semantifier/annotate', {
 					text: $this.val()
 				}, function(results) {
@@ -482,7 +489,21 @@
 				linkificationType: $this.data('rdf-linkification-type')
 			});
 		});
-		$('.sm-semantic.continuousText').prev().continuousTextEnrichment();
+
+		$('.sm-semantic.continuousText').prev().each(function() {
+			var $this = $(this);
+
+			var $container = $(this);
+			$container = $container.add($this.next('.sm-semantic.continuousText'));
+
+			var $wrapper = $('<div class="sm-semantic externalReferenceWrapper"></div>');
+			$container.wrapAll($wrapper);
+
+			$this.continuousTextEnrichment();
+		});
+
+		$('.sm-semantic.externalReferenceWrapper').wrap($('<div class="sm-semantic externalReferenceWrapperOuter"></div>'));
+
 	});
 
 })(jQuery);
