@@ -333,6 +333,11 @@
 			// Set up enrichment widget
 			var h = $this.height();
 			var w = $this.width();
+
+			var $externalReferenceWrapper = $this.parents('.externalReferenceWrapper').first();
+			$externalReferenceWrapper.height($externalReferenceWrapper.height());
+			$externalReferenceWrapper.width($externalReferenceWrapper.width());
+
 			$enrichmentWidget.height(h);
 			$enrichmentWidget.width(w);
 			$enrichmentWidget.css('font-size', $this.css('font-size'));
@@ -360,7 +365,7 @@
 				var text = $this.val();
 				var resultingText = '';
 				var currentResultIndex = 0;
-				var entities = results['entities'];
+				var entities = (results && results['entities'] ? results['entities'] : []);
 				var alreadyStoredAnnotations = [];
 				if ($storageInputField.val()) {
 					try {
@@ -424,25 +429,6 @@
 
 			var currentAnnotationResults = null;
 			var currentlyInEnrichmentMode = false;
-			// Main entry point: when enrichment button is clicked, we start
-			$enrichmentButton.click(function() {
-				//$this.hide();
-				if (currentlyInEnrichmentMode) {
-					currentlyInEnrichmentMode = false;
-					$enrichmentButton.parents('.externalReferenceWrapperOuter').first().removeClass('foo');
-				} else {
-					currentlyInEnrichmentMode = true;
-
-					$enrichmentWidget.html($this.val().replace(/\n/g, '<br />'));
-
-					$enrichmentWidget.css('display', 'inline-block');
-					$enrichmentButton.parents('.externalReferenceWrapperOuter').first().addClass('foo');
-
-					showAnnotationsInEnrichmentWidget(currentAnnotationResults);
-				}
-
-				//$enrichmentButton.hide();
-			});
 
 			// Monitor text changes, and move annotations around if needed
 			$this.monitorTextChanges();
@@ -456,6 +442,8 @@
 					var annotationIndexesToThrowAway = [];
 					for (var a=0; a < currentAnnotationResults.entities.length; a++) {
 						var annotation = currentAnnotationResults.entities[a];
+						if (!annotation) continue;
+
 						// TODO: the following code is almost identical with the code which moves the *already existing* annotations around. can we share it??
 						if (annotation.offset < diff.position && annotation.offset + annotation.length < diff.position) {
 							// Annotation is fully before the changed area, we do not need to modify it at all.
@@ -475,24 +463,66 @@
 					}
 				}
 			};
+
+			var enrichmentHasStartedAtLeastOnce = false;
+			var startEnrichment = function() {
+				enrichmentHasStartedAtLeastOnce = true;
+				semantifierCurrentlyRunning = true;
+				$enrichmentButton.addClass('semantifierCurrentlyRunning');
+
+				$.post('http://localhost:8080/semantifier/annotate', {
+					text: $this.val()
+				}, function(results) {
+					semantifierCurrentlyRunning = false;
+					$enrichmentButton.removeClass('semantifierCurrentlyRunning');
+					currentAnnotationResults = results;
+					applyDiffStackToCurrentAnnotationResults();
+					diffStack = [];
+					if (currentlyInEnrichmentMode) {
+						showAnnotationsInEnrichmentWidget(currentAnnotationResults);
+					}
+				});
+			}
 			// Already annotate in the background
 			$this.bind('textChangeWithDiff', function(event, diff) {
 				if (semantifierCurrentlyRunning) {
 					diffStack.push(diff);
 					return;
 				} else {
-					semantifierCurrentlyRunning = true;
-					$.post('http://localhost:8080/semantifier/annotate', {
-						text: $this.val()
-					}, function(results) {
-						semantifierCurrentlyRunning = false;
-						currentAnnotationResults = results;
-						applyDiffStackToCurrentAnnotationResults();
-						diffStack = [];
-					});
-
+					startEnrichment();
 				}
 			});
+
+			// Main entry point: when enrichment button is clicked, we start
+			$enrichmentButton.click(function() {
+				if (currentlyInEnrichmentMode) {
+					currentlyInEnrichmentMode = false;
+					$this.css('display', 'inline');
+					$enrichmentButton.parents('.externalReferenceWrapperOuter').first().removeClass('foo');
+				} else {
+					var pos = $enrichmentButton.position();
+					$enrichmentButton.css('left', pos.left + 'px');
+					$enrichmentButton.css('top', pos.top + 'px');
+					$enrichmentButton.css('position', 'absolute');
+
+					currentlyInEnrichmentMode = true;
+					window.setTimeout(function() {
+						$this.css('display', 'none');
+					}, 1000);
+
+
+					$enrichmentWidget.html($this.val().replace(/\n/g, '<br />'));
+
+					$enrichmentWidget.css('display', 'inline-block');
+					$enrichmentButton.parents('.externalReferenceWrapperOuter').first().addClass('foo');
+
+					showAnnotationsInEnrichmentWidget(currentAnnotationResults);
+					if (diffStack.length > 0 || !enrichmentHasStartedAtLeastOnce) {
+						startEnrichment();
+					}
+				}
+			});
+
 
 			// Adjust already saved annotations
 			$this.bind('textChangeWithDiff', function(event, diff) {
@@ -504,7 +534,9 @@
 						oldAnnotations = [];
 					}
 				}
+				if (!oldAnnotations) oldAnnotations = [];
 				var newAnnotations = [];
+
 				$.each(oldAnnotations, function(index, annotation) {
 					annotation.offset = parseInt(annotation.offset);
 					annotation.length = parseInt(annotation.length);

@@ -66,6 +66,10 @@
       height: 40px; }
     .sm-semantic.enrichmentButton .backside {
       -webkit-transform: rotateY(180deg); }
+  .sm-semantic .semantifierCurrentlyRunning .frontside, .sm-semantic .semantifierCurrentlyRunning .backside {
+    background-image: url(ajax-loader.gif);
+    background-repeat: no-repeat;
+    background-position: 5px 0; }
   .sm-semantic.externalReferenceWrapperOuter.foo .enrichmentButton .frontside {
     opacity: 0; }
   .sm-semantic.externalReferenceWrapperOuter .enrichmentButton .backside {

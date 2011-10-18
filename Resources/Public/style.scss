@@ -106,6 +106,14 @@
 		}
 	}
 
+	.semantifierCurrentlyRunning {
+		.frontside, .backside {
+			background-image:url(ajax-loader.gif);
+			background-repeat:no-repeat;
+			background-position: 5px 0;
+		}
+	}
+
 	&.externalReferenceWrapperOuter.foo .enrichmentButton .frontside {
 		opacity: 0;
 	}
