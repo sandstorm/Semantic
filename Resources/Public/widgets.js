@@ -327,7 +327,7 @@
 			$this.after('<div class="sm-semantic enrichmentWidget"></div>');
 			$enrichmentWidget = $this.next('.sm-semantic.enrichmentWidget');
 
-			$enrichmentWidget.after('<div class="sm-semantic enrichmentButton">Enrich!</div>');
+			$enrichmentWidget.after('<div class="sm-semantic enrichmentButton"><div class="frontside">Enrich!</div><div class="backside">go back</div></div>');
 			$enrichmentButton = $enrichmentWidget.next('.sm-semantic.enrichmentButton');
 
 			// Set up enrichment widget
@@ -423,18 +423,25 @@
 			};
 
 			var currentAnnotationResults = null;
+			var currentlyInEnrichmentMode = false;
 			// Main entry point: when enrichment button is clicked, we start
 			$enrichmentButton.click(function() {
 				//$this.hide();
-				$enrichmentButton.hide();
+				if (currentlyInEnrichmentMode) {
+					currentlyInEnrichmentMode = false;
+					$enrichmentButton.parents('.externalReferenceWrapperOuter').first().removeClass('foo');
+				} else {
+					currentlyInEnrichmentMode = true;
 
-				$enrichmentWidget.html($this.val().replace(/\n/g, '<br />'));
+					$enrichmentWidget.html($this.val().replace(/\n/g, '<br />'));
 
-				$enrichmentWidget.css('display', 'inline-block');
-				$enrichmentButton.parents('.externalReferenceWrapperOuter').first().addClass('foo');
+					$enrichmentWidget.css('display', 'inline-block');
+					$enrichmentButton.parents('.externalReferenceWrapperOuter').first().addClass('foo');
 
-				showAnnotationsInEnrichmentWidget(currentAnnotationResults);
+					showAnnotationsInEnrichmentWidget(currentAnnotationResults);
+				}
 
+				//$enrichmentButton.hide();
 			});
 
 			// Monitor text changes, and move annotations around if needed
