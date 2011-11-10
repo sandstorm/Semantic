@@ -64,8 +64,9 @@ class ContinuousTextTripleGenerator extends \SandstormMedia\Semantic\Core\RdfGen
 					$graph->add(new Triple($annotationInstance, new NamedNode('rdf:type'), $annotationType));
 					$graph->add(new Triple($annotationInstance, new NamedNode('annot:predicate'), $rdfPredicate));
 					//$graph->add(new Triple($annotationInstance, new NamedNode('annot:annotatedText'), $rdfPredicate)); // TODO
-					$graph->add(new Triple($annotationInstance, new NamedNode('annot:offset'), new Literal($annotation['offset'])));
-					$graph->add(new Triple($annotationInstance, new NamedNode('annot:length'), new Literal($annotation['length'])));
+
+					$graph->add(new Triple($annotationInstance, new NamedNode('annot:offset'), new Literal($annotation['offset'], NULL, new NamedNode('xsd:integer'))));
+					$graph->add(new Triple($annotationInstance, new NamedNode('annot:length'), new Literal($annotation['length'], NULL, new NamedNode('xsd:integer'))));
 					$graph->add(new Triple($annotationInstance, new NamedNode('annot:about'), $rdfObject));
 				}
 			}

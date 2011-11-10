@@ -26,6 +26,7 @@ use \SandstormMedia\Semantic\Core\Rdf\Concept\RdfNode;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Graph;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Triple;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Literal;
+use \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -33,8 +34,12 @@ use \SandstormMedia\Semantic\Core\Rdf\Concept\Literal;
  */
 class BasicTripleGenerator implements TripleGeneratorInterface {
 	public function generate($subjectDomainModelIdentifier, $propertyName, $propertyValue, array $propertySchema, RdfNode $rdfSubject, RdfNode $rdfPredicate, Graph $graph) {
+		if (is_integer($propertyValue)) {
+			$rdfObject = new Literal($propertyValue, NULL, new NamedNode('xsd:integer'));
+		} else {
 			$rdfObject = new Literal($propertyValue);
-			$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
+		}
+		$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
 	}
 }
 ?>
