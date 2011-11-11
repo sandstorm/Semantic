@@ -72,7 +72,7 @@ Writing your own driver is easy: Just subclass `\SandstormMedia\Semantic\Triplif
 and do the following:
 
 1.  define the objects you want to export inside the $objects array. The key is an internal identifier,
-	where the value is the URI which generates the object's identity:
+	where the value is the URI pattern which generates the object's identity:
 
 	```php
 	protected $objects = array(
@@ -80,6 +80,24 @@ and do the following:
 	   'issue' => '{BASEURI}/issues/{_id}'
 	);
 	```
+
+	Here, `{BASEURI}` is replaced with the base URI configured in the YAML config,
+	and `{_id}` is a special property which is the internal object ID.
+
+2.  For each object, set the object's type using the `$<object>Type` variable:
+
+	```php
+	protected $projectType = 'doap:Project';
+	protected $issueType = 'dbug:Issue';
+	```
+
+3.  Now comes the cool part: You now need to define SQL queries which extract the
+	wanted information from the database. For each object, multiple queries
+	can be defined in an array named `$<object>Queries`.
+
+	You need to alias the column names to the following:
+
+	* `_id` for the ID property which is used in the URI
 
 Further Reading
 ===============

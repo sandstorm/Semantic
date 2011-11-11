@@ -45,6 +45,7 @@ class Redmine extends \SandstormMedia\Semantic\Triplify\AbstractDriver {
 	 */
 	protected $issueType = 'dbug:Issue';
 	protected $issueQueries = array(
+		// Issue Metadata
 		"SELECT i.id AS _id,
 				i.subject AS 'rdfs:label',
 				i.description AS 'rdfs:comment'
