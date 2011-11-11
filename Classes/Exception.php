@@ -10,22 +10,7 @@
  *        http://sandstorm-media.de                                       */
 namespace SandstormMedia\Semantic;
 
-use \TYPO3\FLOW3\Package\Package as BasePackage;
-
-/**
- * The TYPO3 Package
- */
-class Package extends BasePackage {
-	public function boot(\TYPO3\FLOW3\Core\Bootstrap $bootstrap) {
-		$dispatcher = $bootstrap->getSignalSlotDispatcher();
-		/*$dispatcher->connect('TYPO3\FLOW3\Core\Bootstrap', 'bootstrapReady', function($slot) use (&$bootstrap) {
-			if ($bootstrap->getObjectManager() instanceof \TYPO3\FLOW3\Object\CompileTimeObjectManager) {
-				return;
-			}
-			$entityManager = $bootstrap->getObjectManager()->get('Doctrine\Common\Persistence\ObjectManager');
-			$entityManager->getEventManager()->addEventSubscriber($bootstrap->getObjectManager()->get('SandstormMedia\Semantic\TripleStore\DoctrineEventSubscriber'));
-		});*/
-	}
+class Exception extends \TYPO3\FLOW3\Exception {
 }
 
 ?>

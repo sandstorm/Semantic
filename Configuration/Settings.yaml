@@ -9,6 +9,10 @@ SandstormMedia:
       dcterms: 'http://purl.org/dc/terms/'
       sioctypes: 'http://rdfs.org/sioc/types#'
       foaf: 'http://xmlns.com/foaf/0.1/'
+
+      # some more "esoteric" ones
+      dbug: 'http://ontologi.es/doap-bugs#'
+      doap: 'http://usefulinc.com/ns/doap#'
     PropertyMapping:
       TYPO3\Blog\Domain\Model\Post:
         type: sioctypes:BlogPost
@@ -40,3 +44,4 @@ SandstormMedia:
         pdoConnection: 'mysql:host=127.0.0.1;dbname=sandstorm_redmine'
         pdoUser: 'root'
         pdoPassword: 'root'
+        baseUri: 'http://redmine.sandstorm-media.de/'

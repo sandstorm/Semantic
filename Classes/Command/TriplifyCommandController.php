@@ -19,10 +19,20 @@ use TYPO3\FLOW3\Annotations as FLOW3;
 class TriplifyCommandController extends \TYPO3\FLOW3\MVC\Controller\CommandController {
 
 	/**
-	 * Generate triples from foreign databases
+	 * @FLOW3\Inject
+	 * @var \SandstormMedia\Semantic\Triplify\TriplifyService
 	 */
-	public function generateTriplesCommand() {
+	protected $triplifyService;
 
+	/**
+	 * Generate triples from foreign databases
+	 *
+	 * @param string $serviceIdentifier string The service identifier from the settings
+	 * @return string nTriples string
+	 */
+	public function generateTriplesCommand($serviceIdentifier) {
+		$triples = $this->triplifyService->generateTriples($serviceIdentifier);
+		return $triples->toNt();
 	}
 }
 ?>

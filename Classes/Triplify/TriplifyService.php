@@ -8,9 +8,45 @@
  *                                                                        *
  * © 2011 Sandstorm Media UG (haftungsbeschränkt)                         *
  *        http://sandstorm-media.de                                       */
+namespace SandstormMedia\Semantic\Triplify;
+use TYPO3\FLOW3\Annotations as FLOW3;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
+ * @FLOW3\Scope("singleton")
  */
+class TriplifyService {
+
+	/**
+	 * @var array
+	 */
+	protected $settings;
+
+	/**
+	 * @param array $settings
+	 */
+	public function injectSettings(array $settings) {
+		$this->settings = $settings;
+	}
+
+	/**
+	 * @param string $serviceIdentifier
+	 * @return \SandstormMedia\Semantic\Core\Rdf\Concept\Graph
+	 */
+	public function generateTriples($serviceIdentifier) {
+		if (!isset($this->settings['triplify'][$serviceIdentifier])) {
+			throw new Exception\ServiceIdentifierNotFoundException(sprintf('The given service identifier "%s" has not been found.', $serviceIdentifier), 1320992632);
+		}
+		$rdfGraph = new \SandstormMedia\Semantic\Core\Rdf\Concept\Graph();
+
+		$triplifyConfiguration = $this->settings['triplify'][$serviceIdentifier];
+
+		$pdoConnection = new \PDO($triplifyConfiguration['pdoConnection'], $triplifyConfiguration['pdoUser'], $triplifyConfiguration['pdoPassword']);
+
+		$driverClassName = $triplifyConfiguration['driver'];
+		$driver = new $driverClassName($pdoConnection, $rdfGraph, $triplifyConfiguration['baseUri']);
+		$driver->run();
+
+		return $rdfGraph;
+	}
+}
 ?>

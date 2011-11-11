@@ -8,9 +8,47 @@
  *                                                                        *
  * © 2011 Sandstorm Media UG (haftungsbeschränkt)                         *
  *        http://sandstorm-media.de                                       */
+namespace SandstormMedia\Semantic\Triplify\Driver;
+use TYPO3\FLOW3\Annotations as FLOW3;
 
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
+/**
  */
+class Redmine extends \SandstormMedia\Semantic\Triplify\AbstractDriver {
+
+	/**
+	 * MASTER CONFIGURATION
+	 */
+	protected $objects = array(
+		'project' => '{BASEURI}/projects/{_id}',
+		'issue' => '{BASEURI}/issues/{_id}'
+	);
+
+	/**
+	 * PROJECT
+	 */
+	protected $projectType = 'doap:Project';
+	protected $projectQueries = array(
+		// Project Metadata
+		"SELECT p.identifier AS _id, p.name AS 'dcterms:title',
+				p.description AS 'sioc:content',
+				p.updated_on AS 'dcterms:modified->asDateTime()',
+				p.created_on AS 'dcterms:created->asDateTime()'
+			FROM projects p WHERE p.is_public=1",
+		// Project -> Issue
+		"SELECT p.identifier AS _id,
+				i.id AS 'dbug:issue->issue'
+			FROM issues i, projects p WHERE p.id = i.project_id"
+	);
+
+	/**
+	 * ISSUE
+	 */
+	protected $issueType = 'dbug:Issue';
+	protected $issueQueries = array(
+		"SELECT i.id AS _id,
+				i.subject AS 'rdfs:label',
+				i.description AS 'rdfs:comment'
+			FROM issues i"
+	);
+}
 ?>
