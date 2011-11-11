@@ -97,13 +97,58 @@ and do the following:
 
 	You need to alias the column names to the following:
 
-	* `_id` for the ID property which is used in the URI.
+	* `_id` for the ID property which is used to build the persistent URI:
 
 		```sql
-		SELECT p.identifier AS _id`
+		SELECT
+			p.identifier AS _id
+		FROM projects p
 		```
 
-	* an *rdf predicate* when you want to map simple values.
+	* an *rdf predicate* when you want to map a column to a simple RDF *literal*:
+
+		```sql
+		SELECT
+			i.subject AS 'rdfs:label',
+			i.description AS 'rdfs:comment'
+		FROM issues i
+		```
+
+	* an *rdf predicate followed by an object type* for relations to other objects.
+
+		The example shows the relation from projects to the `issue`.
+
+		```sql
+		SELECT p.identifier AS _id,
+		       i.id AS 'dbug:issue->issue'
+		FROM issues i, projects p WHERE p.id = i.project_id"
+		```
+
+	* an *rdf predicate followed by a callback function* for custom post-processing.
+
+		This is the most flexible type, where you can for example covert dates
+		to the corresponding RDF Literal:
+
+		```sql
+		SELECT
+			p.updated_on AS 'dcterms:modified->asDateTime()
+		FROM projects p
+		```
+
+		The callback function ``asDateTime`` gets the column value as string parameter,
+		and must return a subclass of `\SandstormMedia\Semantic\Core\Rdf\Concept\RdfNode`.
+
+		As an example, the aforementioned ``asDateTime`` function looks as follows:
+
+		```php
+		protected function asDateTime($value) {
+			$dateTime = \DateTime::createFromFormat('Y-m-d H:i:s', $value);
+			return new Literal($dateTime);
+		}
+		```
+
+NOTE: Make sure all the prefixes you use (like ``dbug`` or ``doap``) are registered
+in `Settings.yaml` `SandstormMedia: Semantic: prefixes`.
 
 Further Reading
 ===============
