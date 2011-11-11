@@ -71,15 +71,15 @@ Writing your own Driver
 Writing your own driver is easy: Just subclass `\SandstormMedia\Semantic\Triplify\AbstractDriver`
 and do the following:
 
-1. define the objects you want to export inside the $objects array. The key is an internal identifier,
-   where the value is the URI which generates the object's identity:
+1.  define the objects you want to export inside the $objects array. The key is an internal identifier,
+	where the value is the URI which generates the object's identity:
 
-   ```php
-   protected $objects = array(
-      'project' => '{BASEURI}/projects/{_id}',
-      'issue' => '{BASEURI}/issues/{_id}'
-   );
-   ```
+	```php
+	protected $objects = array(
+	   'project' => '{BASEURI}/projects/{_id}',
+	   'issue' => '{BASEURI}/issues/{_id}'
+	);
+	```
 
 Further Reading
 ===============
