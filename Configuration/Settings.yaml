@@ -30,3 +30,13 @@ SandstormMedia:
         #  http://rdfs.org/sioc/ns#related to
     rdfa:
       enable: true
+
+    #
+    # Configuration for triplifying a foreign database
+    #
+    triplify:
+      localRedmine:
+        driver: 'SandstormMedia\Semantic\Triplify\Driver\Redmine'
+        pdoConnection: 'mysql:host=127.0.0.1;dbname=sandstorm_redmine'
+        pdoUser: 'root'
+        pdoPassword: 'root'
