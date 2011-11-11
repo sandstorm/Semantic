@@ -22,22 +22,24 @@ namespace SandstormMedia\Semantic\Rdf\Controller;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @scope singleton
+ * @FLOW3\Scope("singleton")
  */
 class DebuggerController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
 
 	/**
 	 * @var SandstormMedia\Semantic\Core\Schema\ClassSchemaResolver
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $classSchemaResolver;
 
 	/**
 	 * @return string
-	 * @skipCsrfProtection
+	 * @FLOW3\SkipCsrfProtection
 	 */
 	public function indexAction() {
 		$output = array();

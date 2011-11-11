@@ -22,6 +22,8 @@ namespace SandstormMedia\Semantic\Rdfa;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 use \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode;
 /**
  *
@@ -33,31 +35,31 @@ class RdfaWrapperViewHelper extends \TYPO3\Fluid\Core\ViewHelper\AbstractTagBase
 
 	/**
 	 * @var \SandstormMedia\Semantic\Core\RdfGenerator
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $rdfGenerator;
 
 	/**
 	 * @var SandstormMedia\Semantic\Core\Rdf\Environment\ProfileInterface
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $profile;
 
 	/**
 	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\ExternalReferenceRepository
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $metadataRepository;
 
 	/**
 	 * @var \SandstormMedia\Semantic\Core\Schema\ClassSchemaResolver
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $classSchemaResolver;
 
 	/**
 	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\TextAnnotationsRepository
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $textAnnotationsRepository;
 

@@ -22,6 +22,8 @@ namespace SandstormMedia\Semantic\Core\Rdf\Concept;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * A NamedNodes is the RDF node for URIs.
  *
@@ -31,7 +33,7 @@ class NamedNode extends RdfNode {
 
 	/**
 	 * @var SandstormMedia\Semantic\Core\Rdf\Environment\ProfileInterface
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $profile;
 

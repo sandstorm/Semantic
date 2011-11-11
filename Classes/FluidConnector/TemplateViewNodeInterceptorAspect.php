@@ -22,28 +22,29 @@ namespace SandstormMedia\Semantic\FluidConnector;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @aspect
+ * @FLOW3\Aspect
  */
 class TemplateViewNodeInterceptorAspect {
 
 	/**
 	 * @var \SandstormMedia\Semantic\Rdfa\FluidSyntaxTreeInterceptor
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $rdfaInterceptor;
 
 	/**
 	 * @var \SandstormMedia\Semantic\Linkification\FluidSyntaxTreeInterceptor
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $linkificationInterceptor;
 
 
 	/**
-	 * @afterreturning method(TYPO3\Fluid\View\TemplateView->buildParserConfiguration()) && setting(SandstormMedia.Semantic.rdfa.enable)
+	 * @FLOW3\AfterReturning("method(TYPO3\Fluid\View\TemplateView->buildParserConfiguration()) && setting(SandstormMedia.Semantic.rdfa.enable)")
 	 * @param \TYPO3\FLOW3\AOP\JoinPointInterface $joinPoint The current join point
 	 * @return void
 	 */

@@ -22,6 +22,8 @@ namespace SandstormMedia\Semantic\Core;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Graph;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Literal;
@@ -29,26 +31,26 @@ use \SandstormMedia\Semantic\Core\Rdf\Concept\Triple;
 
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @scope singleton
+ * @FLOW3\Scope("singleton")
  */
 class RdfGenerator {
 
 	/**
 	 * @var \TYPO3\FLOW3\Object\ObjectManagerInterface
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $objectManager;
 
 	/**
 	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $persistenceManager;
 
 
 	/**
 	 * @var \SandstormMedia\Semantic\Core\Schema\ClassSchemaResolver
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $classSchemaResolver;
 

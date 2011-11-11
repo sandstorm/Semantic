@@ -22,14 +22,16 @@ namespace SandstormMedia\Semantic\Linkification\Domain\Repository;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
- * @scope singleton
+ * @FLOW3\Scope("singleton")
  */
 class ExternalReferenceRepository extends \TYPO3\FLOW3\Persistence\Repository {
 
 	/**
 	 * @var TYPO3\FLOW3\Persistence\PersistenceManagerInterface
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $persistenceManager;
 

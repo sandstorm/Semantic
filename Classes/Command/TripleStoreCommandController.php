@@ -21,42 +21,44 @@ namespace SandstormMedia\Semantic\Command;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * The setup controller for the Blog package, for setting up some
  * data to play with.
  *
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
- * @scope singleton
+ * @FLOW3\Scope("singleton")
  */
 class TripleStoreCommandController extends \TYPO3\FLOW3\MVC\Controller\CommandController {
 
 	/**
-	 * @inject
+	 * @FLOW3\Inject
 	 * @var \TYPO3\FLOW3\MVC\Web\Routing\RouterInterface
 	 */
 	protected $router;
 
 	/**
-	 * @inject
+	 * @FLOW3\Inject
 	 * @var \TYPO3\FLOW3\Configuration\ConfigurationManager
 	 */
 	protected $configurationManager;
 
 	/**
-	 * @inject
+	 * @FLOW3\Inject
 	 * @var \SandstormMedia\Semantic\Core\Schema\ClassSchemaResolver
 	 */
 	protected $classSchemaResolver;
 
 	/**
 	 * @var \TYPO3\FLOW3\Persistence\PersistenceManagerInterface
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $persistenceManager;
 
 	/**
 	 * @var \SandstormMedia\Semantic\Rdf\TripleStore\StoreConnectorInterface
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $storeConnector;
 

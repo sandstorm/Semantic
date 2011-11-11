@@ -22,6 +22,8 @@ namespace SandstormMedia\Semantic\Linkification\TripleGenerator;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 use \SandstormMedia\Semantic\Core\Rdf\Concept\RdfNode;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Graph;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Triple;
@@ -30,19 +32,19 @@ use \SandstormMedia\Semantic\Core\Rdf\Concept\Literal;
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @scope singleton
+ * @FLOW3\Scope("singleton")
  */
 class ContinuousTextTripleGenerator extends \SandstormMedia\Semantic\Core\RdfGeneration\BasicTripleGenerator {
 
 	/**
 	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\ExternalReferenceRepository
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $externalReferenceRepository;
 
 	/**
 	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\TextAnnotationsRepository
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $textAnnotationsRepository;
 

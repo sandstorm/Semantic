@@ -22,11 +22,13 @@ namespace SandstormMedia\Semantic\Linkification\Domain\Model;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * An "external reference" contains for a given object and property a URI which should be used instead.
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @entity
+ * @FLOW3\Entity
  */
 class ExternalReference {
 

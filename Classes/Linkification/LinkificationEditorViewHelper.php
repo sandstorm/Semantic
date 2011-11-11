@@ -22,6 +22,8 @@ namespace SandstormMedia\Semantic\Linkification;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
@@ -32,30 +34,30 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 
 	/**
 	 * @var \SandstormMedia\Semantic\Core\Schema\ClassSchemaResolver
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $classSchemaResolver;
 
 	/**
 	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\TextAnnotationsRepository
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $textAnnotationsRepository;
 
 	/**
 	 * @var SandstormMedia\Semantic\Linkification\Domain\Repository\ExternalReferenceRepository
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $externalReferenceRepository;
 
 	/**
 	 * @var \TYPO3\FLOW3\MVC\Web\Routing\RouterInterface
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $router;
 
 	/**
-	 * @inject
+	 * @FLOW3\Inject
 	 * @var \TYPO3\FLOW3\Reflection\ReflectionService
 	 */
 	protected $myReflectionService;

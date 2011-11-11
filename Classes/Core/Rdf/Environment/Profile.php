@@ -22,6 +22,8 @@ namespace SandstormMedia\Semantic\Core\Rdf\Environment;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
+use TYPO3\FLOW3\Annotations as FLOW3;
+
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
@@ -29,13 +31,13 @@ class Profile implements ProfileInterface {
 
 	/**
 	 * @var SandstormMedia\Semantic\Core\Rdf\Environment\PrefixMap
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $prefixes;
 
 	/**
 	 * @var SandstormMedia\Semantic\Core\Rdf\Environment\TermMap
-	 * @inject
+	 * @FLOW3\Inject
 	 */
 	protected $terms;
 
