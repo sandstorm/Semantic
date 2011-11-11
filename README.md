@@ -97,7 +97,13 @@ and do the following:
 
 	You need to alias the column names to the following:
 
-	* `_id` for the ID property which is used in the URI
+	* `_id` for the ID property which is used in the URI.
+
+		```sql
+		SELECT p.identifier AS _id`
+		```
+
+	* an *rdf predicate* when you want to map simple values.
 
 Further Reading
 ===============
