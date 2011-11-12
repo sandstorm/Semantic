@@ -1,0 +1,19 @@
+We currently use BigData (http://bigdata.com/) as Triple Store.
+
+You can use the following NGINX configuration:
+
+	# Here, the /sparql/ URI is redirected
+	# to Jetty. Furthermore, we only allow
+	# GET without authentication, and authenticate
+	# the other request types.
+	location /sparql/ {
+		limit_except GET {
+			auth_basic "RestrictedStuff";
+			auth_basic_user_file htpasswd;
+		}
+		proxy_pass http://localhost:8080/bigdata/sparql;
+	}
+
+Now, jetty shall only bind to localhost. Thus, start it as follows:
+
+	JAVA_OPTIONS="-Djetty.host=127.0.0.1" bin/jetty.sh start
