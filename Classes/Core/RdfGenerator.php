@@ -139,7 +139,7 @@ class RdfGenerator {
 			throw new \Exception('rdfIdentityProvider not found or no instance of IdentityProviderInterface: "' . $classSchema['rdfIdentityProvider'] . '",', 1314440848);
 		}
 
-		return $rdfIdentityProvider->buildResourceUri($object);
+		return $rdfIdentityProvider->buildResourceUri($object, $classSchema);
 	}
 }
 ?>

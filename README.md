@@ -150,7 +150,30 @@ and do the following:
 NOTE: Make sure all the prefixes you use (like ``dbug`` or ``doap``) are registered
 in `Settings.yaml` `SandstormMedia: Semantic: prefixes`.
 
+Exporting RDF Data
+==================
+
+Installation
+------------
+
+```
+./flow3 doctrine:migrate
+```
+
+Routes:
+
+```
+-
+  name: 'Semantic'
+  uriPattern: '<SemanticSubroutes>'
+  subRoutes:
+    SemanticSubroutes:
+      package: SandstormMedia.Semantic
+```
+
+
 Further Reading
 ===============
 
 - Diploma Thesis (TODO)
+

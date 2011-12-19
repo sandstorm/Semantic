@@ -27,12 +27,15 @@ use \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode;
  */
 class BasicTripleGenerator implements TripleGeneratorInterface {
 	public function generate($subjectDomainModelIdentifier, $propertyName, $propertyValue, array $propertySchema, RdfNode $rdfSubject, RdfNode $rdfPredicate, Graph $graph) {
+		$rdfObject = NULL;
 		if (is_integer($propertyValue)) {
 			$rdfObject = new Literal($propertyValue, NULL, new NamedNode('xsd:integer'));
-		} else {
+		} elseif (!is_null($propertyValue)) {
 			$rdfObject = new Literal($propertyValue);
 		}
-		$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
+		if ($rdfObject !== NULL) {
+			$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
+		}
 	}
 }
 ?>

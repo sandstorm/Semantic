@@ -65,7 +65,11 @@ class YamlProvider implements \SandstormMedia\Semantic\Core\Schema\ClassSchemaPr
 	}
 
 	public function getClassNamesWithSchema(array $existingClassNamesWithSchema) {
-		return array_merge($existingClassNamesWithSchema, array_keys($this->settings['PropertyMapping']));
+		if (isset($this->settings['PropertyMapping']) && is_array($this->settings['PropertyMapping'])) {
+			return array_merge($existingClassNamesWithSchema, array_keys($this->settings['PropertyMapping']));
+		} else {
+			return $existingClassNamesWithSchema;
+		}
 	}
 }
 ?>
