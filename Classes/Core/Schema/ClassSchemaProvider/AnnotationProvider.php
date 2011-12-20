@@ -56,7 +56,7 @@ class AnnotationProvider implements \SandstormMedia\Semantic\Core\Schema\ClassSc
 	}
 
 	public function getPropertySchema($className, $propertyName, array $existingPropertySchema) {
-		$values = $this->cleanupValues($this->reflectionService->getPropertyTagsValues($className, $propertyName));
+		$values = array();
 
 		$classSchema = $this->reflectionService->getClassSchema($className);
 		if (!$classSchema) return $existingPropertySchema;
@@ -70,12 +70,11 @@ class AnnotationProvider implements \SandstormMedia\Semantic\Core\Schema\ClassSc
 	}
 
 	public function getClassSchema($className, array $existingClassSchema) {
-		$values = $this->cleanupValues($this->reflectionService->getClassTagsValues($className));
-		return array_merge($existingClassSchema, $this->filterValues($values));
+		return $existingClassSchema;
 	}
 
 	public function getClassNamesWithSchema(array $existingClassNamesWithSchema) {
-		return array_merge($existingClassNamesWithSchema, $this->reflectionService->getClassNamesByTag('rdfType'));
+		return $existingClassNamesWithSchema;
 	}
 }
 ?>

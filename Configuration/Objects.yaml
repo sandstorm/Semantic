@@ -1,2 +1,5 @@
 SandstormMedia\Semantic\Core\Rdf\Environment\ProfileInterface:
   className: SandstormMedia\Semantic\Core\Rdf\Environment\DefaultProfile
+
+SandstormMedia\Semantic\Rdf\TripleStore\StoreConnectorInterface:
+  className: SandstormMedia\Semantic\Rdf\TripleStore\FourStoreConnector

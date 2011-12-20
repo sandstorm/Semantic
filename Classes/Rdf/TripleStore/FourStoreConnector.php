@@ -44,10 +44,6 @@ class FourStoreConnector extends AbstractConnector {
 		$this->baseUri = rtrim($settings['4Store']['baseUri'], '/');
 	}
 
-	public function storeObject($object) {
-
-	}
-
 	public function addOrUpdateGraph($graphUri, $dataAsTurtle) {
 		$uri = $this->baseUri . '/data/' . $graphUri;
 		$this->httpRequestService->putStringToUri($dataAsTurtle, $uri, 'Content-Type: application/x-turtle', 201);

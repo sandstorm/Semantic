@@ -14,7 +14,7 @@ namespace SandstormMedia\Semantic\Core\RdfGeneration\IdentityProvider;
 
 
 use TYPO3\FLOW3\Annotations as FLOW3;
-
+use TYPO3\FLOW3\Reflection\ObjectAccess;
 /**
  * NO API!!!
  *
@@ -30,7 +30,20 @@ class PlaceholderIdentityProvider implements IdentityProviderInterface {
 
 	public function buildResourceUri($domainObject, $schema) {
 		$uri = $schema['rdfUriPattern'];
-		$uri = str_replace('{identifier}', $this->persistenceManager->getIdentifierByObject($domainObject), $uri);
+		$pm = $this->persistenceManager;
+
+		$uri = preg_replace_callback('#{(.*?)}#', function ($match) use ($domainObject, $pm) {
+			$propertyPath = $match[1];
+			$accessorObject = array(
+				'object' => $domainObject
+			);
+
+			$value = ObjectAccess::getPropertyPath($accessorObject, $propertyPath);
+			if (is_object($value) && $pm->getIdentifierByObject($value)) {
+				$value = $pm->getIdentifierByObject($value);
+			}
+			return $value;
+		}, $uri);
 
 		return new \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode($uri);
 	}

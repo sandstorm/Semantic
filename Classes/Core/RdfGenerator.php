@@ -106,23 +106,6 @@ class RdfGenerator {
 			throw new \Exception('rdTripleGenerator not found or no instance of TripleGeneratorInterface: "' . $propertySchema['rdfTripleGenerator'] . '",', 1314440848);
 		}
 		$rdfTripleGenerator->generate($subjectDomainModelIdentifier, $propertyName, $propertyValue, $propertySchema, $rdfSubject, $rdfPredicate, $graph);
-
-/*
- * 		switch ($propertySchema['rdfSourceType']) {
-			case 'Doctrine\Common\Collections\ArrayCollection':
-				$collection = $propertyValue;
-				if (class_exists($propertySchema['elementType'])) {
-					foreach ($collection as $element) {
-						$rdfObject = $this->getResourceUriForObject($element);
-						$graph->add(new Triple($rdfSubject, $rdfPredicate, $rdfObject));
-					}
-				} else {
-					throw new \Exception('Simple element collection types not yet supported!');
-				}
-				break;
-			default:
-				throw new \Exception('TODO: Type ' . $propertySchema['rdfSourceType'] . ' not supported');
-		}*/
 	}
 
 	/**
