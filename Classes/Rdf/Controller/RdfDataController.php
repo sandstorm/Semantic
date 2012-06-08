@@ -21,7 +21,7 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @FLOW3\Scope("singleton")
  */
-class RdfDataController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+class RdfDataController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 
 	protected $defaultViewObjectName = 'SandstormMedia\Semantic\Rdf\View\ShowNtView';
 

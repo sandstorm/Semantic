@@ -22,7 +22,7 @@ use \SandstormMedia\Semantic\Domain\Model\Triple;
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @FLOW3\Scope("singleton")
  */
-class RdfIdentityController extends \TYPO3\FLOW3\MVC\Controller\ActionController {
+class RdfIdentityController extends \TYPO3\FLOW3\Mvc\Controller\ActionController {
 
 	/**
 	 * Default action of the backend controller.
