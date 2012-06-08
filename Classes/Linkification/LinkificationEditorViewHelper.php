@@ -43,7 +43,7 @@ class LinkificationEditorViewHelper extends \TYPO3\Fluid\Core\ViewHelper\Abstrac
 	protected $externalReferenceRepository;
 
 	/**
-	 * @var \TYPO3\FLOW3\MVC\Web\Routing\RouterInterface
+	 * @var \TYPO3\FLOW3\Mvc\Routing\RouterInterface
 	 * @FLOW3\Inject
 	 */
 	protected $router;

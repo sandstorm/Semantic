@@ -29,7 +29,7 @@ class ResourceUriService implements IdentityProviderInterface {
 	protected $persistenceManager;
 
 	public function buildResourceUri($domainObject, $schema) {
-		$uriBuilder = new \TYPO3\FLOW3\MVC\Web\Routing\UriBuilder();
+		$uriBuilder = new \TYPO3\FLOW3\Mvc\Routing\UriBuilder();
 		$uriBuilder->setRequest(new FakeRequestForUriBuilder());
 
 		$uri = $uriBuilder
