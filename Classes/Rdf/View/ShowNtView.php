@@ -19,7 +19,7 @@ use \SandstormMedia\Semantic\Domain\Model\Triple;
  *
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  */
-class ShowNtView extends \TYPO3\FLOW3\MVC\View\AbstractView {
+class ShowNtView extends \TYPO3\FLOW3\Mvc\View\AbstractView {
 
 	public function render() {
 		if ($this->controllerContext->getRequest()->hasArgument('asText')) {

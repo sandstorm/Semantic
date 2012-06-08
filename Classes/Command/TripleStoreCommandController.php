@@ -19,11 +19,11 @@ use TYPO3\FLOW3\Annotations as FLOW3;
  * @license http://www.gnu.org/licenses/gpl.html GNU General Public License, version 3 or later
  * @FLOW3\Scope("singleton")
  */
-class TripleStoreCommandController extends \TYPO3\FLOW3\MVC\Controller\CommandController {
+class TripleStoreCommandController extends \TYPO3\FLOW3\Cli\CommandController {
 
 	/**
 	 * @FLOW3\Inject
-	 * @var \TYPO3\FLOW3\MVC\Web\Routing\RouterInterface
+	 * @var \TYPO3\FLOW3\Mvc\Routing\RouterInterface
 	 */
 	protected $router;
 
