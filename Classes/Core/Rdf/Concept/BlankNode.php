@@ -33,11 +33,11 @@ class BlankNode extends RdfNode {
 	}
 
 	/**
-	 * Return the NTriples notation for this Node
+	 * Return the NQuads notation for this Node
 	 *
 	 * @return string
 	 */
-	public function toNT() {
+	public function toNQuads() {
 		return '_:' . $this->nominalValue;
 	}
 
@@ -45,7 +45,7 @@ class BlankNode extends RdfNode {
 	 * Return a string repesentation of this RDF Node.
 	 */
 	public function __toString() {
-		return $this->toNT();
+		return $this->toNQuads();
 	}
 
 	/**

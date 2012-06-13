@@ -36,17 +36,17 @@ class TriplifyService {
 		if (!isset($this->settings['triplify'][$serviceIdentifier])) {
 			throw new Exception\ServiceIdentifierNotFoundException(sprintf('The given service identifier "%s" has not been found.', $serviceIdentifier), 1320992632);
 		}
-		$rdfGraph = new \SandstormMedia\Semantic\Core\Rdf\Concept\Graph();
+		$rdfDataset = new \SandstormMedia\Semantic\Core\Rdf\Concept\Dataset();
 
 		$triplifyConfiguration = $this->settings['triplify'][$serviceIdentifier];
 
 		$pdoConnection = new \PDO($triplifyConfiguration['pdoConnection'], $triplifyConfiguration['pdoUser'], $triplifyConfiguration['pdoPassword']);
 
 		$driverClassName = $triplifyConfiguration['driver'];
-		$driver = new $driverClassName($pdoConnection, $rdfGraph, $triplifyConfiguration['baseUri']);
+		$driver = new $driverClassName($pdoConnection, $rdfDataset, $triplifyConfiguration['baseUri']);
 		$driver->run();
 
-		return $rdfGraph;
+		return $rdfDataset;
 	}
 }
 ?>
