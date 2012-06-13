@@ -52,7 +52,7 @@ class NamedNode extends RdfNode {
 	/**
 	 * @return string the IRI of this node in NTriples notation
 	 */
-	public function toNT() {
+	public function toNQuads() {
 		return '<' . $this->nominalValue . '>';
 	}
 

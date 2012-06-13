@@ -36,14 +36,20 @@ class Triple {
 	protected $object;
 
 	/**
+	 * @var RdfNode
+	 */
+	protected $context;
+
+	/**
 	 * @param RdfNode $subject
 	 * @param RdfNode $predicate
 	 * @param RdfNode $object
 	 */
-	public function __construct(RdfNode $subject, RdfNode $predicate, RdfNode $object) {
+	public function __construct(RdfNode $subject, RdfNode $predicate, RdfNode $object, RdfNode $context = NULL) {
 		$this->subject = $subject;
 		$this->predicate = $predicate;
 		$this->object = $object;
+		$this->context = $context;
 	}
 	/**
 	 * @return RdfNode
@@ -67,6 +73,22 @@ class Triple {
 	}
 
 	/**
+	 * @return RdfNode
+	 */
+	public function getContext() {
+		return $this->context;
+	}
+
+	/**
+	 * Sets the context.
+	 *
+	 * @return void
+	 */
+	public function setContext(RdfNode $context = NULL) {
+		$this->context = $context;
+	}
+
+	/**
 	 * @param Triple $otherTriple
 	 * @return boolean TRUE if $this equals $otherTriple, FALSE otherwise.
 	 */
@@ -77,18 +99,22 @@ class Triple {
 	}
 
 	/**
-	 *Return the NTriples notation for this triple.
+	 * Return the NQuads notation for this triple.
 	 *
 	 * @return string
 	 */
 	public function __toString() {
 		$output = '';
-		$output .= $this->subject->toNT();
+		$output .= $this->subject->toNQuads();
 		$output .= ' ';
-		$output .= $this->predicate->toNT();
+		$output .= $this->predicate->toNQuads();
 		$output .= ' ';
-		$output .= $this->object->toNT();
-		$output .= '.';
+		$output .= $this->object->toNQuads();
+		if ($this->context !== NULL) {
+			$output .= ' ';
+			$output .= $this->context->toNQuads();
+		}
+		$output .= ' .';
 		$output .= chr(10);
 
 		return $output;

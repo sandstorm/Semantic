@@ -24,9 +24,35 @@ class Redmine extends \SandstormMedia\Semantic\Triplify\AbstractDriver {
 	);
 
 	/**
+	 * CONFIGURATION OF NAMED GRAPHS THAT SHOULD BE CREATED
+	 */
+	protected $namedGraphs = array(
+		'{BASEURI}/projects/{_id}.rdf' => array(
+			'doap:project' => array(
+				'_only' => array(
+					'rdf:type',
+					'dcterms:title',
+					'sioc:content',
+					'dcterms:modified',
+					'dcterms:created',
+					'dbug:issue',
+				),
+				'_descend' => array(
+					'dbug:issue' => array(
+						'_only' => array(
+							'rdf:type',
+							'rdfs:comment'
+						)
+					)
+				)
+			)
+		)
+	);
+
+	/**
 	 * PROJECT
 	 */
-	protected $projectType = 'doap:Project';
+	protected $projectType = 'doap:project';
 	protected $projectQueries = array(
 		// Project Metadata
 		"SELECT p.identifier AS _id, p.name AS 'dcterms:title',
@@ -43,7 +69,7 @@ class Redmine extends \SandstormMedia\Semantic\Triplify\AbstractDriver {
 	/**
 	 * ISSUE
 	 */
-	protected $issueType = 'dbug:Issue';
+	protected $issueType = 'dbug:issue';
 	protected $issueQueries = array(
 		// Issue Metadata
 		"SELECT i.id AS _id,

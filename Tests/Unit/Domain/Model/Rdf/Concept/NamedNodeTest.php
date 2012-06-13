@@ -52,9 +52,9 @@ class NamedNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 	/**
 	 * @test
 	 */
-	public function asNTReturnsUriEnclosedInBrackets() {
+	public function toNQuadsReturnsUriEnclosedInBrackets() {
 		$namedNode = $this->createNamedNode('http://foo.bar');
-		$this->assertEquals('<http://foo.bar>', $namedNode->toNT());
+		$this->assertEquals('<http://foo.bar>', $namedNode->toNQuads());
 	}
 
 	/**

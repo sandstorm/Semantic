@@ -31,63 +31,41 @@ namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
  * The TYPO3 project - inspiring people to share!                         *
  *                                                                        */
 
-use \SandstormMedia\Semantic\Core\Rdf\Concept\BlankNode;
-use \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode;
-
+use SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode;
+use SandstormMedia\Semantic\Core\Rdf\Concept\Dataset;
+use SandstormMedia\Semantic\Core\Rdf\Concept\Literal;
+use SandstormMedia\Semantic\Core\Rdf\Concept\Graph;
+use SandstormMedia\Semantic\Core\Rdf\Concept\Triple;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
- * @covers SandstormMedia\Semantic\Core\Rdf\Concept\BlankNode
+ * @covers SandstormMedia\Semantic\Core\Rdf\Concept\Graph
  */
-class BlankNodeTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
+class DatasetTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
+	 * @expectedException SandstormMedia\Semantic\Exception
+	 * @expectedExceptionCode 1339428519
 	 */
-	public function toNQuadReturnsNQuadsNotation() {
-		$blankNode = new BlankNode();
-		$this->assertStringStartsWith('_:b', $blankNode->toNQuads());
+	public function addGraphThrowsExceptionIfAGraphWithThisNameBelongsToTheGraph() {
+		$dataset = new Dataset();
+		$graphName = new NamedNode('http://id.foo.org/bar/baz');
+		$graph1 = new Graph($graphName);
+		$graph2 = new Graph($graphName);
+		$dataset->addGraph($graph1)->addGraph($graph2);
 	}
 
 	/**
 	 * @test
+	 * @expectedException SandstormMedia\Semantic\Exception
+	 * @expectedExceptionCode 1339428519
 	 */
-	public function toStringTest() {
-		$blankNode = new BlankNode();
-		$this->assertStringStartsWith('_:b', (string)$blankNode);
+	public function createGraphThrowsExceptionIfAGraphWithThisNameBelongsToTheGraph() {
+		$dataset = new Dataset();
+		$graphName = new NamedNode('http://id.foo.org/bar/baz');
+		$graph = new Graph($graphName);
+		$dataset->addGraph($graph)->createGraph($graphName);
 	}
 
-	/**
-	 * @test
-	 */
-	public function valueOfReturnsValueStartingWithB() {
-		$blankNode = new BlankNode();
-		$this->assertStringStartsWith('b', $blankNode->valueOf());
-	}
-
-	/**
-	 * @test
-	 */
-	public function isEqualWithItself() {
-		$blankNode = new BlankNode();
-		$this->assertTrue($blankNode->equals($blankNode));
-	}
-
-	/**
-	 * @test
-	 */
-	public function isNotEqualWithAnotherBlankNode() {
-		$blankNode = new BlankNode();
-		$otherBlankNode = new BlankNode();
-		$this->assertFalse($blankNode->equals($otherBlankNode));
-	}
-
-	/**
-	 * @test
-	 */
-	public function isNotEqualWithANamedNode() {
-		$blankNode = new BlankNode();
-		$namedNode = new NamedNode('http://foo.bar');
-		$this->assertFalse($blankNode->equals($namedNode));
-	}
 }
 ?>
