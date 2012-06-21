@@ -85,7 +85,7 @@ class LiteralTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$this->assertSame($dataType, $literal->getDataType());
 	}
 
-	public function dataProviderForNT() {
+	public function dataProviderForNQuads() {
 		return array(
 			array(
 				'title' => 'Simple Literal',
@@ -108,11 +108,11 @@ class LiteralTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	/**
 	 * @test
-	 * @dataProvider dataProviderForNT
+	 * @dataProvider dataProviderForNQuads
 	 */
-	public function toNTReturnsNT($title, $literal, $expected) {
+	public function toNQuadsReturnsNQuads($title, $literal, $expected) {
 		$literal = new Literal($literal);
-		$this->assertEquals($expected, $literal->toNT(), $title);
+		$this->assertEquals($expected, $literal->toNQuads(), $title);
 	}
 
 	public function equalNodesDataProvider() {

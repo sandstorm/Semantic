@@ -21,11 +21,12 @@ namespace SandstormMedia\Semantic\Core\Rdf\Concept;
 abstract class RdfNode {
 
 	/**
-	 * Return the NTriples notation for this Node
+	 * Return the N-Quads notation for this Node.
+	 *
 	 *
 	 * @return string
 	 */
-	abstract public function toNT();
+	abstract public function toNQuads();
 
 	/**
 	 * Return a string repesentation of this RDF Node.

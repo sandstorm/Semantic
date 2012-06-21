@@ -34,6 +34,7 @@ namespace SandstormMedia\Semantic\Tests\Unit\Domain\Model\Rdf\Concept;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Literal;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Graph;
 use \SandstormMedia\Semantic\Core\Rdf\Concept\Triple;
+use \SandstormMedia\Semantic\Core\Rdf\Concept\NamedNode;
 /**
  * @license http://www.gnu.org/licenses/lgpl.html GNU Lesser General Public License, version 3 or later
  * @covers SandstormMedia\Semantic\Core\Rdf\Concept\Graph
@@ -50,9 +51,55 @@ class GraphTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 		$returnValue = $graph->add($mockTriple);
 
 		foreach ($graph as $triple) {
-			$this->assertSame($mockTriple, $triple);
+			$this->assertSame($mockTriple, $triple, 'Triple is not the same...');
 		}
 		$this->assertSame($graph, $returnValue, 'Wrong return value');
+	}
+
+	/**
+	 * @test
+	 */
+	public function addTripleToNamedGraphSetsContextOnTheTriple() {
+		$mockTriple = $this->getMockTriple();
+		$name = new NamedNode('http://id.foo.org/barGraph');
+		$mockTriple->expects($this->once())->method('setContext')->with($this->equalTo($name));
+		$graph = new Graph($name);
+		$graph->add($mockTriple);
+	}
+
+	/**
+	 * @test
+	 */
+	public function addTripleToUnnamedGraphSetsContextOnTheTripleToNull() {
+		$mockTriple = $this->getMockTriple();
+		$mockTriple->expects($this->once())->method('setContext')->with($this->equalTo(NULL));
+		$graph = new Graph();
+		$graph->add($mockTriple);
+	}
+
+	/**
+	 * @test
+	 */
+	public function setNameSetsTheContextOnAlreadyAssignedTriples() {
+		$mockTriple1 = $this->getMockTriple();
+		$mockTriple2 = $this->getMockTriple();
+		$mockTriple3 = $this->getMockTriple();
+
+		$name = new NamedNode('http://id.foo.org/barGraph');
+
+		$mockTriple1->expects($this->at(0))->method('setContext')->with($this->equalTo(NULL));
+		$mockTriple2->expects($this->at(0))->method('setContext')->with($this->equalTo(NULL));
+		$mockTriple3->expects($this->at(0))->method('setContext')->with($this->equalTo(NULL));
+		$mockTriple1->expects($this->at(1))->method('setContext')->with($this->equalTo($name));
+		$mockTriple2->expects($this->at(1))->method('setContext')->with($this->equalTo($name));
+		$mockTriple3->expects($this->at(1))->method('setContext')->with($this->equalTo($name));
+
+		$graph = new Graph();
+		$graph->add($mockTriple1);
+		$graph->add($mockTriple2);
+		$graph->add($mockTriple3);
+
+		$graph->setName($name);
 	}
 
 	/**

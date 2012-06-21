@@ -45,31 +45,52 @@ class TripleTest extends \TYPO3\FLOW3\Tests\UnitTestCase {
 
 	protected $mockObject;
 
+	protected $mockContext;
+
 	public function setUp() {
 		$this->mockSubject = $this->getMock('SandstormMedia\Semantic\Core\Rdf\Concept\RdfNode');
 		$this->mockPredicate = $this->getMock('SandstormMedia\Semantic\Core\Rdf\Concept\RdfNode');
 		$this->mockObject = $this->getMock('SandstormMedia\Semantic\Core\Rdf\Concept\RdfNode');
+		$this->mockContext = $this->getMock('SandstormMedia\Semantic\Core\Rdf\Concept\RdfNode');
 	}
 	/**
 	 * @test
 	 */
 	public function constructorArgumentsCanBeReadAgain() {
-		$triple = new Triple($this->mockSubject, $this->mockPredicate, $this->mockObject);
+		$triple = new Triple($this->mockSubject, $this->mockPredicate, $this->mockObject, $this->mockContext);
 		$this->assertEquals($this->mockSubject, $triple->getSubject());
 		$this->assertEquals($this->mockPredicate, $triple->getPredicate());
 		$this->assertEquals($this->mockObject, $triple->getObject());
+		$this->assertEquals($this->mockContext, $triple->getContext());
 	}
 
 	/**
 	 * @test
 	 */
-	public function toStringReturnsNTriplesRepresentation() {
-		$triple = new Triple($this->mockSubject, $this->mockPredicate, $this->mockObject);
+	public function toStringReturnsNQuadsRepresentation() {
+		$triple = new Triple($this->mockSubject, $this->mockPredicate, $this->mockObject, $this->mockContext);
 
-		$this->mockSubject->expects($this->any())->method('toNT')->will($this->returnValue('S'));
-		$this->mockPredicate->expects($this->any())->method('toNT')->will($this->returnValue('P'));
-		$this->mockObject->expects($this->any())->method('toNT')->will($this->returnValue('O'));
-		$this->assertEquals('S P O.' . chr(10), $triple->__toString());
+		$this->mockSubject->expects($this->any())->method('toNQuads')->will($this->returnValue('S'));
+		$this->mockPredicate->expects($this->any())->method('toNQuads')->will($this->returnValue('P'));
+		$this->mockObject->expects($this->any())->method('toNQuads')->will($this->returnValue('O'));
+		$this->mockContext->expects($this->any())->method('toNQuads')->will($this->returnValue('Q'));
+		$this->assertEquals('S P O Q .' . chr(10), $triple->__toString());
+	}
+
+	/**
+	 * @test
+	 */
+	public function toNQuadsOptionalRendersContext() {
+		$tripleWithContext = new Triple($this->mockSubject, $this->mockPredicate, $this->mockObject, $this->mockContext);
+		$tripleWithoutContext = new Triple($this->mockSubject, $this->mockPredicate, $this->mockObject);
+
+		$this->mockSubject->expects($this->any())->method('toNQuads')->will($this->returnValue('S'));
+		$this->mockPredicate->expects($this->any())->method('toNQuads')->will($this->returnValue('P'));
+		$this->mockObject->expects($this->any())->method('toNQuads')->will($this->returnValue('O'));
+		$this->mockContext->expects($this->any())->method('toNQuads')->will($this->returnValue('Q'));
+
+		$this->assertEquals('S P O Q .' . chr(10), $tripleWithContext->__toString());
+		$this->assertEquals('S P O .' . chr(10), $tripleWithoutContext->__toString());
 	}
 
 	/**

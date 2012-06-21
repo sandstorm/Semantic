@@ -32,7 +32,7 @@ class TriplifyCommandController extends \TYPO3\FLOW3\Cli\CommandController {
 	 */
 	public function generateTriplesCommand($serviceIdentifier) {
 		$triples = $this->triplifyService->generateTriples($serviceIdentifier);
-		return $triples->toNt();
+		return $triples->toNQuads();
 	}
 }
 ?>

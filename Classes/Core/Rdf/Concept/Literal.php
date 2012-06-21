@@ -65,12 +65,12 @@ class Literal extends RdfNode {
 		return $this->language;
 	}
 
-	public function toNT() {
+	public function toNQuads() {
 		$nominalValue = str_replace(array("\r\n", "\n"), '\n', $this->nominalValue);
 		$output = '"' . $nominalValue . '"';
 
 		if ($this->dataType !== NULL) {
-			$output .= '^^' . $this->dataType->toNT();
+			$output .= '^^' . $this->dataType->toNQuads();
 		}
 		return $output;
 	}
